@@ -14,7 +14,7 @@ import java.io.IOException;
 public class App extends Application {
 
     private static Scene scene;
-    private final static String rootPage = Pages.levelsPage;
+    private final static String rootPage = Pages.startPage;
 
     @Override
     public void start(Stage stage) throws IOException {

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.image.Image?>
@@ -13,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="480.0" prefWidth="640.0" styleClass="background" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.LevelsPageController">
+<BorderPane prefHeight="480.0" prefWidth="640.0" styleClass="background" stylesheets="@../../../styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.LevelsPageController">
    <bottom>
       <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="BOTTOM_CENTER">
          <children>
@@ -32,7 +31,7 @@
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <StackPane fx:id="easyButton" maxWidth="261.0" onMouseClicked="#easyClicked" prefHeight="51.0" prefWidth="261.0" styleClass="button" stylesheets="@../../../../java/styles.css">
+            <StackPane fx:id="easyButton" maxWidth="261.0" onMouseClicked="#easyClicked" prefHeight="51.0" prefWidth="261.0" styleClass="button" stylesheets="@../../../styles.css">
                <children>
                   <HBox prefHeight="46.0" prefWidth="261.0">
                      <children>
@@ -62,7 +61,7 @@
                   <Insets top="20.0" />
                </VBox.margin>
             </StackPane>
-            <StackPane fx:id="mediumButton" layoutX="10.0" layoutY="124.0" maxWidth="261.0" onMouseClicked="#mediumClicked" prefHeight="51.0" prefWidth="261.0" styleClass="button" stylesheets="@../../../../java/styles.css">
+            <StackPane fx:id="mediumButton" layoutX="10.0" layoutY="124.0" maxWidth="261.0" onMouseClicked="#mediumClicked" prefHeight="51.0" prefWidth="261.0" styleClass="button" stylesheets="@../../../styles.css">
                <children>
                   <HBox prefHeight="46.0" prefWidth="261.0">
                      <children>
@@ -89,7 +88,7 @@
                   <Insets top="10.0" />
                </VBox.margin>
             </StackPane>
-            <StackPane fx:id="hardButton" layoutX="10.0" layoutY="124.0" maxWidth="261.0" onMouseClicked="#hardClicked" prefHeight="51.0" prefWidth="261.0" styleClass="button" stylesheets="@../../../../java/styles.css">
+            <StackPane fx:id="hardButton" layoutX="10.0" layoutY="124.0" maxWidth="261.0" onMouseClicked="#hardClicked" prefHeight="51.0" prefWidth="261.0" styleClass="button" stylesheets="@../../../styles.css">
                <children>
                   <HBox prefHeight="46.0" prefWidth="261.0">
                      <children>
@@ -142,8 +141,4 @@
          </children>
       </HBox>
    </top>
-   <stylesheets>
-      <URL value="@../../../../java/styles.css" />
-      <URL value="@../../../styles.css" />
-   </stylesheets>
 </BorderPane>

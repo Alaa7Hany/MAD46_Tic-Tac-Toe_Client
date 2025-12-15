@@ -6,15 +6,22 @@ package com.mycompany.tictactoeclient;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 /**
  * FXML Controller class
  *
- * @author hp
+ * @author siam
  */
 public class StartPageController implements Initializable {
 
+
+    @FXML
+    private StackPane singlePlayerButton;
+    @FXML
+    private StackPane multiPalyerButton;
     /**
      * Initializes the controller class.
      */
@@ -23,4 +30,13 @@ public class StartPageController implements Initializable {
         // TODO
     }    
     
+    @FXML
+    private void singlePlayerClicked(MouseEvent event) {
+           System.out.println("Single Player Button Clicked!");
+    }
+
+    @FXML
+    private void multiPlayerClicked(MouseEvent event) {
+    }
+
 }

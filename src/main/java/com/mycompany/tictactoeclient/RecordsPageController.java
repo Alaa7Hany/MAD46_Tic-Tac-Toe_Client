@@ -4,17 +4,26 @@
  */
 package com.mycompany.tictactoeclient;
 
+
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
+import javafx.scene.control.Button;
 /**
  * FXML Controller class
  *
- * @author hp
+ * @author emada
  */
 public class RecordsPageController implements Initializable {
 
+
+    @FXML
+    private Button backButton;
+    @FXML
+    private Button rewatchButton;
     /**
      * Initializes the controller class.
      */
@@ -23,4 +32,12 @@ public class RecordsPageController implements Initializable {
         // TODO
     }    
     
+    @FXML
+    private void moveBack(ActionEvent event) {
+    }
+
+    @FXML
+    private void rewatch(ActionEvent event) {
+    }
+
 }

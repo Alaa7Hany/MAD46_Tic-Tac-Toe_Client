@@ -6,7 +6,11 @@ package com.mycompany.tictactoeclient;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 
 /**
  * FXML Controller class
@@ -15,6 +19,15 @@ import javafx.fxml.Initializable;
  */
 public class LevelsPageController implements Initializable {
 
+    @FXML
+    private ImageView back;
+    @FXML
+    private StackPane easyButton;
+    @FXML
+    private StackPane mediumButton;
+    @FXML
+    private StackPane hardButton;
+
     /**
      * Initializes the controller class.
      */
@@ -22,5 +35,21 @@ public class LevelsPageController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
+
+    @FXML
+    private void backClicked(MouseEvent event) {
+    }
+
+    @FXML
+    private void easyClicked(MouseEvent event) {
+    }
+
+    @FXML
+    private void mediumClicked(MouseEvent event) {
+    }
+
+    @FXML
+    private void hardClicked(MouseEvent event) {
+    }
     
 }

@@ -8,7 +8,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.image.ImageView;
+
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 /**
@@ -16,13 +16,13 @@ import javafx.scene.layout.StackPane;
  *
  * @author siam
  */
-public class StartPageController implements Initializable {
+public class LocalOrOnlineDialogController implements Initializable {
 
 
     @FXML
     private StackPane singlePlayerButton;
     @FXML
-    private StackPane multiPalyerButton;
+    private StackPane singlePlayerButton1;
     /**
      * Initializes the controller class.
      */
@@ -33,13 +33,6 @@ public class StartPageController implements Initializable {
     
     @FXML
     private void singlePlayerClicked(MouseEvent event) {
-           System.out.println("Single Player Button Clicked!");
     }
-
-    @FXML
-    private void multiPlayerClicked(MouseEvent event) {
-    }
-
-
 
 }

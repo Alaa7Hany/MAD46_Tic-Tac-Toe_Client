@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="175.0" prefWidth="270.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-image: #D7EA91;" styleClass="background" stylesheets="@../../../styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.LocalOrOnlineDialogController">
+   <children>
+      <StackPane fx:id="singlePlayerButton" maxWidth="168.0" onMouseClicked="#singlePlayerClicked" prefHeight="44.0" prefWidth="168.0" styleClass="button" stylesheets="@../../../styles.css">
+         <children>
+            <HBox prefHeight="32.0" prefWidth="152.0" StackPane.alignment="CENTER">
+               <children>
+                  <ImageView fitHeight="26.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/local.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="30.0" right="15.0" top="2.0" />
+                     </HBox.margin>
+                  </ImageView>
+                  <Text fill="#d7ea91" strokeType="OUTSIDE" strokeWidth="0.0" text="Local" wrappingWidth="51.884765625">
+                     <font>
+                        <Font name="System Bold Italic" size="19.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets bottom="2.0" right="20.0" top="2.0" />
+                     </HBox.margin>
+                  </Text>
+               </children>
+            </HBox>
+         </children>
+         <VBox.margin>
+            <Insets left="2.0" top="2.0" />
+         </VBox.margin>
+      </StackPane>
+      <StackPane fx:id="singlePlayerButton1" maxWidth="100.0" onMouseClicked="#singlePlayerClicked" prefHeight="35.0" prefWidth="200.0" styleClass="button" stylesheets="@../../../styles.css">
+         <children>
+            <HBox prefHeight="32.0" prefWidth="148.0" StackPane.alignment="CENTER">
+               <children>
+                  <ImageView fitHeight="26.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/online.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="30.0" right="10.0" top="2.0" />
+                     </HBox.margin>
+                  </ImageView>
+                  <Text fill="#d7ea91" strokeType="OUTSIDE" strokeWidth="0.0" text="Online" wrappingWidth="62.884765625">
+                     <font>
+                        <Font name="System Bold Italic" size="19.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets bottom="2.0" right="20.0" top="2.0" />
+                     </HBox.margin>
+                  </Text>
+               </children>
+            </HBox>
+         </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </StackPane>
+   </children>
+</VBox>

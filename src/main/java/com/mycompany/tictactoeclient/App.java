@@ -27,6 +27,7 @@ public class App extends Application {
         stage.setScene(scene);
         stage.setResizable(false);
         scene.setFill(Color.TRANSPARENT);
+        Sounds.playSound();
         stage.show();
     }
 

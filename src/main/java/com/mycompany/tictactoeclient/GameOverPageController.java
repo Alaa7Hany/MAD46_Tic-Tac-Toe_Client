@@ -40,6 +40,7 @@ public class GameOverPageController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        Sounds.pauseSound();
         String path = getClass()
                 .getResource("/videos/winnerVideo.mp4")
                 .toExternalForm();
@@ -63,7 +64,8 @@ public class GameOverPageController implements Initializable {
     @FXML
     private void reMatchAction(ActionEvent event) {
         try {
-            // TODO: return to the game page with the same parameters
+            Sounds.resumeSound();
+            
             App.setRoot(Pages.gamePage, (GamePageController controller)->{
                 controller.initGame(GameMode.ONLINE, Difficulty.MEDIUM);
             });
@@ -75,6 +77,7 @@ public class GameOverPageController implements Initializable {
     @FXML
     private void exitAction(ActionEvent event) {
         try {
+            Sounds.resumeSound();
             App.setRoot(Pages.startPage);
         } catch (IOException ex) {
             System.getLogger(GameOverPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);

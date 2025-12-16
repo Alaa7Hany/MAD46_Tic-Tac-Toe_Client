@@ -13,14 +13,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<StackPane fx:id="rootStackPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.StartPageController">
+<StackPane fx:id="rootStackPane" prefHeight="577.0" prefWidth="615.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.StartPageController">
    <children>
       <BorderPane prefHeight="480.0" prefWidth="640.0" styleClass="background" stylesheets="@../../../styles.css">
          <bottom>
             <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="BOTTOM_CENTER">
                <children>
-                  <Button mnemonicParsing="false" style="-fx-background-color: D9D9D9; -fx-border-radius: 15; -fx-background-radius: 15;" text="Records" textAlignment="CENTER">
+                  <Button mnemonicParsing="false" onAction="#onRecordsClicked" style="-fx-background-color: D9D9D9; -fx-border-radius: 15; -fx-background-radius: 15;" text="Records" textAlignment="CENTER">
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font>
@@ -48,7 +47,7 @@
             </ImageView>
          </top>
          <center>
-            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <VBox alignment="TOP_CENTER" BorderPane.alignment="CENTER">
                <children>
                   <StackPane fx:id="singlePlayerButton" maxWidth="100.0" onMouseClicked="#singlePlayerClicked" prefHeight="35.0" prefWidth="200.0" styleClass="button" stylesheets="@../../../styles.css">
                      <children>
@@ -108,10 +107,10 @@
             </VBox>
          </center>
          <left>
-            <Region prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+            <Region BorderPane.alignment="CENTER" />
          </left>
          <right>
-            <Region prefHeight="252.0" prefWidth="151.0" BorderPane.alignment="CENTER" />
+            <Region prefHeight="0.0" BorderPane.alignment="CENTER" />
          </right>
          <padding>
             <Insets top="20.0" />

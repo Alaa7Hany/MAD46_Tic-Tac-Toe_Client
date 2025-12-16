@@ -25,3 +25,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-border-width: 2;
 
 }
+
+.x-label {
+    -fx-text-fill: red;
+    -fx-font-weight: bold;
+    -fx-font-size: 50px;
+}
+
+.o-label {
+    -fx-text-fill: #d7ea91;
+    -fx-font-weight: bold;
+    -fx-font-size: 50px;
+}

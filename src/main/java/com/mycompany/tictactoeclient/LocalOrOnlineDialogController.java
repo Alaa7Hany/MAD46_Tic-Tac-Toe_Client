@@ -4,6 +4,7 @@
  */
 package com.mycompany.tictactoeclient;
 
+import com.mycompany.tictactoeclient.enums.GameMode;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -32,8 +33,9 @@ public class LocalOrOnlineDialogController implements Initializable {
         
         try {
             App.setRoot(Pages.gamePage, (GamePageController controller) -> {
-                controller.initGame("Local", null);
-            }); } catch (IOException ex) {
+                controller.initGame(GameMode.LOCAL_MULTIPLAYER, null);
+            }); 
+        } catch (IOException ex) {
             System.getLogger(LocalOrOnlineDialogController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
         

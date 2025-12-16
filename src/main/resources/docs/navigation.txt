@@ -1,5 +1,5 @@
 private void singlePlayerClicked(MouseEvent event) throws IOException {
-     App.setRoot("gamePage", (GamePageController controller) -> {
-        controller.initGame("Local", null);
-    });
+    App.setRoot(Pages.gamePage, (GamePageController controller) -> {
+        controller.initGame(GameMode.LOCAL_MULTIPLAYER, null);
+    }); 
 }

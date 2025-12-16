@@ -14,11 +14,11 @@ import java.io.IOException;
 public class App extends Application {
 
     private static Scene scene;
-    private final static String rootPage = Pages.startPage;
+    private final static String rootPage = Pages.gameOverPage;
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML(rootPage), 640, 480);
+        scene = new Scene(loadFXML(rootPage),  600, 400);
         stage.setScene(scene);
         stage.show();
     }

@@ -4,13 +4,13 @@
  */
 package com.mycompany.tictactoeclient;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
 /**
  * FXML Controller class
  *
@@ -19,10 +19,6 @@ import javafx.scene.layout.StackPane;
 public class LocalOrOnlineDialogController implements Initializable {
 
 
-    @FXML
-    private StackPane singlePlayerButton;
-    @FXML
-    private StackPane singlePlayerButton1;
     /**
      * Initializes the controller class.
      */
@@ -32,7 +28,19 @@ public class LocalOrOnlineDialogController implements Initializable {
     }    
     
     @FXML
-    private void singlePlayerClicked(MouseEvent event) {
+    private void localClicked(MouseEvent event) {
+        
+        try {
+            App.setRoot(Pages.gamePage, (GamePageController controller) -> {
+                controller.initGame("Local", null);
+            }); } catch (IOException ex) {
+            System.getLogger(LocalOrOnlineDialogController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        
+    }
+
+    @FXML
+    private void onlineClicked(MouseEvent event) {
     }
 
 }

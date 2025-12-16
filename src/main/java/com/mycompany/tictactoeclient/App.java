@@ -7,6 +7,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.function.Consumer;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 
 /**
  * JavaFX App
@@ -18,14 +22,46 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML(rootPage), 640, 480);
+        scene = new Scene(loadFXML(rootPage), 615, 577);
         stage.setScene(scene);
         stage.setResizable(false);
+        scene.setFill(Color.TRANSPARENT);
         stage.show();
     }
 
     static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
+    }
+    
+    // We will use this method to pass parameters between pages using lambda 
+    static <T> void setRoot(String fxml, Consumer<T> controllerAction) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
+        Parent root = fxmlLoader.load();
+
+        T controller = fxmlLoader.getController();
+
+        controllerAction.accept(controller);
+        
+        scene.setRoot(root);
+    }
+    
+    
+    // To show an fxml dialog with a dim background
+    public static void showMyFxmlDialog(StackPane rootStackPane, String dialogPath) throws IOException {
+        
+        Parent dialog = loadFXML(dialogPath);
+        
+        Region dimmer = new Region();
+        dimmer.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
+        
+        dimmer.prefWidthProperty().bind(rootStackPane.widthProperty());
+        dimmer.prefHeightProperty().bind(rootStackPane.heightProperty());
+
+        rootStackPane.getChildren().addAll(dimmer, dialog);
+
+        dimmer.setOnMouseClicked(event -> {
+            rootStackPane.getChildren().removeAll(dimmer, dialog);
+        });
     }
 
     private static Parent loadFXML(String fxml) throws IOException {

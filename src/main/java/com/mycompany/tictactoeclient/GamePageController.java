@@ -27,6 +27,9 @@ public class GamePageController implements Initializable {
     private Label playerOlbl;
     @FXML
     private Label playerOScore;
+    
+    private String gameMode; // e.g., "Single", "Local", "Online"
+    private String difficulty; // e.g., "Easy", "Medium", "Hard" (only for Single)
 
     /**
      * Initializes the controller class.
@@ -34,6 +37,21 @@ public class GamePageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+    }
+
+    public void initGame(String mode, String difficulty) {
+        this.gameMode = mode;
+        this.difficulty = difficulty;
+        
+        System.out.println("Starting game: " + mode + ", Difficulty: " + difficulty);
+        
+        // Setup logic based on mode (e.g., enable AI if "Single")
+        if ("Single".equals(mode)) {
+            // Setup AI player
+            playerOlbl.setText("Computer");
+        } else {
+            // Setup multiplayer names
+        }
     }    
 
     @FXML

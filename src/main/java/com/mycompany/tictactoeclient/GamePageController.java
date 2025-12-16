@@ -6,6 +6,7 @@ package com.mycompany.tictactoeclient;
 
 import com.mycompany.tictactoeclient.enums.Difficulty;
 import com.mycompany.tictactoeclient.enums.GameMode;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -35,6 +36,8 @@ public class GamePageController implements Initializable {
     
     private GameMode currentGameMode;
     private Difficulty currentDifficulty;
+    @FXML
+    private StackPane rootStackPane;
   
     
     /**
@@ -94,6 +97,18 @@ public class GamePageController implements Initializable {
 
     @FXML
     private void onRecord(ActionEvent event) {
+        try {
+            ////////////////////////////////
+            ////
+            /// For now i will use it to try out the gamoOverPage
+            ///
+            ///////////////////////
+            ///
+            App.showMyFxmlDialog(rootStackPane, Pages.gameOverPage, false);
+            
+        } catch (IOException ex) {
+            System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
 
     @FXML

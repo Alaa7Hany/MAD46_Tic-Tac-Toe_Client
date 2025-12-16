@@ -55,7 +55,7 @@ public class StartPageController implements Initializable {
     @FXML
     private void multiPlayerClicked(MouseEvent event) {
         try {   
-            App.showMyFxmlDialog(rootStackPane, Pages.localOrOnlineDialog);
+            App.showMyFxmlDialog(rootStackPane, Pages.localOrOnlineDialog, false);
         } catch (IOException ex) {
             System.getLogger(StartPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }

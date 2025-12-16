@@ -23,6 +23,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML(rootPage), 615, 577);
+
         stage.setScene(scene);
         stage.setResizable(false);
         scene.setFill(Color.TRANSPARENT);
@@ -47,7 +48,7 @@ public class App extends Application {
     
     
     // To show an fxml dialog with a dim background
-    public static void showMyFxmlDialog(StackPane rootStackPane, String dialogPath) throws IOException {
+    public static void showMyFxmlDialog(StackPane rootStackPane, String dialogPath, boolean isCloseable) throws IOException {
         
         Parent dialog = loadFXML(dialogPath);
         
@@ -58,10 +59,11 @@ public class App extends Application {
         dimmer.prefHeightProperty().bind(rootStackPane.heightProperty());
 
         rootStackPane.getChildren().addAll(dimmer, dialog);
-
-        dimmer.setOnMouseClicked(event -> {
-            rootStackPane.getChildren().removeAll(dimmer, dialog);
-        });
+        if(isCloseable){ 
+            dimmer.setOnMouseClicked(event -> {
+                rootStackPane.getChildren().removeAll(dimmer, dialog);
+            });
+        }
     }
 
     private static Parent loadFXML(String fxml) throws IOException {

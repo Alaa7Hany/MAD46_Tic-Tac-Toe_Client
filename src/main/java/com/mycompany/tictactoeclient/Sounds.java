@@ -30,24 +30,24 @@ public class Sounds {
     
     
     public static void playSound(){
-//        Media media =  new Media(Sounds.class.getResource("/sounds/background.mp3").toExternalForm());
-//        backgroundSound = new MediaPlayer(media);
-//        
-//        backgroundSound.setCycleCount(MediaPlayer.INDEFINITE);
-//        backgroundSound.setVolume(0.4);
-//        backgroundSound.play();
+        Media media =  new Media(Sounds.class.getResource("/sounds/background.mp3").toExternalForm());
+        backgroundSound = new MediaPlayer(media);
+        
+        backgroundSound.setCycleCount(MediaPlayer.INDEFINITE);
+        backgroundSound.setVolume(0.4);
+        backgroundSound.play();
     }
     
     public static void pauseSound(){
-//        if(backgroundSound != null){
-//            backgroundSound.pause();
-//        }
+        if(backgroundSound != null){
+            backgroundSound.pause();
+        }
     }
     
     public static void resumeSound(){
-//        if(backgroundSound != null){
-//            backgroundSound.play();
-//        }
+        if(backgroundSound != null){
+            backgroundSound.play();
+        }
     }
     
     public static void playUiClick() {
@@ -55,11 +55,11 @@ public class Sounds {
     }
 
     public static void playXOClick() {
-       // XO_CLICK.play();
+        XO_CLICK.play();
     }
 
     public static void playTypeClick() {
-   //     TYPE_CLICK.play();
+        TYPE_CLICK.play();
     }
     
 }

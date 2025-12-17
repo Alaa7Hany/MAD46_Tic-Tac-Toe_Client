@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +21,8 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 
 /**
  * FXML Controller class
@@ -42,9 +45,8 @@ public class GamePageController implements Initializable {
     @FXML
     private StackPane rootStackPane;
 
-   
     private boolean playerXRole;
-
+    private boolean isSingle;
     List<Integer> xSteps = new ArrayList<>();
     List<Integer> ySteps = new ArrayList<>();
     List<StepsToWin> stepsToWin = Arrays.asList(
@@ -57,14 +59,16 @@ public class GamePageController implements Initializable {
             new StepsToWin(1, 5, 9),
             new StepsToWin(3, 5, 7)
     );
+    @FXML
+    private GridPane gameBoard;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-       playerXScore.setText("0");
-       playerOScore.setText("0");
+        playerXScore.setText("0");
+        playerOScore.setText("0");
         playerXRole = true;
     }
 
@@ -78,10 +82,10 @@ public class GamePageController implements Initializable {
 
         // Setup logic based on mode (e.g., enable AI if "Single")
         if (mode == GameMode.SINGLE_PLAYER) {
-            // Setup AI player
+            isSingle = true;
             playerOlbl.setText("Computer");
         } else {
-            // Setup multiplayer names
+            isSingle = false;
         }
     }
 
@@ -129,15 +133,18 @@ public class GamePageController implements Initializable {
                     System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
             }
-             
+
         }
 
         playerXRole = !playerXRole;
+        if (isSingle) {
+            performComputerMove();
+        }
     }
 
     @FXML
     private void onRecord(ActionEvent event) {
-      
+
     }
 
     @FXML
@@ -171,4 +178,58 @@ public class GamePageController implements Initializable {
         }
     }
 
+    private void performComputerMove() {
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+        pause.setOnFinished(e -> makeComputerMove());
+        pause.play();
+    }
+
+    private void makeComputerMove() {
+        List<Integer> availableCells = new ArrayList<>();
+        for (int i = 1; i <= 9; i++) {
+            if (!xSteps.contains(i) && !ySteps.contains(i)) {
+                availableCells.add(i);
+            }
+        }
+        if (availableCells.isEmpty()) {
+            return;
+        }
+        Random random = new Random();
+        int selectedCellNum = availableCells.get(random.nextInt(availableCells.size()));
+        int row = (selectedCellNum - 1) / 3;
+        int col = (selectedCellNum - 1) % 3;
+
+        for (javafx.scene.Node node : gameBoard.getChildren()) {
+
+            Integer nodeRow = GridPane.getRowIndex(node);
+            Integer nodeCol = GridPane.getColumnIndex(node);
+            int r = (nodeRow == null) ? 0 : nodeRow;
+            int c = (nodeCol == null) ? 0 : nodeCol;
+
+            if (r == row && c == col) {
+                StackPane targetCell = (StackPane) node;
+
+                Label lbl = new Label("O");
+                lbl.getStyleClass().add("o-label");
+                targetCell.getChildren().add(lbl);
+
+                Sounds.playXOClick();
+                ySteps.add(selectedCellNum);
+
+                if (checkWin(ySteps)) {
+
+                    try {
+                        App.showMyFxmlDialog(rootStackPane, Pages.gameOverOwinPage, false);
+                    } catch (IOException ex) {
+                        System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                    }
+
+                }
+
+                playerXRole = true;
+                break;
+            }
+
+        }
+    }
 }

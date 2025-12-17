@@ -12,39 +12,35 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-
 /**
  * FXML Controller class
  *
- * @author LAPTOP
+ * @author siam
  */
-public class GameOverPageController implements Initializable {
+public class GameOverNoWinPageController implements Initializable {
 
+
+    @FXML
+    private MediaView mediaView;
     @FXML
     private Button rematchBtn;
     @FXML
     private Button exitBtn;
-    
-     @FXML
-    private MediaView mediaView;
-
-    private MediaPlayer mediaPlayer;
-
     @FXML
     private ImageView playerWinImage;
-
-
     /**
      * Initializes the controller class.
      */
+        private MediaPlayer mediaPlayer;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Sounds.pauseSound();
+               Sounds.pauseSound();
         String path = getClass()
                 .getResource("/videos/winnerVideo.mp4")
                 .toExternalForm();
@@ -64,10 +60,10 @@ public class GameOverPageController implements Initializable {
             }
         });
     }    
-
-    @FXML
+    
+   @FXML
     private void reMatchAction(ActionEvent event) {
-        Sounds.playUiClick();
+             Sounds.playUiClick();
         try {
             Sounds.resumeSound();
             
@@ -81,7 +77,7 @@ public class GameOverPageController implements Initializable {
 
     @FXML
     private void exitAction(ActionEvent event) {
-        Sounds.playUiClick();
+          Sounds.playUiClick();
         try {
             Sounds.resumeSound();
             App.setRoot(Pages.startPage);
@@ -90,7 +86,5 @@ public class GameOverPageController implements Initializable {
         }
         
     }
-    
-    
-    
+
 }

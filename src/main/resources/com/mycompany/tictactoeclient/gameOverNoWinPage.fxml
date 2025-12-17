@@ -10,7 +10,7 @@
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #4426A9; -fx-border-color: #D7EA91; -fx-border-radius: 20; -fx-background-radius: 20;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.GameOverPageController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #4426A9; -fx-border-color: #D7EA91; -fx-border-radius: 20; -fx-background-radius: 20;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.GameOverNoWinPageController">
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-radius: 20; -fx-background-radius: 20;" styleClass="background" stylesheets="@../../../styles.css" BorderPane.alignment="CENTER">
          <children>
@@ -51,9 +51,9 @@
                   </ImageView>
                </graphic>
             </Button>
-            <ImageView fx:id="playerWinImage" fitHeight="150.0" fitWidth="200.0" layoutX="199.0" layoutY="67.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="playerWinImage" fitHeight="150.0" fitWidth="200.0" layoutX="208.0" layoutY="69.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../images/playerWins.png" />
+                  <Image url="@../../../images/NO_Winner.png" />
                </image>
             </ImageView>
          </children>

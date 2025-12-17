@@ -20,7 +20,7 @@
    <children>
       <AnchorPane id="AnchorPane" prefHeight="577.0" prefWidth="615.0" styleClass="background" stylesheets="@../../../styles.css">
          <children>
-            <GridPane alignment="CENTER" hgap="10.0" layoutX="128.0" layoutY="144.0" prefHeight="315.0" prefWidth="360.0" vgap="10.0">
+            <GridPane fx:id="gameBoard" alignment="CENTER" hgap="10.0" layoutX="128.0" layoutY="144.0" prefHeight="315.0" prefWidth="360.0" vgap="10.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -39,13 +39,6 @@
                </padding>
                <children>
                   <StackPane onMouseClicked="#onSelectCell" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: B3ACCA; -fx-border-color: #000000;" styleClass="xo-cell">
-                     <children>
-                        <Label text="X" textAlignment="CENTER" textFill="RED">
-                           <font>
-                              <Font name="System Bold" size="50.0" />
-                           </font>
-                        </Label>
-                     </children>
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -92,13 +85,6 @@
                      <effect>
                         <DropShadow />
                      </effect>
-                     <children>
-                        <Label text="O" textFill="#d7ea91">
-                           <font>
-                              <Font name="System Bold" size="50.0" />
-                           </font>
-                        </Label>
-                     </children>
                   </StackPane>
                   <StackPane onMouseClicked="#onSelectCell" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: B3ACCA; -fx-border-color: #000000;" styleClass="xo-cell" GridPane.rowIndex="2">
                      <cursor>

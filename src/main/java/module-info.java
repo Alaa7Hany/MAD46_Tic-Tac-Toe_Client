@@ -7,4 +7,5 @@ module com.mycompany.tictactoeclient {
     opens com.mycompany.tictactoeclient to javafx.fxml;
     exports com.mycompany.tictactoeclient;
     requires javafx.mediaEmpty;
+    requires com.mycompany.tictactoeshared;
 }

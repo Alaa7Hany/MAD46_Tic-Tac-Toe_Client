@@ -6,6 +6,8 @@ package com.mycompany.tictactoeclient;
 
 import com.mycompany.tictactoeclient.enums.Difficulty;
 import com.mycompany.tictactoeclient.enums.GameMode;
+import com.mycompany.tictactoeshared.LoginDTO;
+import com.mycompany.tictactoeshared.MoveDTO;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -49,7 +51,9 @@ public class StartPageController implements Initializable {
         System.out.println("Single Player Button Clicked!");
         App.setRoot("gamePage", (GamePageController controller) -> {
             controller.initGame(GameMode.SINGLE_PLAYER, Difficulty.EASY);
-        });     
+        });
+        
+        
     }
 
     @FXML
@@ -59,7 +63,7 @@ public class StartPageController implements Initializable {
         } catch (IOException ex) {
             System.getLogger(StartPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        
+       
         
     }
 

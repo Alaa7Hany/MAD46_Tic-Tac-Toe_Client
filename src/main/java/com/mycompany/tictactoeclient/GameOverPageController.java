@@ -33,6 +33,7 @@ public class GameOverPageController implements Initializable {
     private MediaView mediaView;
 
     private MediaPlayer mediaPlayer;
+    
 
 
     /**

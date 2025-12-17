@@ -39,13 +39,6 @@
                </padding>
                <children>
                   <StackPane onMouseClicked="#onSelectCell" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: B3ACCA; -fx-border-color: #000000;" styleClass="xo-cell">
-                     <children>
-                        <Label text="X" textAlignment="CENTER" textFill="RED">
-                           <font>
-                              <Font name="System Bold" size="50.0" />
-                           </font>
-                        </Label>
-                     </children>
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -92,13 +85,6 @@
                      <effect>
                         <DropShadow />
                      </effect>
-                     <children>
-                        <Label text="O" textFill="#d7ea91">
-                           <font>
-                              <Font name="System Bold" size="50.0" />
-                           </font>
-                        </Label>
-                     </children>
                   </StackPane>
                   <StackPane onMouseClicked="#onSelectCell" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: B3ACCA; -fx-border-color: #000000;" styleClass="xo-cell" GridPane.rowIndex="2">
                      <cursor>

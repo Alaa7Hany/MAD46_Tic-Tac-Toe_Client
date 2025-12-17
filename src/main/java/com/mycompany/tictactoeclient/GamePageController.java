@@ -135,7 +135,14 @@ public class GamePageController implements Initializable {
             }
 
         }
-
+    if (checkDraw()) {
+        try {
+            App.showMyFxmlDialog(rootStackPane, Pages.gameOverNoWinPage, false);
+            
+        } catch (IOException ex) {
+            System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }
         playerXRole = !playerXRole;
         if (isSingle) {
             performComputerMove();
@@ -225,11 +232,22 @@ public class GamePageController implements Initializable {
                     }
 
                 }
-
+  if (checkDraw()) {
+        try {
+            App.showMyFxmlDialog(rootStackPane, Pages.gameOverNoWinPage, false);
+            
+        } catch (IOException ex) {
+            System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }
                 playerXRole = true;
                 break;
             }
 
         }
     }
+    
+    private boolean checkDraw() {
+    return (xSteps.size() + ySteps.size()) == 9;
+}
 }

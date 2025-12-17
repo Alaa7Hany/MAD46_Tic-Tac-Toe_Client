@@ -20,4 +20,5 @@ public class Pages {
     public static final String gameOverOwinPage = "gameOverOWinPage"; 
     public static final String recordsPage = "recordsPage"; 
     public static final String localOrOnlineDialog = "localOrOnlineDialog"; 
+    public static final String gameOverNoWinPage = "gameOverNoWinPage"; 
 }

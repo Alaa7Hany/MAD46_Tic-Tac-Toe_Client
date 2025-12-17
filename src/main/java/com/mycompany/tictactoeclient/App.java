@@ -28,6 +28,14 @@ public class App extends Application {
         stage.setResizable(false);
         scene.setFill(Color.TRANSPARENT);
         Sounds.playSound();
+        
+        scene.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, event -> {
+        if (!event.isPrimaryButtonDown()) return;   //  left mouse button only
+        javafx.scene.Node node = (javafx.scene.Node) event.getTarget();
+        if (node.getStyleClass().contains("xo-cell")) return;
+        Sounds.playUiClick();
+        });
+        
         stage.show();
     }
 

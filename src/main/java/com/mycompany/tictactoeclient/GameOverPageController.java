@@ -63,6 +63,7 @@ public class GameOverPageController implements Initializable {
 
     @FXML
     private void reMatchAction(ActionEvent event) {
+        Sounds.playUiClick();
         try {
             Sounds.resumeSound();
             
@@ -76,6 +77,7 @@ public class GameOverPageController implements Initializable {
 
     @FXML
     private void exitAction(ActionEvent event) {
+        Sounds.playUiClick();
         try {
             Sounds.resumeSound();
             App.setRoot(Pages.startPage);

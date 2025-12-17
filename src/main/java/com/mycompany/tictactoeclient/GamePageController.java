@@ -92,6 +92,8 @@ public class GamePageController implements Initializable {
         
         // add the X or O to the screen
         clickedCell.getChildren().add(lbl);
+        
+        Sounds.playXOClick();
           
     }
 

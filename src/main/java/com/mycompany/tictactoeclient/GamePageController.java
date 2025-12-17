@@ -115,7 +115,7 @@ public class GamePageController implements Initializable {
             xSteps.add(cellNum);
             if (checkWin(xSteps)) {
                 try {
-                    App.showMyFxmlDialog(rootStackPane, Pages.gameOverPage, false);
+                    App.showMyFxmlDialog(rootStackPane, Pages.gameOverXwinPage, false);
                 } catch (IOException ex) {
                     System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
@@ -123,7 +123,11 @@ public class GamePageController implements Initializable {
         } else {
             ySteps.add(cellNum);
             if (checkWin(ySteps)) {
-                System.out.println("O wins!");
+                try {
+                    App.showMyFxmlDialog(rootStackPane, Pages.gameOverOwinPage, false);
+                } catch (IOException ex) {
+                    System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
             }
              
         }
@@ -133,18 +137,7 @@ public class GamePageController implements Initializable {
 
     @FXML
     private void onRecord(ActionEvent event) {
-        try {
-            ////////////////////////////////
-            ////
-            /// For now i will use it to try out the gamoOverPage
-            ///
-            ///////////////////////
-            ///
-            App.showMyFxmlDialog(rootStackPane, Pages.gameOverPage, false);
-
-        } catch (IOException ex) {
-            System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
+      
     }
 
     @FXML

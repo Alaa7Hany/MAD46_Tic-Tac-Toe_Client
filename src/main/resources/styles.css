@@ -37,3 +37,31 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-font-weight: bold;
     -fx-font-size: 50px;
 }
+
+.custom-scroll {
+    -fx-background-color: transparent;
+}
+
+.custom-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.custom-scroll .scroll-bar:vertical {
+    -fx-opacity: 0;
+    -fx-pref-width: 6;
+}
+
+.custom-scroll:hover .scroll-bar:vertical {
+    -fx-opacity: 1;
+}
+
+.custom-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(58, 29, 122,0.7);
+    -fx-background-radius: 10;
+}
+
+.custom-scroll .increment-button,
+.custom-scroll .decrement-button {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}

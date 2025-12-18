@@ -31,36 +31,46 @@ public class GameOverPageController implements Initializable {
     private Button rematchBtn;
     @FXML
     private Button exitBtn;
-
     @FXML
     private MediaView mediaView;
-
-    private MediaPlayer mediaPlayer;
-
     @FXML
     private Label title;
-    private GameResult gameResult;
 
-    /**
-     * Initializes the controller class.
-     */
+    private MediaPlayer mediaPlayer;
+    private GameResult gameResult;
+    private String path;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         Sounds.pauseSound();
-        String path = getClass()
-                .getResource("/videos/winnerVideo.mp4")
-                .toExternalForm();
+    }
+
+    public void initGameOver(GameResult _gameResult, boolean isLose) {
+        this.gameResult = _gameResult;
+
+       switch (gameResult) {
+            case NO_WIN:
+                title.setText("No Winner");
+                path = getVideoPath("no_win");
+                break;
+            case O_WIN:
+                title.setText("Player O Wins");
+                path = getVideoPath(isLose ? "loser" : "winner");
+                break;
+            case X_WIN:
+                title.setText("Player X Wins");
+                path = getVideoPath(isLose ? "loser" : "winner");
+                break;
+            default:
+                break;
+        }
 
         Media media = new Media(path);
         mediaPlayer = new MediaPlayer(media);
-
         mediaView.setMediaPlayer(mediaPlayer);
-
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         mediaPlayer.setAutoPlay(true);
 
-        // Stop the video when the dialog is removed from the screen
         mediaView.sceneProperty().addListener((observable, oldScene, newScene) -> {
             if (newScene == null && mediaPlayer != null) {
                 mediaPlayer.stop();
@@ -68,26 +78,12 @@ public class GameOverPageController implements Initializable {
         });
     }
 
-    public void initGameOver(GameResult _gameResult) {
-        this.gameResult = _gameResult;
-        if(gameResult ==GameResult.NO_WIN)
-        {
-        title.setText("No Winner");
-        }
-        else if(gameResult==GameResult.O_WIN){
-        title.setText("Player O Wins");
-        }
-        else if(gameResult==GameResult.X_WIN){
-        title.setText("Player X Wins");
-        }
-    }
-
     @FXML
     private void reMatchAction(ActionEvent event) {
         Sounds.playUiClick();
+        stopMediaPlayer();
         try {
             Sounds.resumeSound();
-
             App.setRoot(Pages.gamePage, (GamePageController controller) -> {
                 controller.initGame(GameMode.ONLINE, Difficulty.MEDIUM);
             });
@@ -99,13 +95,23 @@ public class GameOverPageController implements Initializable {
     @FXML
     private void exitAction(ActionEvent event) {
         Sounds.playUiClick();
+        stopMediaPlayer();
         try {
             Sounds.resumeSound();
             App.setRoot(Pages.startPage);
         } catch (IOException ex) {
             System.getLogger(GameOverPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-
     }
 
+    private String getVideoPath(String name) {
+        return getClass().getResource("/videos/" + name + ".mp4").toExternalForm();
+    }
+
+    private void stopMediaPlayer() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.dispose();
+        }
+    }
 }

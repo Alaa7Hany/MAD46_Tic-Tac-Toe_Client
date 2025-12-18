@@ -123,7 +123,8 @@ public class GamePageController implements Initializable {
             xSteps.add(cellNum);
             if (checkWin(xSteps)) {
                 try {
-                     showgameOverDialog(GameResult.X_WIN );
+                     showgameOverDialog(GameResult.X_WIN,false );
+                        return;
                 } catch (IOException ex) {
                     System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
@@ -132,7 +133,8 @@ public class GamePageController implements Initializable {
             ySteps.add(cellNum);
             if (checkWin(ySteps)) {
                 try {
-                     showgameOverDialog(GameResult.O_WIN );
+                     showgameOverDialog(GameResult.O_WIN,false );
+                        return;
                 } catch (IOException ex) {
                     System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
@@ -141,7 +143,8 @@ public class GamePageController implements Initializable {
         }
     if (checkDraw()) {
         try {
-            showgameOverDialog(GameResult.NO_WIN );
+            showgameOverDialog(GameResult.NO_WIN,false );
+               return;
             
         } catch (IOException ex) {
             System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -230,7 +233,8 @@ public class GamePageController implements Initializable {
                 if (checkWin(ySteps)) {
 
                     try {
-                         showgameOverDialog(GameResult.O_WIN );
+                         showgameOverDialog(GameResult.O_WIN ,true);
+                            return;
                     } catch (IOException ex) {
                         System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                     }
@@ -238,8 +242,8 @@ public class GamePageController implements Initializable {
                 }
   if (checkDraw()) {
         try {
-            showgameOverDialog(GameResult.NO_WIN );
-            
+            showgameOverDialog(GameResult.NO_WIN ,false);
+               return;
         } catch (IOException ex) {
             System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
@@ -255,13 +259,13 @@ public class GamePageController implements Initializable {
     return (xSteps.size() + ySteps.size()) == 9;
 }
     
- private void showgameOverDialog(GameResult _gameResult) throws IOException {
+ private void showgameOverDialog(GameResult _gameResult, boolean isLose) throws IOException {
 
     FXMLLoader loader = new FXMLLoader(getClass().getResource(Pages.gameOverPage + ".fxml"));
     Parent dialog = loader.load();
 
     GameOverPageController controller = loader.getController();
-    controller.initGameOver(_gameResult);
+    controller.initGameOver(_gameResult,isLose);
 
     Region dimmer = new Region();
     dimmer.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");

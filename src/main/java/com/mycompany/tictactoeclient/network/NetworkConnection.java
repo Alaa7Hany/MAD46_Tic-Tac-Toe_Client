@@ -55,9 +55,11 @@ public class NetworkConnection {
     }
     
     public void closeConnection() throws IOException{
-        socket.close();
-        out.close();
-        in.close();
+        if (in != null) in.close();
+        if (out != null) out.close();
+        if (socket != null && !socket.isClosed()) {
+            socket.close();
+        }
     }
     
 }

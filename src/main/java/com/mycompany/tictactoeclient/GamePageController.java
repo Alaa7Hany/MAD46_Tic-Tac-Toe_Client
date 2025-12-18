@@ -6,6 +6,7 @@ package com.mycompany.tictactoeclient;
 
 import com.mycompany.tictactoeclient.enums.Difficulty;
 import com.mycompany.tictactoeclient.enums.GameMode;
+import com.mycompany.tictactoeclient.enums.GameResult;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -22,6 +23,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.animation.PauseTransition;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.layout.Region;
 import javafx.util.Duration;
 
 /**
@@ -119,7 +123,7 @@ public class GamePageController implements Initializable {
             xSteps.add(cellNum);
             if (checkWin(xSteps)) {
                 try {
-                    App.showMyFxmlDialog(rootStackPane, Pages.gameOverXwinPage, false);
+                     showgameOverDialog(GameResult.X_WIN );
                 } catch (IOException ex) {
                     System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
@@ -128,7 +132,7 @@ public class GamePageController implements Initializable {
             ySteps.add(cellNum);
             if (checkWin(ySteps)) {
                 try {
-                    App.showMyFxmlDialog(rootStackPane, Pages.gameOverOwinPage, false);
+                     showgameOverDialog(GameResult.O_WIN );
                 } catch (IOException ex) {
                     System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
@@ -137,7 +141,7 @@ public class GamePageController implements Initializable {
         }
     if (checkDraw()) {
         try {
-            App.showMyFxmlDialog(rootStackPane, Pages.gameOverNoWinPage, false);
+            showgameOverDialog(GameResult.NO_WIN );
             
         } catch (IOException ex) {
             System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -226,7 +230,7 @@ public class GamePageController implements Initializable {
                 if (checkWin(ySteps)) {
 
                     try {
-                        App.showMyFxmlDialog(rootStackPane, Pages.gameOverOwinPage, false);
+                         showgameOverDialog(GameResult.O_WIN );
                     } catch (IOException ex) {
                         System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                     }
@@ -234,7 +238,7 @@ public class GamePageController implements Initializable {
                 }
   if (checkDraw()) {
         try {
-            App.showMyFxmlDialog(rootStackPane, Pages.gameOverNoWinPage, false);
+            showgameOverDialog(GameResult.NO_WIN );
             
         } catch (IOException ex) {
             System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -250,4 +254,24 @@ public class GamePageController implements Initializable {
     private boolean checkDraw() {
     return (xSteps.size() + ySteps.size()) == 9;
 }
+    
+ private void showgameOverDialog(GameResult _gameResult) throws IOException {
+
+    FXMLLoader loader = new FXMLLoader(getClass().getResource(Pages.gameOverPage + ".fxml"));
+    Parent dialog = loader.load();
+
+    GameOverPageController controller = loader.getController();
+    controller.initGameOver(_gameResult);
+
+    Region dimmer = new Region();
+    dimmer.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
+
+    dimmer.prefWidthProperty().bind(rootStackPane.widthProperty());
+    dimmer.prefHeightProperty().bind(rootStackPane.heightProperty());
+
+    rootStackPane.getChildren().addAll(dimmer, dialog);
+}
+
+
+
 }

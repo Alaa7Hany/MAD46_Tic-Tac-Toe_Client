@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -51,11 +52,11 @@
                   </ImageView>
                </graphic>
             </Button>
-            <ImageView fx:id="playerWinImage" fitHeight="150.0" fitWidth="200.0" layoutX="199.0" layoutY="67.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../images/playerWins.png" />
-               </image>
-            </ImageView>
+            <Label fx:id="title" alignment="CENTER" contentDisplay="CENTER" layoutX="156.0" layoutY="53.0" prefHeight="56.0" prefWidth="286.0" style="-fx-effect: dropshadow(gaussian, black, 30, 0.7, 0, 0);" text=" Winner" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="39.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </center>

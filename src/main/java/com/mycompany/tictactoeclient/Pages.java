@@ -20,5 +20,5 @@ public class Pages {
     public static final String recordsPage = "recordsPage"; 
     public static final String localOrOnlineDialog = "localOrOnlineDialog"; 
     public static final String loginPage = "loginPage"; 
-    public static final String signUpPage = "signUpPage"; 
+    public static final String signUpPage = "SignUpPage"; 
 }

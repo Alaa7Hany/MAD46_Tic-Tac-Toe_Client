@@ -1,5 +1,6 @@
 package com.mycompany.tictactoeclient;
 
+import com.mycompany.tictactoeclient.network.NetworkConnection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -79,6 +80,14 @@ public class App extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
     }
+
+    @Override
+    public void stop() throws Exception {
+        NetworkConnection.getConnection().closeConnection();
+        super.stop(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+    
+    
 
     public static void main(String[] args) {
         launch();

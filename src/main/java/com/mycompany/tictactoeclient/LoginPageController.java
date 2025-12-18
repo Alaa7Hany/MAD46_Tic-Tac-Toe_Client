@@ -5,8 +5,11 @@
 package com.mycompany.tictactoeclient;
 
 
+import com.mycompany.tictactoeclient.network.NetworkDAO;
+import com.mycompany.tictactoeshared.Response;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,6 +46,27 @@ public class LoginPageController implements Initializable {
     
     @FXML
     private void login(ActionEvent event) {
+        String username = userNameTextField.getText();
+        String password = passwordTextField.getText();
+        
+        
+        // new thread because we can't for response on the main thread
+        new Thread(() -> {
+            
+            // while waiting we should show like a circular progress indicator
+            
+           Response response = NetworkDAO.getInstance().login(username, password);
+           
+           Platform.runLater(() -> {
+               if(response.getStatus() == Response.Status.SUCCESS){
+                    System.out.println("Login Successful");                   
+                    // Navigation to Lobby
+               }else{
+                   System.out.println("Login Failed");
+                   // Maybe show error Message
+               }
+           });
+        }).start();
     }
 
     @FXML

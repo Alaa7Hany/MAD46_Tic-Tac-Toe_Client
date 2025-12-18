@@ -37,3 +37,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-font-weight: bold;
     -fx-font-size: 50px;
 }
+
+.textInput {
+    -fx-text-fill: #D7EA91;
+    -fx-prompt-text-fill: #B3ACCA;
+    -fx-font-weight: bold;
+}

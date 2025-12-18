@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
@@ -13,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="615.0" styleClass="background" stylesheets="@../../../styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="615.0" styleClass="background" stylesheets="@../../../styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.LoginPageController">
    <children>
       <ImageView fitHeight="54.0" fitWidth="207.0" layoutX="221.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -37,7 +38,7 @@
                               <Image url="@../../../images/person.png" />
                            </image>
                         </ImageView>
-                        <TextField fx:id="userNameTextField" prefHeight="31.0" prefWidth="154.0" promptText="Username" style="-fx-background-color: #2A1F59;">
+                        <TextField fx:id="userNameTextField" prefHeight="31.0" prefWidth="154.0" promptText="Username" style="-fx-background-color: #2A1F59;" styleClass="textInput">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
@@ -57,11 +58,10 @@
                               <Image url="@../../../images/lock.png" />
                            </image>
                         </ImageView>
-                        <TextField fx:id="passwordTextField" prefHeight="31.0" prefWidth="154.0" promptText="Password" style="-fx-background-color: #2A1F59;">
+                        <PasswordField fx:id="passwordTextField" promptText="Password" style="-fx-background-color: #2A1F59;" styleClass="textInput">
                            <font>
                               <Font name="System Bold" size="15.0" />
-                           </font>
-                        </TextField>
+                           </font></PasswordField>
                      </children>
                      <VBox.margin>
                         <Insets left="5.0" right="5.0" />

@@ -13,13 +13,14 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
+
 /**
  * JavaFX App
  */
 public class App extends Application {
 
     private static Scene scene;
-    private final static String rootPage = Pages.signUpPage;
+    private final static String rootPage = Pages.lobbyPage;
 
     @Override
     public void start(Stage stage) throws IOException {

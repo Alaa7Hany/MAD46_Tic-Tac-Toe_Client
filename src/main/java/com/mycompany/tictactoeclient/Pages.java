@@ -19,10 +19,13 @@ public class Pages {
     public static final String gameOverPage = "gameOverPage"; 
     public static final String recordsPage = "recordsPage"; 
     public static final String localOrOnlineDialog = "localOrOnlineDialog"; 
-    public static final String loginPage = "loginPage"; 
+     public static final String loginPage = "loginPage"; 
     public static final String signUpPage = "SignUpPage"; 
     public static final String waitingDialog = "waitingDialog"; 
     public static final String playerDetailsDialog = "playerDetailsDialog"; 
-    public static final String invitationDialog = "invitationDialog"; 
-    
+    public static final String invitationDialog = "invitationDialog";
+    public static final String gameOverNoWinPage = "gameOverNoWinPage"; 
+    public static final String PlayerComponent = "playerComponent";
+    public static final String lobbyPage = "LobbyPage";
+
 }

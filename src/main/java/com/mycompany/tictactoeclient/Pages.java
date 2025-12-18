@@ -22,4 +22,5 @@ public class Pages {
     public static final String localOrOnlineDialog = "localOrOnlineDialog"; 
     public static final String gameOverNoWinPage = "gameOverNoWinPage";
     public static final String loginPage = "loginPage"; 
+    public static final String signUpPage = "signUpPage"; 
 }

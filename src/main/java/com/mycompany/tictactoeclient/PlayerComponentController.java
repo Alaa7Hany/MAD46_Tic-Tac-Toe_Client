@@ -4,17 +4,14 @@
  */
 package com.mycompany.tictactoeclient;
 
-iimport javafx.event.ActionEvent;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-mport javafx.fxml.Initializable;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-
 import java.net.URL;
-
-import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.fxml.Initializable;
 
 /**
  * FXML Controller class
@@ -40,6 +37,10 @@ public class PlayerComponentController implements Initializable {
     
     @FXML
     private void viewProfile(ActionEvent event) {
+    }
+    
+    public void setData(String name){
+        playerName.setText(name);
     }
 
 }

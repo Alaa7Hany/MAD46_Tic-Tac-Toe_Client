@@ -21,4 +21,6 @@ public class Pages {
     public static final String recordsPage = "recordsPage"; 
     public static final String localOrOnlineDialog = "localOrOnlineDialog"; 
     public static final String gameOverNoWinPage = "gameOverNoWinPage"; 
+    public static final String PlayerComponent = "playerComponent";
+    public static final String lobbyPage = "LobbyPage";
 }

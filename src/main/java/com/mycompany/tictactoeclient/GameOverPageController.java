@@ -6,6 +6,7 @@ package com.mycompany.tictactoeclient;
 
 import com.mycompany.tictactoeclient.enums.Difficulty;
 import com.mycompany.tictactoeclient.enums.GameMode;
+import com.mycompany.tictactoeclient.enums.GameResult;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -13,6 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -29,49 +31,60 @@ public class GameOverPageController implements Initializable {
     private Button rematchBtn;
     @FXML
     private Button exitBtn;
-    
-     @FXML
+    @FXML
     private MediaView mediaView;
+    @FXML
+    private Label title;
 
     private MediaPlayer mediaPlayer;
+    private GameResult gameResult;
+    private String path;
 
-    @FXML
-    private ImageView playerWinImage;
-
-
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Sounds.pauseSound();
-        String path = getClass()
-                .getResource("/videos/winnerVideo.mp4")
-                .toExternalForm();
+    }
+
+    public void initGameOver(GameResult _gameResult, boolean isLose) {
+        this.gameResult = _gameResult;
+
+       switch (gameResult) {
+            case NO_WIN:
+                title.setText("No Winner");
+                path = getVideoPath("no_win");
+                break;
+            case O_WIN:
+                title.setText("Player O Wins");
+                path = getVideoPath(isLose ? "loser" : "winner");
+                break;
+            case X_WIN:
+                title.setText("Player X Wins");
+                path = getVideoPath(isLose ? "loser" : "winner");
+                break;
+            default:
+                break;
+        }
 
         Media media = new Media(path);
         mediaPlayer = new MediaPlayer(media);
-
         mediaView.setMediaPlayer(mediaPlayer);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.setAutoPlay(true);
 
-        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); 
-        mediaPlayer.setAutoPlay(true); 
-        
-        // Stop the video when the dialog is removed from the screen
         mediaView.sceneProperty().addListener((observable, oldScene, newScene) -> {
             if (newScene == null && mediaPlayer != null) {
                 mediaPlayer.stop();
             }
         });
-    }    
+    }
 
     @FXML
     private void reMatchAction(ActionEvent event) {
         Sounds.playUiClick();
+        stopMediaPlayer();
         try {
             Sounds.resumeSound();
-            
-            App.setRoot(Pages.gamePage, (GamePageController controller)->{
+            App.setRoot(Pages.gamePage, (GamePageController controller) -> {
                 controller.initGame(GameMode.ONLINE, Difficulty.MEDIUM);
             });
         } catch (IOException ex) {
@@ -82,15 +95,23 @@ public class GameOverPageController implements Initializable {
     @FXML
     private void exitAction(ActionEvent event) {
         Sounds.playUiClick();
+        stopMediaPlayer();
         try {
             Sounds.resumeSound();
             App.setRoot(Pages.startPage);
         } catch (IOException ex) {
             System.getLogger(GameOverPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        
     }
-    
-    
-    
+
+    private String getVideoPath(String name) {
+        return getClass().getResource("/videos/" + name + ".mp4").toExternalForm();
+    }
+
+    private void stopMediaPlayer() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.dispose();
+        }
+    }
 }

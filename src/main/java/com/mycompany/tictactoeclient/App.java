@@ -2,6 +2,7 @@ package com.mycompany.tictactoeclient;
 
 
 import com.mycompany.tictactoeshared.PlayerDTO;
+import com.mycompany.tictactoeclient.network.NetworkConnection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,7 +14,10 @@ import java.util.function.Consumer;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.Scanner;
 
 /**
  * JavaFX App
@@ -21,8 +25,8 @@ import javafx.scene.paint.Color;
 public class App extends Application {
 
     private static Scene scene;
-    private final static String rootPage = Pages.startPage;
 
+    private final static String rootPage = Pages.loginPage;
     @Override
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML(rootPage), 615, 577);
@@ -38,7 +42,7 @@ public class App extends Application {
         if (node.getStyleClass().contains("xo-cell")) return;
         Sounds.playUiClick();
         });
-        
+ 
         stage.show();
     }
 
@@ -83,8 +87,18 @@ public class App extends Application {
         return fxmlLoader.load();
     }
 
+    @Override
+    public void stop() throws Exception {
+        NetworkConnection.getConnection().closeConnection();
+        super.stop(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+    
+    
+
     public static void main(String[] args) {
+     
         launch();
+  
+    }
     }
 
-}

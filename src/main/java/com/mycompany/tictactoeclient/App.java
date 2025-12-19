@@ -12,7 +12,10 @@ import java.util.function.Consumer;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.Scanner;
 
 /**
  * JavaFX App
@@ -21,7 +24,9 @@ public class App extends Application {
 
     private static Scene scene;
     private final static String rootPage = Pages.lobbyPage;
-
+  private static Socket socket;
+    private static ObjectOutputStream output;
+    private static ObjectInputStream input;
     @Override
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML(rootPage), 615, 577);
@@ -37,10 +42,48 @@ public class App extends Application {
         if (node.getStyleClass().contains("xo-cell")) return;
         Sounds.playUiClick();
         });
-        
+ 
         stage.show();
+        startNetworkConnection();
     }
+ private void startNetworkConnection() {
+        new Thread(() -> {
+            try {
+                socket = new Socket("127.0.0.1", 5005);
+                System.out.println("Connected to server!");
+                
+                output = new ObjectOutputStream(socket.getOutputStream());
+                input = new ObjectInputStream(socket.getInputStream());
+                
+  
+                new Thread(() -> {
+                    try {
+                        while (true) {
+                            Object response = input.readObject();
+                            System.out.println("Server: " + response);
 
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Disconnected from server.");
+                    }
+                }).start();
+                
+ 
+                Scanner scanner = new Scanner(System.in);
+                while (true) {
+                    System.out.print("Enter message: ");
+                    String msg = scanner.nextLine();
+                    output.writeObject(msg);
+                    output.flush();
+                }
+                
+            } catch (Exception e) {
+                System.out.println("Failed to connect to server!");
+                e.printStackTrace();
+            }
+        }).start();
+    }
+    
     static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
     }
@@ -91,7 +134,9 @@ public class App extends Application {
     
 
     public static void main(String[] args) {
+     
         launch();
+  
+    }
     }
 
-}

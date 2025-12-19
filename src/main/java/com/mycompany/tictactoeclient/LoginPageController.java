@@ -6,6 +6,7 @@ package com.mycompany.tictactoeclient;
 
 
 import com.mycompany.tictactoeclient.network.NetworkDAO;
+import com.mycompany.tictactoeshared.PlayerDTO;
 import com.mycompany.tictactoeshared.Response;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -59,7 +60,10 @@ public class LoginPageController implements Initializable {
            
            Platform.runLater(() -> {
                if(response.getStatus() == Response.Status.SUCCESS){
-                    System.out.println("Login Successful");                   
+                    System.out.println("Login Successful");
+                    PlayerDTO player = (PlayerDTO) response.getData();
+                    String name = player.getUsername();
+                    System.out.println("Helloooooooooo"+name);
                     // Navigation to Lobby
                }else{
                    System.out.println("Login Failed");

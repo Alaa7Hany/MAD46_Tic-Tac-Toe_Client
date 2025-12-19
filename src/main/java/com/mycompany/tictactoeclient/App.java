@@ -1,5 +1,7 @@
 package com.mycompany.tictactoeclient;
 
+
+import com.mycompany.tictactoeshared.PlayerDTO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,7 +21,7 @@ import javafx.scene.paint.Color;
 public class App extends Application {
 
     private static Scene scene;
-    private final static String rootPage = Pages.lobbyPage;
+    private final static String rootPage = Pages.startPage;
 
     @Override
     public void start(Stage stage) throws IOException {

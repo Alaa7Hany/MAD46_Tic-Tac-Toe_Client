@@ -5,6 +5,7 @@
 package com.mycompany.tictactoeclient;
 
 import static com.mycompany.tictactoeclient.Pages.PlayerComponent;
+import com.mycompany.tictactoeshared.PlayerDTO;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -20,6 +21,8 @@ import javafx.scene.layout.VBox;
  * @author LAPTOP
  */
 public class LobbyPageController implements Initializable {
+    
+    private PlayerDTO currentPlayer;
 
 
     @FXML
@@ -56,5 +59,11 @@ public class LobbyPageController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public void setCurrentPlayer(PlayerDTO player){
+        this.currentPlayer=player;
+        myName.setText(player.getUsername());
+        score.setText(String.valueOf(player.getScore()));
     }
 }

@@ -4,6 +4,8 @@
  */
 package com.mycompany.tictactoeclient;
 
+import com.mycompany.tictactoeshared.PlayerDTO;
+import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -11,7 +13,11 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -19,7 +25,8 @@ import javafx.fxml.Initializable;
  * @author LAPTOP
  */
 public class PlayerComponentController implements Initializable {
-
+    
+    private PlayerDTO player;
 
     @FXML
     private Label playerName;
@@ -37,10 +44,18 @@ public class PlayerComponentController implements Initializable {
     
     @FXML
     private void viewProfile(ActionEvent event) {
+        LobbyPageController lobbyController =
+            (LobbyPageController)
+            challangeBtn.getScene()
+                        .getRoot()
+                        .getProperties()
+                        .get("controller");
+        lobbyController.openInvitationDialog(player);
     }
     
-    public void setData(String name){
-        playerName.setText(name);
+    public void setData(PlayerDTO player){
+        this.player = player;
+        playerName.setText(player.getUsername());
     }
 
 }

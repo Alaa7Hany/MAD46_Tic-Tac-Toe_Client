@@ -1,5 +1,7 @@
 package com.mycompany.tictactoeclient;
 
+
+import com.mycompany.tictactoeshared.PlayerDTO;
 import com.mycompany.tictactoeclient.network.NetworkConnection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +30,7 @@ public class App extends Application {
     private final static String rootPage = Pages.startPage;
     private MouseEvent mouseEvent;
     private Node node;
+
     @Override
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML(rootPage), 615, 577);

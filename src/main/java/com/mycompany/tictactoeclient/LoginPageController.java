@@ -8,16 +8,21 @@ package com.mycompany.tictactoeclient;
 import com.mycompany.tictactoeclient.network.NetworkDAO;
 import com.mycompany.tictactoeshared.PlayerDTO;
 import com.mycompany.tictactoeshared.Response;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 /**
  * FXML Controller class
  *
@@ -64,7 +69,22 @@ public class LoginPageController implements Initializable {
                     PlayerDTO player = (PlayerDTO) response.getData();
                     String name = player.getUsername();
                     System.out.println("Helloooooooooo"+name);
+                   
                     // Navigation to Lobby
+                    try {
+                        FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/mycompany/tictactoeclient/LobbyPage.fxml"));
+
+                    Parent root = loader.load();
+                    LobbyPageController controller = loader.getController();
+
+                    Stage stage = (Stage) loginButton.getScene().getWindow();
+                    stage.getScene().setRoot(root);
+                    controller.setCurrentPlayer(player);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                }else{
                    System.out.println("Login Failed");
                    // Maybe show error Message

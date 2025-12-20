@@ -6,12 +6,14 @@ package com.mycompany.tictactoeclient;
 
 import com.mycompany.tictactoeclient.network.NetworkDAO;
 import com.mycompany.tictactoeshared.Response;
+import com.mycompany.tictactoeshared.PlayerDTO;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 
 /**
  * FXML Controller class
@@ -19,6 +21,7 @@ import javafx.scene.control.Label;
  * @author hp
  */
 public class PlayerDetailsDialogController implements Initializable {
+    private PlayerDTO challengedPlayer;
 
     @FXML
     private Label nameLbl;
@@ -28,11 +31,15 @@ public class PlayerDetailsDialogController implements Initializable {
     private String currentUserName = "player1";  
     private String targetUserName = "player2";    
     private int targetScore = 51;    
+    @FXML
+    private BorderPane root;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        root.getProperties().put("controller", this);
         // TODO
     }    
 
@@ -54,4 +61,10 @@ public class PlayerDetailsDialogController implements Initializable {
         
     }
     
+    
+     public void setChallengedPlayer(PlayerDTO player) {
+        this.challengedPlayer = player;
+        nameLbl.setText(player.getUsername());
+        scoreLbl.setText(String.valueOf(player.getScore()));
+    }
 }

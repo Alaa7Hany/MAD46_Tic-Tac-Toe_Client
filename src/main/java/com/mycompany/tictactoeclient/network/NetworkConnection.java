@@ -52,14 +52,29 @@ public class NetworkConnection {
         return connection;
     }
     
-    public Response sendRequest(Request request){
+    public Response sendRequest(Request request) {
+        // Check if the output stream is initialized
+        // in case in initial connection when the server is down
+        if (out == null) {
+            connection = null; 
+            return new Response(Response.Status.FAILURE, "Server Not Available");
+        }
+
         try {
             out.writeObject(request);
             out.flush();
             Response response = (Response) in.readObject();
             return response;
         } catch (IOException | ClassNotFoundException ex) {
-            return new Response(Response.Status.FAILURE, "Conection Erro");
+            //  because when the server shuts we want to reset the connection to a new connection
+            try {
+                closeConnection();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // reset the connection
+            connection = null; 
+            return new Response(Response.Status.FAILURE, "Connection Error");
         }
     }
     

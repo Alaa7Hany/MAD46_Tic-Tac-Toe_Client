@@ -69,8 +69,8 @@ public class LoginPageController implements Initializable {
                     PlayerDTO player = (PlayerDTO) response.getData();
                     String name = player.getUsername();
                     System.out.println("Helloooooooooo"+name);
+                   
                     // Navigation to Lobby
-                    
                     try {
                         FXMLLoader loader = new FXMLLoader(
                             getClass().getResource("/com/mycompany/tictactoeclient/LobbyPage.fxml")

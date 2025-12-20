@@ -5,10 +5,14 @@
 package com.mycompany.tictactoeclient;
 
 import static com.mycompany.tictactoeclient.Pages.PlayerComponent;
+import com.mycompany.tictactoeclient.network.NetworkDAO;
 import com.mycompany.tictactoeshared.PlayerDTO;
+import com.mycompany.tictactoeshared.Response;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -36,14 +40,11 @@ public class LobbyPageController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        String [] players = {"Alaa", "Ibrahim", "Emad", "Menna","Alaa", "Ibrahim", "Emad", "Menna","Alaa", "Ibrahim", "Emad", "Menna"};
-        for(String name : players){
-            addPlayer(name);
-        }   
+        
     }    
     
     
-    private void addPlayer(String name) {
+    private void addPlayer(PlayerDTO player) {
         try {
             FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/com/mycompany/tictactoeclient/" + PlayerComponent + ".fxml")
@@ -52,7 +53,7 @@ public class LobbyPageController implements Initializable {
             AnchorPane playerComponent = loader.load();
 
             PlayerComponentController controller = loader.getController();
-            controller.setData(name);
+            controller.setData(player);
 
             playerContainer.getChildren().add(playerComponent);
 
@@ -65,5 +66,32 @@ public class LobbyPageController implements Initializable {
         this.currentPlayer=player;
         myName.setText(player.getUsername());
         score.setText(String.valueOf(player.getScore()));
+    }
+    
+    private void loadOnlinePlayers() {
+
+        new Thread(() -> {
+
+            Response response = NetworkDAO.getInstance().lobby();
+
+            if (response.getStatus() == Response.Status.SUCCESS) {
+
+                List<PlayerDTO> players =
+                    (List<PlayerDTO>) response.getData();
+
+                Platform.runLater(() -> {
+                    playerContainer.getChildren().clear();
+
+                    for (PlayerDTO p : players) {
+                        if (p.getUsername()
+                             .equals(currentPlayer.getUsername()))
+                            continue;
+
+                        addPlayer(p);
+                    }
+                });
+            }
+
+        }).start();
     }
 }

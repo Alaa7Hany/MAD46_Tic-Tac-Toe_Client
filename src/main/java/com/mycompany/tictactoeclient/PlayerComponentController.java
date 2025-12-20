@@ -4,6 +4,7 @@
  */
 package com.mycompany.tictactoeclient;
 
+import com.mycompany.tictactoeshared.PlayerDTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,7 +20,8 @@ import javafx.fxml.Initializable;
  * @author LAPTOP
  */
 public class PlayerComponentController implements Initializable {
-
+    
+    private PlayerDTO player;
 
     @FXML
     private Label playerName;
@@ -39,8 +41,9 @@ public class PlayerComponentController implements Initializable {
     private void viewProfile(ActionEvent event) {
     }
     
-    public void setData(String name){
-        playerName.setText(name);
+    public void setData(PlayerDTO player){
+        this.player = player;
+        playerName.setText(player.getUsername());
     }
 
 }

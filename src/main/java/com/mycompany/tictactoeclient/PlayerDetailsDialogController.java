@@ -4,6 +4,8 @@
  */
 package com.mycompany.tictactoeclient;
 
+import com.mycompany.tictactoeclient.network.NetworkDAO;
+import com.mycompany.tictactoeshared.Response;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -22,7 +24,9 @@ public class PlayerDetailsDialogController implements Initializable {
     private Label nameLbl;
     @FXML
     private Label scoreLbl;
-
+    
+    private String currentUserName = "player1";  
+    private String targetUserName = "player2";    
     /**
      * Initializes the controller class.
      */
@@ -37,6 +41,21 @@ public class PlayerDetailsDialogController implements Initializable {
 
     @FXML
     private void onInviteClicked(ActionEvent event) {
+        
+        Response response = NetworkDAO.getInstance()
+                .sendInvite(currentUserName, targetUserName);
+        
+        if (response == null) {
+        System.out.println("No response (connection error)");
+        return;
+        }
+
+        if (response.getStatus() == Response.Status.SUCCESS) {
+            System.out.println("Invite sent to " + targetUserName);
+        } else {
+            System.out.println("Failed to send invite");
+        }
+        
     }
     
 }

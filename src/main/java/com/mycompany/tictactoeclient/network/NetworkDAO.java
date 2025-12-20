@@ -4,6 +4,7 @@
  */
 package com.mycompany.tictactoeclient.network;
 
+import com.mycompany.tictactoeshared.InvitationDTO;
 import com.mycompany.tictactoeshared.LoginDTO;
 import com.mycompany.tictactoeshared.Request;
 import com.mycompany.tictactoeshared.RequestType;
@@ -33,6 +34,17 @@ public class NetworkDAO {
         Request request = new Request(RequestType.LOGIN, loginData);
         
         Response response = NetworkConnection.getConnection().sendRequest(request);
+        
+        return response;
+    }
+    
+    public Response sendInvite(String fromUser, String toUser) {
+        
+        InvitationDTO inviteDTo = new InvitationDTO(fromUser, toUser);
+        
+        Request request = new Request(RequestType.INVITE_PLAYER, inviteDTo);
+        
+        Response response= NetworkConnection.getConnection().sendRequest(request);
         
         return response;
     }

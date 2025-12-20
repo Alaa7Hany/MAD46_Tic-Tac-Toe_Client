@@ -12,6 +12,8 @@ import java.util.function.Consumer;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.Node;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -23,7 +25,9 @@ import java.util.Scanner;
 public class App extends Application {
 
     private static Scene scene;
-    private final static String rootPage = Pages.loginPage;
+    private final static String rootPage = Pages.startPage;
+    private MouseEvent mouseEvent;
+    private Node node;
     @Override
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML(rootPage), 615, 577);
@@ -33,9 +37,9 @@ public class App extends Application {
         scene.setFill(Color.TRANSPARENT);
         Sounds.playSound();
         
-        scene.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, event -> {
+        scene.addEventFilter(mouseEvent.MOUSE_PRESSED, event -> {
         if (!event.isPrimaryButtonDown()) return;   //  left mouse button only
-        javafx.scene.Node node = (javafx.scene.Node) event.getTarget();
+        node = (Node) event.getTarget();
         if (node.getStyleClass().contains("xo-cell")) return;
         Sounds.playUiClick();
         });

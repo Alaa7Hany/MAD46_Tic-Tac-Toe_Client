@@ -46,5 +46,14 @@ public class NetworkDAO {
         return response;
     }
 
+
     
+    public Response lobby(){
+        Request request = new Request(RequestType.GET_ONLINE_PLAYERS, null);
+        
+        Response response = NetworkConnection.getConnection().sendRequest(request);
+        return response;
+    }
+    
+  
 }

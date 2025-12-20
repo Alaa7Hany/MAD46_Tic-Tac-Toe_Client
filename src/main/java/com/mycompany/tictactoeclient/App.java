@@ -1,5 +1,7 @@
 package com.mycompany.tictactoeclient;
 
+
+import com.mycompany.tictactoeshared.PlayerDTO;
 import com.mycompany.tictactoeclient.network.NetworkConnection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -29,6 +31,7 @@ import javafx.util.Duration;
 public class App extends Application {
 
     private static Scene scene;
+
     private final static String rootPage = Pages.loginPage;
     @Override
     public void start(Stage stage) throws IOException {

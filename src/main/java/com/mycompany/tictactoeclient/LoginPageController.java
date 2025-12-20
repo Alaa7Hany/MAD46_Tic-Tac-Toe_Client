@@ -8,16 +8,21 @@ package com.mycompany.tictactoeclient;
 import com.mycompany.tictactoeclient.network.NetworkDAO;
 import com.mycompany.tictactoeshared.PlayerDTO;
 import com.mycompany.tictactoeshared.Response;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 /**
  * FXML Controller class
  *
@@ -34,6 +39,8 @@ public class LoginPageController implements Initializable {
     private Button loginButton;
     @FXML
     private Button signUpNav;
+    @FXML
+    private StackPane rootStackPane;
     /**
      * Initializes the controller class.
      */
@@ -50,31 +57,68 @@ public class LoginPageController implements Initializable {
         String username = userNameTextField.getText();
         String password = passwordTextField.getText();
         
-        
-        // new thread because we can't for response on the main thread
+        if(username.isEmpty() || password.isEmpty()){
+            Platform.runLater(()->{
+                App.showAlertMessage(rootStackPane, "Please fill your data", false);
+            });
+            return;
+        }
+            
+        // new thread because we can't wait for response on the main thread
         new Thread(() -> {
             
             // while waiting we should show like a circular progress indicator
+            App.addProgressIndicator(rootStackPane);
             
-           Response response = NetworkDAO.getInstance().login(username, password);
+            
+            Response response = NetworkDAO.getInstance().login(username, password);
            
-           Platform.runLater(() -> {
-               if(response.getStatus() == Response.Status.SUCCESS){
-                    System.out.println("Login Successful");
-                    PlayerDTO player = (PlayerDTO) response.getData();
-                    String name = player.getUsername();
-                    System.out.println("Helloooooooooo"+name);
-                    // Navigation to Lobby
-               }else{
-                   System.out.println("Login Failed");
-                   // Maybe show error Message
-               }
-           });
+            App.removeProgressIndicator(rootStackPane);
+            
+            
+            if(response.getStatus() == Response.Status.SUCCESS){
+                 System.out.println("#################### Login Successful");
+                 PlayerDTO player = (PlayerDTO) response.getData();
+                 String name = player.getUsername();
+                 System.out.println("######################### Helloooooooooo "+name);
+                 // Navigation to Lobby
+                 Platform.runLater(()->{
+                     App.showAlertMessage(rootStackPane, "Login Successful!", true);
+                 });
+                 
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                    System.getLogger(LoginPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
+                 
+                Platform.runLater(()->{
+                    try {
+                        // ############# Navigation to lobby
+                        App.setRoot(Pages.lobbyPage);
+                    } catch (IOException ex) {
+                        System.getLogger(LoginPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                    }
+                });
+            }else{
+                 System.out.println("Login Failed");
+                 Platform.runLater(()->{
+                     App.showAlertMessage(rootStackPane, "Login Failed!", false);
+                 });
+            }
+               
+           
         }).start();
     }
 
     @FXML
     private void navigateToSignUp(ActionEvent event) {
+        try {
+            App.setRoot(Pages.signUpPage);
+        } catch (IOException ex) {
+            System.getLogger(LoginPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        
     }
 
 }

@@ -14,99 +14,104 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="615.0" styleClass="background" stylesheets="@../../../styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.LoginPageController">
+<StackPane fx:id="rootStackPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.LoginPageController">
    <children>
-      <ImageView fitHeight="54.0" fitWidth="207.0" layoutX="221.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../images/LOGIN.png" />
-         </image>
-      </ImageView>
-      <StackPane layoutX="140.0" layoutY="116.0" prefHeight="380.0" prefWidth="335.0" style="-fx-border-color: D6F692; -fx-border-radius: 20; -fx-background-radius: 20; -fx-border-width: 2;">
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="615.0" styleClass="background" stylesheets="@../../../styles.css">
          <children>
-            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="375.0" spacing="10.0">
-               <padding>
-                  <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
-               </padding>
+            <ImageView fitHeight="54.0" fitWidth="207.0" layoutX="221.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/LOGIN.png" />
+               </image>
+            </ImageView>
+            <StackPane layoutX="140.0" layoutY="116.0" prefHeight="380.0" prefWidth="335.0" style="-fx-border-color: D6F692; -fx-border-radius: 20; -fx-background-radius: 20; -fx-border-width: 2;">
                <children>
-                  <HBox alignment="CENTER_LEFT" prefHeight="51.0" prefWidth="246.0" spacing="10.0" style="-fx-background-color: #2A1F59; -fx-border-color: #5A4DB2; -fx-background-radius: 100; -fx-border-width: 3; -fx-border-radius: 100;">
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="375.0" spacing="10.0">
                      <padding>
-                        <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
                      </padding>
                      <children>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../images/person.png" />
-                           </image>
-                        </ImageView>
-                        <TextField fx:id="userNameTextField" prefHeight="31.0" prefWidth="154.0" promptText="Username" style="-fx-background-color: #2A1F59;" styleClass="textInput">
-                           <font>
-                              <Font name="System Bold" size="15.0" />
-                           </font>
-                        </TextField>
-                     </children>
-                     <VBox.margin>
-                        <Insets left="5.0" right="5.0" />
-                     </VBox.margin>
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="51.0" prefWidth="251.0" spacing="10.0" style="-fx-background-color: #2A1F59; -fx-border-color: #5A4DB2; -fx-background-radius: 100; -fx-border-width: 3; -fx-border-radius: 100;">
-                     <padding>
-                        <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
-                     </padding>
-                     <children>
-                        <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../images/lock.png" />
-                           </image>
-                        </ImageView>
-                        <PasswordField fx:id="passwordTextField" promptText="Password" style="-fx-background-color: #2A1F59;" styleClass="textInput">
-                           <font>
-                              <Font name="System Bold" size="15.0" />
-                           </font></PasswordField>
-                     </children>
-                     <VBox.margin>
-                        <Insets left="5.0" right="5.0" />
-                     </VBox.margin>
-                  </HBox>
-                  <Button fx:id="loginButton" mnemonicParsing="false" onAction="#login" prefHeight="30.0" prefWidth="270.0" textAlignment="CENTER">
-                     <graphic>
-                        <HBox alignment="CENTER" prefHeight="22.0" prefWidth="250.0" spacing="2.0" style="-fx-background-radius: 100; -fx-border-width: 2; -fx-border-radius: 100;">
+                        <HBox alignment="CENTER_LEFT" prefHeight="51.0" prefWidth="246.0" spacing="10.0" style="-fx-background-color: #2A1F59; -fx-border-color: #5A4DB2; -fx-background-radius: 100; -fx-border-width: 3; -fx-border-radius: 100;">
+                           <padding>
+                              <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
+                           </padding>
                            <children>
-                              <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../../../images/how_to_reg.png" />
+                                    <Image url="@../../../images/person.png" />
                                  </image>
                               </ImageView>
-                              <Text fill="#d7ea91" strokeType="OUTSIDE" strokeWidth="0.0" text="LOGIN" wrappingWidth="83.583984375">
+                              <TextField fx:id="userNameTextField" prefHeight="31.0" prefWidth="154.0" promptText="Username" style="-fx-background-color: #2A1F59;" styleClass="textInput">
                                  <font>
-                                    <Font name="System Bold Italic" size="23.0" />
+                                    <Font name="System Bold" size="15.0" />
                                  </font>
-                              </Text>
+                              </TextField>
                            </children>
-                           <effect>
-                              <DropShadow />
-                           </effect>
+                           <VBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </VBox.margin>
                         </HBox>
-                     </graphic>
-                     <VBox.margin>
-                        <Insets top="10.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Button fx:id="signUpNav" mnemonicParsing="false" onAction="#navigateToSignUp" prefHeight="38.0" prefWidth="294.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="Don't have an account? Sign up" textFill="#ffff99">
-                     <VBox.margin>
-                        <Insets top="90.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font name="Fredoka SemiBold" size="16.0" />
-                     </font>
-                  </Button>
+                        <HBox alignment="CENTER_LEFT" prefHeight="51.0" prefWidth="251.0" spacing="10.0" style="-fx-background-color: #2A1F59; -fx-border-color: #5A4DB2; -fx-background-radius: 100; -fx-border-width: 3; -fx-border-radius: 100;">
+                           <padding>
+                              <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
+                           </padding>
+                           <children>
+                              <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../images/lock.png" />
+                                 </image>
+                              </ImageView>
+                              <PasswordField fx:id="passwordTextField" promptText="Password" style="-fx-background-color: #2A1F59;" styleClass="textInput">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </PasswordField>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <Button fx:id="loginButton" mnemonicParsing="false" onAction="#login" prefHeight="30.0" prefWidth="270.0" textAlignment="CENTER">
+                           <graphic>
+                              <HBox alignment="CENTER" prefHeight="22.0" prefWidth="250.0" spacing="2.0" style="-fx-background-radius: 100; -fx-border-width: 2; -fx-border-radius: 100;">
+                                 <children>
+                                    <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../images/how_to_reg.png" />
+                                       </image>
+                                    </ImageView>
+                                    <Text fill="#d7ea91" strokeType="OUTSIDE" strokeWidth="0.0" text="LOGIN" wrappingWidth="83.583984375">
+                                       <font>
+                                          <Font name="System Bold Italic" size="23.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                                 <effect>
+                                    <DropShadow />
+                                 </effect>
+                              </HBox>
+                           </graphic>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Button fx:id="signUpNav" mnemonicParsing="false" onAction="#navigateToSignUp" prefHeight="38.0" prefWidth="294.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="Don't have an account? Sign up" textFill="#ffff99">
+                           <VBox.margin>
+                              <Insets top="90.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Fredoka SemiBold" size="16.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </VBox>
                </children>
-            </VBox>
+            </StackPane>
+            <ImageView fitHeight="110.0" fitWidth="116.0" layoutX="494.0" layoutY="462.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/xo.png" />
+               </image>
+            </ImageView>
          </children>
-      </StackPane>
-      <ImageView fitHeight="110.0" fitWidth="116.0" layoutX="494.0" layoutY="462.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../images/xo.png" />
-         </image>
-      </ImageView>
+      </AnchorPane>
    </children>
-</AnchorPane>
+</StackPane>

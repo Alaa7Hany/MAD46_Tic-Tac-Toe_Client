@@ -73,3 +73,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-font-weight: bold;
 }
 
+.progress-indicator {
+    -fx-progress-color: #D7EA91;
+}
+
+.progress-indicator .percentage {
+    -fx-fill: #D7EA91;
+}
+

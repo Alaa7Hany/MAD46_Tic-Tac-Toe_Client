@@ -36,6 +36,17 @@ public class NetworkDAO {
         
         return response;
     }
+    public Response register(String username, String password){
+        LoginDTO loginData = new LoginDTO(username, password);
+        
+        Request request = new Request(RequestType.REGISTER, loginData);
+        
+        Response response = NetworkConnection.getConnection().sendRequest(request);
+        
+        return response;
+    }
+
+
     
     public Response lobby(){
         Request request = new Request(RequestType.GET_ONLINE_PLAYERS, null);

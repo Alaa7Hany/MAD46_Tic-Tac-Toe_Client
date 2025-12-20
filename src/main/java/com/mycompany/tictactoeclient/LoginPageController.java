@@ -73,18 +73,14 @@ public class LoginPageController implements Initializable {
                     // Navigation to Lobby
                     try {
                         FXMLLoader loader = new FXMLLoader(
-                            getClass().getResource("/com/mycompany/tictactoeclient/LobbyPage.fxml")
-                        );
+                    getClass().getResource("/com/mycompany/tictactoeclient/LobbyPage.fxml"));
 
-                        Parent root = loader.load();
+                    Parent root = loader.load();
+                    LobbyPageController controller = loader.getController();
 
-                        LobbyPageController controller = loader.getController();
-                        Stage stage = (Stage) loginButton.getScene().getWindow();
-                        stage.setScene(new Scene(root));
-                        stage.show();
-                        
-                        root.requestFocus();
-                        controller.setCurrentPlayer(player);
+                    Stage stage = (Stage) loginButton.getScene().getWindow();
+                    stage.getScene().setRoot(root);
+                    controller.setCurrentPlayer(player);
 
                     } catch (IOException e) {
                         e.printStackTrace();

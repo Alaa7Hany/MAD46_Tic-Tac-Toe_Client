@@ -18,6 +18,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 /**
  * FXML Controller class
@@ -35,11 +37,14 @@ public class LobbyPageController implements Initializable {
     private Label score;
     @FXML
     private VBox playerContainer;
+    @FXML
+    private StackPane rootStackPane;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        rootStackPane.getProperties().put("controller", this);
        
     }    
     
@@ -94,5 +99,28 @@ public class LobbyPageController implements Initializable {
             }
 
         }).start();
+    }
+    
+    public void openInvitationDialog(PlayerDTO player) {
+        try {
+            App.showMyFxmlDialog(
+                rootStackPane,
+                "/com/mycompany/tictactoeclient/playerDetailsDialog",
+                true
+            );
+
+            BorderPane dialog = (BorderPane)
+                    rootStackPane.getChildren()
+                    .get(rootStackPane.getChildren().size() - 1);
+
+            PlayerDetailsDialogController controller =
+                    (PlayerDetailsDialogController)
+                            dialog.getProperties().get("controller");
+
+            controller.setChallengedPlayer(player);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

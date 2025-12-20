@@ -38,9 +38,9 @@ public class NetworkDAO {
         return response;
     }
     
-    public Response sendInvite(String fromUser, String toUser) {
+    public Response sendInvite(String fromUser, String toUser, int opponantScore) {
         
-        InvitationDTO inviteDTo = new InvitationDTO(fromUser, toUser);
+        InvitationDTO inviteDTo = new InvitationDTO(fromUser, toUser, opponantScore);
         
         Request request = new Request(RequestType.INVITE_PLAYER, inviteDTo);
         

@@ -5,6 +5,8 @@
 package com.mycompany.tictactoeclient;
 
 import static com.mycompany.tictactoeclient.Pages.PlayerComponent;
+import com.mycompany.tictactoeclient.network.InvitationListener;
+import com.mycompany.tictactoeshared.InvitationDTO;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -14,12 +16,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.application.Platform;
 /**
  * FXML Controller class
  *
  * @author LAPTOP
  */
-public class LobbyPageController implements Initializable {
+public class LobbyPageController implements Initializable, InvitationListener {
 
 
     @FXML
@@ -28,6 +31,8 @@ public class LobbyPageController implements Initializable {
     private Label score;
     @FXML
     private VBox playerContainer;
+    
+    private Platform platform;
     /**
      * Initializes the controller class.
      */
@@ -57,4 +62,12 @@ public class LobbyPageController implements Initializable {
             e.printStackTrace();
         }
     }
+    
+    @Override
+    public void onInvitationReceived(InvitationDTO dto) {
+        platform.runLater(() -> {
+            //show dialog
+        });
+    }
+    
 }

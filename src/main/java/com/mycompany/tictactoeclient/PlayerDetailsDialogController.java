@@ -27,6 +27,7 @@ public class PlayerDetailsDialogController implements Initializable {
     
     private String currentUserName = "player1";  
     private String targetUserName = "player2";    
+    private int targetScore = 51;    
     /**
      * Initializes the controller class.
      */
@@ -43,13 +44,8 @@ public class PlayerDetailsDialogController implements Initializable {
     private void onInviteClicked(ActionEvent event) {
         
         Response response = NetworkDAO.getInstance()
-                .sendInvite(currentUserName, targetUserName);
+                .sendInvite(currentUserName, targetUserName,targetScore); // ths will fail cz there is no real data 
         
-        if (response == null) {
-        System.out.println("No response (connection error)");
-        return;
-        }
-
         if (response.getStatus() == Response.Status.SUCCESS) {
             System.out.println("Invite sent to " + targetUserName);
         } else {

@@ -4,6 +4,7 @@
  */
 package com.mycompany.tictactoeclient.network;
 
+import com.mycompany.tictactoeshared.InvitationDTO;
 import com.mycompany.tictactoeshared.Request;
 import com.mycompany.tictactoeshared.Response;
 import java.io.IOException;
@@ -23,12 +24,16 @@ public class NetworkConnection {
     private Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
+    private InvitationListener invitationListener;
     
     private NetworkConnection(){
         try {
             socket = new Socket(InetAddress.getLocalHost(), 5005);
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
+            
+            new Thread(this::listenLoop).start(); 
+              
         } catch (UnknownHostException ex) {
             System.getLogger(NetworkConnection.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         } catch (IOException ex) {
@@ -36,6 +41,10 @@ public class NetworkConnection {
         }
     }
     
+    public void setInvitationListener(InvitationListener listener) {
+        this.invitationListener = listener;
+    }
+
     // Singleton, only one instance of the class
     public static NetworkConnection getConnection(){
         if(connection == null)
@@ -51,6 +60,31 @@ public class NetworkConnection {
             return response;
         } catch (IOException | ClassNotFoundException ex) {
             return new Response(Response.Status.FAILURE, "Conection Erro");
+        }
+    }
+    
+    private void listenLoop() {
+        try {
+            while (true) {
+                Object obj = in.readObject();   
+                if (!(obj instanceof Response)) continue;
+
+                Response response = (Response) obj;
+
+                // Check if this is an invite (data is InvitationDTO)
+                if (response.getData() instanceof InvitationDTO) {
+                    InvitationDTO dto = (InvitationDTO) response.getData();
+                    if (invitationListener != null) {
+                        invitationListener.onInvitationReceived(dto);
+                    } else {
+                        System.out.println("Invitation from " + dto.getFromUsername());
+                    }
+                } else {
+                    System.out.println("Received async response: " + response.getData());
+                }
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Listener stopped: " + e.getMessage());
         }
     }
     

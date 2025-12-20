@@ -13,12 +13,12 @@
    <top>
       <AnchorPane prefHeight="204.0" prefWidth="615.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="131.0" fitWidth="133.0" layoutX="-2.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="131.0" fitWidth="133.0" layoutX="-2.0" mouseTransparent="true"  preserveRatio="true">
                <image>
                   <Image url="@../../../images/xo.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="175.0" fitWidth="228.0" layoutX="387.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="175.0" fitWidth="228.0" layoutX="387.0" mouseTransparent="true"  preserveRatio="true">
                <image>
                   <Image url="@../../../images/scoreRectangle.png" />
                </image>

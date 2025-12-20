@@ -40,7 +40,7 @@ public class LobbyPageController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+       
     }    
     
     
@@ -66,6 +66,7 @@ public class LobbyPageController implements Initializable {
         this.currentPlayer=player;
         myName.setText(player.getUsername());
         score.setText(String.valueOf(player.getScore()));
+        loadOnlinePlayers();
     }
     
     private void loadOnlinePlayers() {

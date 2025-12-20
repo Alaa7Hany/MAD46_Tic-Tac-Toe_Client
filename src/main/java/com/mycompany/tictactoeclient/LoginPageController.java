@@ -79,10 +79,12 @@ public class LoginPageController implements Initializable {
                         Parent root = loader.load();
 
                         LobbyPageController controller = loader.getController();
-                        controller.setCurrentPlayer(player);
                         Stage stage = (Stage) loginButton.getScene().getWindow();
                         stage.setScene(new Scene(root));
                         stage.show();
+                        
+                        root.requestFocus();
+                        controller.setCurrentPlayer(player);
 
                     } catch (IOException e) {
                         e.printStackTrace();

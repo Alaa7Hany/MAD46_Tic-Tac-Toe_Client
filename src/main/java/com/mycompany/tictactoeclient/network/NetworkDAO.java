@@ -56,8 +56,8 @@ public class NetworkDAO {
         return response;
     }
     
-      public void sendMove (int cellNo,String symbol,boolean win ,boolean draw){
-        MoveDTO moveData = new MoveDTO(cellNo, symbol,win,draw);
+      public void sendMove (String sessionId,int cellNo,String symbol,boolean win ,boolean draw){
+        MoveDTO moveData = new MoveDTO(sessionId,cellNo, symbol,win,draw);
         Request request = new Request(RequestType.MOVE, moveData);
         NetworkConnection.getConnection().sendMessage(request);
     }

@@ -5,6 +5,7 @@
 package com.mycompany.tictactoeclient.network;
 
 import com.mycompany.tictactoeshared.LoginDTO;
+import com.mycompany.tictactoeshared.MoveDTO;
 import com.mycompany.tictactoeshared.Request;
 import com.mycompany.tictactoeshared.RequestType;
 import com.mycompany.tictactoeshared.Response;
@@ -55,5 +56,11 @@ public class NetworkDAO {
         return response;
     }
     
-  
+      public void sendMove (int cellNo,String symbol,boolean win ,boolean draw){
+        MoveDTO moveData = new MoveDTO(cellNo, symbol,win,draw);
+        Request request = new Request(RequestType.MOVE, moveData);
+        NetworkConnection.getConnection().sendMessage(request);
+    }
+    
+
 }

@@ -4,6 +4,7 @@
  */
 package com.mycompany.tictactoeclient;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -48,6 +49,11 @@ public class SignUpPageController implements Initializable {
     
     @FXML
     void navigateToLogin(ActionEvent event) {
+        try {
+            App.setRoot(Pages.loginPage);
+        } catch (IOException ex) {
+            System.getLogger(LocalOrOnlineDialogController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
 
     }
 

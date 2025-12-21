@@ -95,6 +95,11 @@ public class LoginPageController implements Initializable {
 
     @FXML
     private void navigateToSignUp(ActionEvent event) {
+        try {
+            App.setRoot(Pages.signUpPage);
+        } catch (IOException ex) {
+            System.getLogger(LocalOrOnlineDialogController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
 
 }

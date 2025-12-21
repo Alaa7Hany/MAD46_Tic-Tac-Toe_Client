@@ -7,6 +7,7 @@ package com.mycompany.tictactoeclient;
 import com.mycompany.tictactoeclient.enums.Difficulty;
 import com.mycompany.tictactoeclient.enums.GameMode;
 import com.mycompany.tictactoeclient.enums.GameResult;
+import com.mycompany.tictactoeclient.network.NetworkConnection;
 import com.mycompany.tictactoeclient.network.NetworkDAO;
 import com.mycompany.tictactoeshared.MoveDTO;
 import com.mycompany.tictactoeshared.Request;
@@ -67,18 +68,8 @@ public class GamePageController implements Initializable {
     private boolean isOnline;
     private boolean boardLocked = false;
     private String sessionID;
-    List<Integer> xSteps = new ArrayList<>();
-    List<Integer> ySteps = new ArrayList<>();
-    List<StepsToWin> stepsToWin = Arrays.asList(
-            new StepsToWin(1, 2, 3),
-            new StepsToWin(4, 5, 6),
-            new StepsToWin(7, 8, 9),
-            new StepsToWin(1, 4, 7),
-            new StepsToWin(2, 5, 8),
-            new StepsToWin(3, 6, 9),
-            new StepsToWin(1, 5, 9),
-            new StepsToWin(3, 5, 7)
-    );
+    private List<Integer> xSteps = new ArrayList<>();
+    private List<Integer> ySteps = new ArrayList<>();
     @FXML
     private GridPane gameBoard;
 
@@ -122,7 +113,6 @@ public class GamePageController implements Initializable {
                 playerXRole = true;
             }
         }
-
     }
 
     @FXML
@@ -131,73 +121,32 @@ public class GamePageController implements Initializable {
             return;
         }
 
-        // get the cell that was clicked
         StackPane clickedCell = (StackPane) event.getSource();
 
-        // prevent modiying an already modified cell
         if (!clickedCell.getChildren().isEmpty()) {
             return;
         }
 
-        // get the number of the cell
         Integer rowIndex = GridPane.getRowIndex(clickedCell);
         Integer colIndex = GridPane.getColumnIndex(clickedCell);
-        int row = (rowIndex == null) ? 0 : rowIndex;
-        int col = (colIndex == null) ? 0 : colIndex;
-        int cellNum = getCellNum(row, col);
+        int row = GameHelper.getGridIndex(rowIndex);
+        int col = GameHelper.getGridIndex(colIndex);
+        int cellNum = GameHelper.getCellNum(row, col);
 
-        String playerLbl = playerXRole ? "X" : "O";
-        String playerLblStyle = playerXRole ? "x-label" : "o-label";
-        Label lbl = new Label(playerLbl);
-        lbl.getStyleClass().add(playerLblStyle);
-
-        // add the X or O to the screen
-        clickedCell.getChildren().add(lbl);
-
+        GameHelper.addMoveToCell(clickedCell, playerXRole);
+        
         Sounds.playXOClick();
+        
         if (isOnline) {
             lockBoard();
         }
-        if (playerXRole) {
-            xSteps.add(cellNum);
-            if (isOnline) {
-                NetworkDAO.getInstance().sendMove(sessionID, cellNum, "x", checkWin(xSteps), checkDraw());
-            }
-            if (checkWin(xSteps)) {
-                try {
-                    showgameOverDialog(GameResult.X_WIN, false);
-                    return;
-                } catch (IOException ex) {
-                    System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-                }
-            }
-        } else {
-            ySteps.add(cellNum);
-            if (isOnline) {
-                NetworkDAO.getInstance().sendMove(sessionID, cellNum, "o", checkWin(ySteps), checkDraw());
-            }
-            if (checkWin(ySteps)) {
-                try {
-                    showgameOverDialog(GameResult.O_WIN, false);
-                    return;
-                } catch (IOException ex) {
-                    System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-                }
-            }
 
-        }
-        if (checkDraw()) {
-            try {
-                showgameOverDialog(GameResult.NO_WIN, false);
-                return;
+        handlePlayerMove(cellNum);
 
-            } catch (IOException ex) {
-                System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            }
-        }
         if (!isOnline) {
             playerXRole = !playerXRole;
         }
+        
         if (isSingle) {
             lockBoard();
             performComputerMove();
@@ -213,33 +162,6 @@ public class GamePageController implements Initializable {
     private void onExit(ActionEvent event) {
     }
 
-    private int getCellNum(int row, int col) {
-        // return a number from 1 to 9
-        return (row * 3) + col + 1;
-    }
-
-    private boolean checkWin(List<Integer> steps) {
-        for (StepsToWin s : stepsToWin) {
-            if (steps.contains(s.step1)
-                    && steps.contains(s.step2)
-                    && steps.contains(s.step3)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public class StepsToWin {
-
-        int step1, step2, step3;
-
-        public StepsToWin(int step1, int step2, int step3) {
-            this.step1 = step1;
-            this.step2 = step2;
-            this.step3 = step3;
-        }
-    }
-
     private void performComputerMove() {
         PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
         pause.setOnFinished(e -> makeComputerMove());
@@ -247,65 +169,27 @@ public class GamePageController implements Initializable {
     }
 
     private void makeComputerMove() {
-        List<Integer> availableCells = new ArrayList<>();
-        for (int i = 1; i <= 9; i++) {
-            if (!xSteps.contains(i) && !ySteps.contains(i)) {
-                availableCells.add(i);
-            }
-        }
+        List<Integer> availableCells = GameHelper.getAvailableCells(xSteps, ySteps);
         if (availableCells.isEmpty()) {
             return;
         }
+        
         Random random = new Random();
         int selectedCellNum = availableCells.get(random.nextInt(availableCells.size()));
-        int row = (selectedCellNum - 1) / 3;
-        int col = (selectedCellNum - 1) % 3;
+        StackPane targetCell = GameHelper.findCellByNumber(gameBoard, selectedCellNum);
+        
+        if (targetCell != null) {
+            GameHelper.addMoveToCell(targetCell, false);
+            Sounds.playXOClick();
+            ySteps.add(selectedCellNum);
 
-        for (javafx.scene.Node node : gameBoard.getChildren()) {
-
-            Integer nodeRow = GridPane.getRowIndex(node);
-            Integer nodeCol = GridPane.getColumnIndex(node);
-            int r = (nodeRow == null) ? 0 : nodeRow;
-            int c = (nodeCol == null) ? 0 : nodeCol;
-
-            if (r == row && c == col) {
-                StackPane targetCell = (StackPane) node;
-
-                Label lbl = new Label("O");
-                lbl.getStyleClass().add("o-label");
-                targetCell.getChildren().add(lbl);
-
-                Sounds.playXOClick();
-                ySteps.add(selectedCellNum);
-
-                if (checkWin(ySteps)) {
-
-                    try {
-                        showgameOverDialog(GameResult.O_WIN, true);
-                        return;
-                    } catch (IOException ex) {
-                        System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-                    }
-
-                }
-                if (checkDraw()) {
-                    try {
-                        showgameOverDialog(GameResult.NO_WIN, false);
-                        return;
-                    } catch (IOException ex) {
-                        System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-                    }
-                }
-                playerXRole = true;
-                unlockBoard();
-                break;
+            if (handleGameEnd(ySteps, GameResult.O_WIN, true)) {
+                return;
             }
 
+            playerXRole = true;
+            unlockBoard();
         }
-    }
-
-    private boolean checkDraw() {
-        return (xSteps.size() + ySteps.size()) == 9;
     }
 
     private void lockBoard() {
@@ -316,34 +200,19 @@ public class GamePageController implements Initializable {
         boardLocked = false;
     }
 
-    private void showgameOverDialog(GameResult _gameResult, boolean isLose) throws IOException {
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(Pages.gameOverPage + ".fxml"));
-        Parent dialog = loader.load();
-
-        GameOverPageController controller = loader.getController();
-        controller.initGameOver(_gameResult, isLose);
-
-        Region dimmer = new Region();
-        dimmer.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
-
-        dimmer.prefWidthProperty().bind(rootStackPane.widthProperty());
-        dimmer.prefHeightProperty().bind(rootStackPane.heightProperty());
-
-        rootStackPane.getChildren().addAll(dimmer, dialog);
-    }
+  
 
     private void setupNetworkListener() {
         new Thread(() -> {
             try {
-                in = com.mycompany.tictactoeclient.network.NetworkConnection.getConnection().getInputStream();
+                in = NetworkConnection.getConnection().getInputStream();
                 if (in == null) {
                     System.out.println("Connection not established");
                     return;
                 }
 
                 while (true) {
-                    Object obj = in.readObject(); // wait any response
+                    Object obj = in.readObject();
                     if (obj instanceof Request) {
                         Request req = (Request) obj;
                         switch (req.getType()) {
@@ -363,7 +232,6 @@ public class GamePageController implements Initializable {
                         });
                     }
                 }
-
             } catch (IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
@@ -375,13 +243,12 @@ public class GamePageController implements Initializable {
         sessionID = data.sessionID;
         String symbol = data.symbol;
 
-        playerXRole = symbol.equals("x") ? true : false;
+        playerXRole = symbol.equals("x");
 
         if (playerXRole) {
             System.out.println("unlooc");
             unlockBoard();
         }
-
     }
 
     private void receiveMove(Object _data) {
@@ -390,55 +257,71 @@ public class GamePageController implements Initializable {
         String symbol = data.getSymbol();
         boolean win = data.isWin();
         boolean draw = data.isDraw();
+        
         Platform.runLater(() -> {
-            int row = (cellNo - 1) / 3;
-            int col = (cellNo - 1) % 3;
-
-            for (Node node : gameBoard.getChildren()) {
-
-                Integer nodeRow = GridPane.getRowIndex(node);
-                Integer nodeCol = GridPane.getColumnIndex(node);
-                int r = (nodeRow == null) ? 0 : nodeRow;
-                int c = (nodeCol == null) ? 0 : nodeCol;
-
-                if (r == row && c == col) {
-                    StackPane targetCell = (StackPane) node;
-
-                    Label lbl = new Label(symbol.toUpperCase());
-                    String playerLblStyle = symbol.equals("x") ? "x-label" : "o-label";
-                    lbl.getStyleClass().add(playerLblStyle);
-                    targetCell.getChildren().add(lbl);
-
-                     Sounds.playXOClick();
-                    if (symbol.equals("x")) {
-                        xSteps.add(cellNo);
-                    } else {
-                        ySteps.add(cellNo);
-                    }
-
-                    if (win) {
-                        try {
-                            GameResult result = symbol.equals("x") ? GameResult.X_WIN : GameResult.O_WIN;
-                            showgameOverDialog(result, true);
-                            return;
-                        } catch (IOException ex) {
-                            System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-                        }
-
-                    }
-                    if (draw) {
-                        try {
-                            showgameOverDialog(GameResult.NO_WIN, false);
-                            return;
-                        } catch (IOException ex) {
-                            System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-                        }
-                    }
-                    unlockBoard();
-                    break;
+            StackPane targetCell = GameHelper.findCellByNumber(gameBoard, cellNo);
+            
+            if (targetCell != null) {
+                boolean isXPlayer = symbol.equals("x");
+                GameHelper.addMoveToCell(targetCell, isXPlayer);
+                Sounds.playXOClick();
+                
+                if (isXPlayer) {
+                    xSteps.add(cellNo);
+                } else {
+                    ySteps.add(cellNo);
                 }
 
+                if (win) {
+                    GameResult result = isXPlayer ? GameResult.X_WIN : GameResult.O_WIN;
+                    showGameOverSafely(result, true);
+                    return;
+                }
+                
+                if (draw) {
+                    showGameOverSafely(GameResult.NO_WIN, false);
+                    return;
+                }
+                
+                unlockBoard();
             }
         });
+    }
+
+    private void handlePlayerMove(int cellNum) {
+        List<Integer> currentSteps = playerXRole ? xSteps : ySteps;
+        GameResult winResult = playerXRole ? GameResult.X_WIN : GameResult.O_WIN;
+        String symbol = playerXRole ? "x" : "o";
+        
+        currentSteps.add(cellNum);
+        
+        if (isOnline) {
+            NetworkDAO.getInstance().sendMove(sessionID, cellNum, symbol, 
+                    GameHelper.checkWin(currentSteps), GameHelper.checkDraw(xSteps, ySteps));
+        }
+        
+        handleGameEnd(currentSteps, winResult, false);
+    }
+
+    private boolean handleGameEnd(List<Integer> steps, GameResult winResult, boolean isLose) {
+        if (GameHelper.checkWin(steps)) {
+            showGameOverSafely(winResult, isLose);
+            return true;
+        }
+        
+        if (GameHelper.checkDraw(xSteps, ySteps)) {
+            showGameOverSafely(GameResult.NO_WIN, false);
+            return true;
+        }
+        
+        return false;
+    }
+
+    private void showGameOverSafely(GameResult result, boolean isLose) {
+        try {
+        GameHelper.showGameOverDialog(rootStackPane, result, isLose);
+        } catch (IOException ex) {
+            System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
 }

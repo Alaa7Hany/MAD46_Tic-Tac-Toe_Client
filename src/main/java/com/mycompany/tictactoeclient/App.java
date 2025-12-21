@@ -20,6 +20,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Scanner;
+import javafx.animation.FadeTransition;
+import javafx.application.Platform;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
+import javafx.util.Duration;
 
 /**
  * JavaFX App
@@ -27,7 +33,7 @@ import java.util.Scanner;
 public class App extends Application {
 
     private static Scene scene;
-    private final static String rootPage = Pages.startPage;
+    private final static String rootPage = Pages.lobbyPage;
     private MouseEvent mouseEvent;
     private Node node;
 
@@ -48,6 +54,64 @@ public class App extends Application {
         });
  
         stage.show();
+    }
+    
+    static void addProgressIndicator(StackPane sp){
+        Region dimmer = new Region();
+        dimmer.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
+
+        dimmer.prefWidthProperty().bind(sp.widthProperty());
+        dimmer.prefHeightProperty().bind(sp.heightProperty());
+
+        ProgressIndicator pi = new ProgressIndicator();
+
+        Platform.runLater(()->{
+            sp.getChildren().addAll(dimmer, pi);
+        });
+    }
+    
+    static void removeProgressIndicator(StackPane sp){
+        Platform.runLater(()->{
+            int size = sp.getChildren().size();
+            
+            if (size > 0) {
+                sp.getChildren().remove(size - 1); 
+            }
+            
+            size = sp.getChildren().size();
+            if (size > 0) {
+                sp.getChildren().remove(size - 1);
+            }
+        });
+    }
+    
+    static void showAlertMessage(StackPane sp, String message, boolean isSuccess) {
+        // 1. Create the label
+        Label toast = new Label(message);
+
+        // 2. Simple Styling (Green for success, Red for failure)
+        String bgColor = isSuccess ? "rgba(0, 128, 0, 0.7)" : "rgba(255, 0, 0, 0.7)";
+        toast.setStyle("-fx-background-color: " + bgColor + ";" +
+                       "-fx-text-fill: white;" +
+                       "-fx-font-weight: bold;" +
+                       "-fx-padding: 10px 20px;" +
+                       "-fx-background-radius: 20;");
+
+        // 3. Position it (Bottom Center looks best for toasts)
+        // Note: You can remove this to center it by default
+        StackPane.setAlignment(toast, Pos.BOTTOM_CENTER);
+        StackPane.setMargin(toast, new javafx.geometry.Insets(0, 0, 50, 0)); // 50px from bottom
+
+        // 4. Add to the provided StackPane
+        sp.getChildren().add(toast);
+
+        // 5. Animation: Wait 1.5s, then Fade Out, then Remove
+        FadeTransition fade = new FadeTransition(Duration.seconds(1.5), toast);
+        fade.setFromValue(1.0); // Fully visible
+        fade.setToValue(0.0);   // Transparent
+        fade.setDelay(Duration.seconds(1.5)); // Wait before fading
+        fade.setOnFinished(e -> sp.getChildren().remove(toast)); // Cleanup
+        fade.play();
     }
 
     static void setRoot(String fxml) throws IOException {
@@ -97,12 +161,11 @@ public class App extends Application {
         super.stop(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
     
-    
 
     public static void main(String[] args) {
      
         launch();
   
     }
-    }
+}
 

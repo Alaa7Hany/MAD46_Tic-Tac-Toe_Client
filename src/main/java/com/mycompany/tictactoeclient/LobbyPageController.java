@@ -6,6 +6,7 @@ package com.mycompany.tictactoeclient;
 
 import static com.mycompany.tictactoeclient.Pages.PlayerComponent;
 import com.mycompany.tictactoeclient.network.InvitationListener;
+import com.mycompany.tictactoeclient.network.NetworkConnection;
 import com.mycompany.tictactoeshared.InvitationDTO;
 import com.mycompany.tictactoeclient.network.NetworkDAO;
 import com.mycompany.tictactoeshared.PlayerDTO;
@@ -24,16 +25,18 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.application.Platform;
+import javafx.scene.Parent;
+import javafx.scene.control.Button;
 /**
  * FXML Controller class
  *
  * @author LAPTOP
  */
-public class LobbyPageController implements Initializable, InvitationListener {
+public class LobbyPageController implements Initializable, InvitationListener { // needs to receive player dto
 
     
     private PlayerDTO currentPlayer;
-
+    public static LobbyPageController instance;
 
     @FXML
     private Label myName;
@@ -41,6 +44,9 @@ public class LobbyPageController implements Initializable, InvitationListener {
     private Label score;
     @FXML
     private VBox playerContainer;
+    
+    @FXML
+    private Button sendInvite;
     
     private Platform platform;
     @FXML
@@ -51,6 +57,7 @@ public class LobbyPageController implements Initializable, InvitationListener {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         rootStackPane.getProperties().put("controller", this);
+        NetworkConnection.getConnection().setInvitationListener(this);
        
     }    
     
@@ -75,13 +82,37 @@ public class LobbyPageController implements Initializable, InvitationListener {
     
     @Override
     public void onInvitationReceived(InvitationDTO dto) {
-        platform.runLater(() -> {
-            //show dialog
+        Platform.runLater(() -> {
+            try {
+                // Open dialog
+                App.showMyFxmlDialog(
+                    rootStackPane,
+                    Pages.invitationDialog,
+                    true
+                );
+
+                // Get the dialog root
+                Parent dialogRoot = (Parent) rootStackPane.getChildren()
+                        .get(rootStackPane.getChildren().size() - 1);
+
+                // Controller is stored as property (same pattern you used)
+                InvitationDialogController controller =
+                    (InvitationDialogController) dialogRoot.getProperties()
+                                                           .get("controller");
+
+                // Pass data to dialog
+                controller.setInvitationData(dto);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
     
     public void setCurrentPlayer(PlayerDTO player){
-        this.currentPlayer=player;
+        // TEMPfot testing : force Emad as current player
+        this.currentPlayer = new PlayerDTO("Emad", 150, true);
+        //this.currentPlayer=player;
         myName.setText(player.getUsername());
         score.setText(String.valueOf(player.getScore()));
         loadOnlinePlayers();
@@ -114,6 +145,12 @@ public class LobbyPageController implements Initializable, InvitationListener {
         }).start();
     }
     
+     public void onInviteRejected() {
+        App.showAlertMessage(rootStackPane,
+                "Your invitation was rejected",
+                false);
+    }
+    
     public void openInvitationDialog(PlayerDTO player) {
         try {
             App.showMyFxmlDialog(
@@ -135,5 +172,38 @@ public class LobbyPageController implements Initializable, InvitationListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    @FXML
+    public void sendInvite(){
+        
+       /* try {
+            App.showMyFxmlDialog(rootStackPane, Pages.waitingDialog, false);
+
+            Parent dialogRoot = (Parent) rootStackPane.getChildren()
+                    .get(rootStackPane.getChildren().size() - 1);
+
+            WaitingDialogController waitingController =
+                (WaitingDialogController) dialogRoot.getProperties()
+                                                    .get("controller");
+
+            waitingController.setOpponentName("Hema");  // or selected player name
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
+        new Thread(() -> {
+            Response response = NetworkDAO.getInstance()
+                    .sendInvite("Emad", "Hema", 350);
+
+            Platform.runLater(() -> {
+                if (response.getStatus() == Response.Status.SUCCESS) {
+                    App.showAlertMessage(rootStackPane,
+                           "Invite sent from Emad to Hema", true);
+                } else {
+                    App.showAlertMessage(rootStackPane,
+                            "Failed to send invite", false);
+                }
+            });
+        }).start();
     }
 }

@@ -14,7 +14,9 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 
 /**
  * FXML Controller class
@@ -53,10 +55,10 @@ public class InvitationDialogController implements Initializable {
             );
             NetworkConnection.getConnection().sendRequest(request);
             
-            // close dialog here
-            
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            closeDialog();
         }
     }
 
@@ -69,9 +71,19 @@ public class InvitationDialogController implements Initializable {
         
             NetworkConnection.getConnection().sendRequest(request);
             
-        // close dialog here
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            closeDialog();
+        }
+    }
+    
+    private void closeDialog() {
+        StackPane stack = (StackPane) playerLbl.getScene().getRoot();
+        int size = stack.getChildren().size();
+        if (size >= 2) {
+            stack.getChildren().remove(size - 1);
+            stack.getChildren().remove(size - 2);
         }
     }
     

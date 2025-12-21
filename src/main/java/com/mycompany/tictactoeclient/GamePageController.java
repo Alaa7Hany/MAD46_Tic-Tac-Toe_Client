@@ -1,3 +1,5 @@
+
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
@@ -7,7 +9,17 @@ package com.mycompany.tictactoeclient;
 import com.mycompany.tictactoeclient.enums.Difficulty;
 import com.mycompany.tictactoeclient.enums.GameMode;
 import com.mycompany.tictactoeclient.enums.GameResult;
+import com.mycompany.tictactoeclient.network.NetworkDAO;
+import com.mycompany.tictactoeshared.MoveDTO;
+import com.mycompany.tictactoeshared.Request;
+import static com.mycompany.tictactoeshared.RequestType.MOVE;
+import com.mycompany.tictactoeshared.Response;
+import com.mycompany.tictactoeshared.StartGameDTO;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import static java.lang.System.in;
+import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +35,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.Region;
@@ -48,9 +61,14 @@ public class GamePageController implements Initializable {
     private Difficulty currentDifficulty;
     @FXML
     private StackPane rootStackPane;
-
+    private Socket socket;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
     private boolean playerXRole;
     private boolean isSingle;
+    private boolean isOnline;
+    private boolean boardLocked = false;
+
     List<Integer> xSteps = new ArrayList<>();
     List<Integer> ySteps = new ArrayList<>();
     List<StepsToWin> stepsToWin = Arrays.asList(
@@ -73,7 +91,12 @@ public class GamePageController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         playerXScore.setText("0");
         playerOScore.setText("0");
-        playerXRole = true;
+ 
+        //remove this  put now use it for test
+        isOnline = true;
+        isSingle = false;
+        lockBoard();
+        setupNetworkListener();
     }
 
     public void initGame(GameMode mode, Difficulty difficulty) {
@@ -84,17 +107,32 @@ public class GamePageController implements Initializable {
         // in online we will accept two player models to set their names
         System.out.println("Starting game: " + mode + ", Difficulty: " + difficulty);
 
-        // Setup logic based on mode (e.g., enable AI if "Single")
-        if (mode == GameMode.SINGLE_PLAYER) {
-            isSingle = true;
-            playerOlbl.setText("Computer");
-        } else {
+        if (mode == GameMode.ONLINE) {
+            isOnline = true;
             isSingle = false;
+            lockBoard();
+            setupNetworkListener();
+        } else {
+            if (mode == GameMode.SINGLE_PLAYER) {
+                isSingle = true;
+                isOnline = false;
+                playerXRole = true;
+                playerOlbl.setText("Computer");
+            } else {
+                isSingle = false;
+                isOnline = false;
+                playerXRole = true;
+            }
         }
+
     }
 
     @FXML
     private void onSelectCell(MouseEvent event) {
+        if (boardLocked) {
+            return;
+        }
+     
         // get the cell that was clicked
         StackPane clickedCell = (StackPane) event.getSource();
 
@@ -118,40 +156,50 @@ public class GamePageController implements Initializable {
         // add the X or O to the screen
         clickedCell.getChildren().add(lbl);
 
-        Sounds.playXOClick();
+        // Sounds.playXOClick();
+          if (isOnline) {
+           lockBoard();
+        }
         if (playerXRole) {
             xSteps.add(cellNum);
+            if (isOnline) {
+                  NetworkDAO.getInstance().sendMove(cellNum, "x", checkWin(xSteps), checkDraw());
+        }
             if (checkWin(xSteps)) {
                 try {
-                     showgameOverDialog(GameResult.X_WIN,false );
-                        return;
+                    showgameOverDialog(GameResult.X_WIN, false);
+                    return;
                 } catch (IOException ex) {
                     System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
             }
         } else {
             ySteps.add(cellNum);
+                   if (isOnline) {
+                  NetworkDAO.getInstance().sendMove(cellNum, "o", checkWin(ySteps), checkDraw());
+        }
             if (checkWin(ySteps)) {
                 try {
-                     showgameOverDialog(GameResult.O_WIN,false );
-                        return;
+                    showgameOverDialog(GameResult.O_WIN, false);
+                    return;
                 } catch (IOException ex) {
                     System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
             }
 
         }
-    if (checkDraw()) {
-        try {
-            showgameOverDialog(GameResult.NO_WIN,false );
-               return;
-            
-        } catch (IOException ex) {
-            System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        if (checkDraw()) {
+            try {
+                showgameOverDialog(GameResult.NO_WIN, false);
+                return;
+
+            } catch (IOException ex) {
+                System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
         }
-    }
-        playerXRole = !playerXRole;
+      if(!isOnline)  playerXRole = !playerXRole;
         if (isSingle) {
+            lockBoard();
             performComputerMove();
         }
     }
@@ -227,55 +275,170 @@ public class GamePageController implements Initializable {
                 lbl.getStyleClass().add("o-label");
                 targetCell.getChildren().add(lbl);
 
-                Sounds.playXOClick();
+                // Sounds.playXOClick();
                 ySteps.add(selectedCellNum);
 
                 if (checkWin(ySteps)) {
 
                     try {
-                         showgameOverDialog(GameResult.O_WIN ,true);
-                            return;
+                        showgameOverDialog(GameResult.O_WIN, true);
+                        return;
                     } catch (IOException ex) {
                         System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                     }
 
                 }
-  if (checkDraw()) {
-        try {
-            showgameOverDialog(GameResult.NO_WIN ,false);
-               return;
-        } catch (IOException ex) {
-            System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
-    }
+                if (checkDraw()) {
+                    try {
+                        showgameOverDialog(GameResult.NO_WIN, false);
+                        return;
+                    } catch (IOException ex) {
+                        System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                    }
+                }
                 playerXRole = true;
+                unlockBoard();
                 break;
             }
 
         }
     }
-    
+
     private boolean checkDraw() {
-    return (xSteps.size() + ySteps.size()) == 9;
-}
+        return (xSteps.size() + ySteps.size()) == 9;
+    }
+
+    private void lockBoard() {
+        boardLocked = true;
+    }
+
+    private void unlockBoard() {
+        boardLocked = false;
+    }
+
+    private void showgameOverDialog(GameResult _gameResult, boolean isLose) throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(Pages.gameOverPage + ".fxml"));
+        Parent dialog = loader.load();
+
+        GameOverPageController controller = loader.getController();
+        controller.initGameOver(_gameResult, isLose);
+
+        Region dimmer = new Region();
+        dimmer.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
+
+        dimmer.prefWidthProperty().bind(rootStackPane.widthProperty());
+        dimmer.prefHeightProperty().bind(rootStackPane.heightProperty());
+
+        rootStackPane.getChildren().addAll(dimmer, dialog);
+    }
+
+    private void setupNetworkListener() {
+        new Thread(() -> {
+            try {
+                in = com.mycompany.tictactoeclient.network.NetworkConnection.getConnection().getInputStream();
+                if (in == null) {
+                    System.out.println("Connection not established");
+                    return;
+                }
+
+                while (true) {
+                    Object obj = in.readObject(); // wait any response
+                    if (obj instanceof Request) {
+                        Request req = (Request) obj;
+                        switch (req.getType()) {
+                            case MOVE:
+                                 receiveMove(req.getData());
+                                break;
+                            case START_GAME:
+                                startOnlineGame(req.getData());
+                                break;
+                            default:
+                                break;
+                        }
+                        System.out.println("Received Response: " + req.getData().toString());
+
+                        Platform.runLater(() -> {
+
+                        });
+                    }
+                }
+
+            } catch (IOException | ClassNotFoundException ex) {
+                ex.printStackTrace();
+            }
+        }).start();
+    }
+
+    private void startOnlineGame(Object _data) {
+        StartGameDTO data = (StartGameDTO) _data;
+        String symbol = data.symbol;
+        playerXRole = symbol.equals("x") ? true : false;
+        if (playerXRole) {
+          System.out.println("unlooc");
+            unlockBoard();
+        }
+
+    }
     
- private void showgameOverDialog(GameResult _gameResult, boolean isLose) throws IOException {
+  
+   private void  receiveMove(Object _data){
+         MoveDTO data = (MoveDTO) _data;
+            int cellNo = data.getCellNo();
+            String symbol = data.getSymbol();
+            boolean win = data.isWin();
+            boolean draw = data.isDraw();
+       Platform.runLater(() -> {
+           int row = (cellNo - 1) / 3;
+           int col = (cellNo - 1) % 3;
 
-    FXMLLoader loader = new FXMLLoader(getClass().getResource(Pages.gameOverPage + ".fxml"));
-    Parent dialog = loader.load();
+           for (Node node : gameBoard.getChildren()) {
 
-    GameOverPageController controller = loader.getController();
-    controller.initGameOver(_gameResult,isLose);
+               Integer nodeRow = GridPane.getRowIndex(node);
+               Integer nodeCol = GridPane.getColumnIndex(node);
+               int r = (nodeRow == null) ? 0 : nodeRow;
+               int c = (nodeCol == null) ? 0 : nodeCol;
 
-    Region dimmer = new Region();
-    dimmer.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
+               if (r == row && c == col) {
+                   StackPane targetCell = (StackPane) node;
 
-    dimmer.prefWidthProperty().bind(rootStackPane.widthProperty());
-    dimmer.prefHeightProperty().bind(rootStackPane.heightProperty());
+                   Label lbl = new Label(symbol.toUpperCase());
+                   String playerLblStyle = symbol.equals("x") ? "x-label" : "o-label";
+                   lbl.getStyleClass().add(playerLblStyle);
+                   targetCell.getChildren().add(lbl);
 
-    rootStackPane.getChildren().addAll(dimmer, dialog);
+                   // Sounds.playXOClick();
+                   if (symbol.equals("x")) {
+                       xSteps.add(cellNo);
+                   } else {
+                       ySteps.add(cellNo);
+                   }
+
+                   if (win) {
+                       try {
+                           GameResult result = symbol.equals("x") ? GameResult.X_WIN : GameResult.O_WIN;
+                           showgameOverDialog(result, false);
+                           return;
+                       } catch (IOException ex) {
+                           System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                       }
+
+                   }
+                   if (draw) {
+                       try {
+                           showgameOverDialog(GameResult.NO_WIN, false);
+                           return;
+                       } catch (IOException ex) {
+                           System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                       }
+                   }
+                   unlockBoard();
+                   break;
+               }
+
+           }
+       });
+   }
 }
 
 
-
-}

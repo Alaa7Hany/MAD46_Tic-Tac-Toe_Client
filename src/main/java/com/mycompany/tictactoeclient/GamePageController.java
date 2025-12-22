@@ -12,32 +12,25 @@ import com.mycompany.tictactoeclient.network.NetworkDAO;
 import com.mycompany.tictactoeshared.MoveDTO;
 import com.mycompany.tictactoeshared.Request;
 import static com.mycompany.tictactoeshared.RequestType.MOVE;
-import com.mycompany.tictactoeshared.Response;
 import com.mycompany.tictactoeshared.StartGameDTO;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import static java.lang.System.in;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.layout.Region;
 import javafx.util.Duration;
 
 /**
@@ -72,6 +65,8 @@ public class GamePageController implements Initializable {
     private List<Integer> ySteps = new ArrayList<>();
     @FXML
     private GridPane gameBoard;
+    @FXML
+    private Label roleLabel;
 
     /**
      * Initializes the controller class.
@@ -120,7 +115,7 @@ public class GamePageController implements Initializable {
         if (boardLocked) {
             return;
         }
-
+       
         StackPane clickedCell = (StackPane) event.getSource();
 
         if (!clickedCell.getChildren().isEmpty()) {
@@ -139,6 +134,7 @@ public class GamePageController implements Initializable {
         
         if (isOnline) {
             lockBoard();
+            roleLabel.setText("Watting...");
         }
 
         handlePlayerMove(cellNum);
@@ -245,10 +241,14 @@ public class GamePageController implements Initializable {
 
         playerXRole = symbol.equals("x");
 
+          Platform.runLater(() -> {
         if (playerXRole) {
-            System.out.println("unlooc");
+            roleLabel.setText("Your Role");
             unlockBoard();
+        } else {
+            roleLabel.setText("Waiting...");
         }
+    });
     }
 
     private void receiveMove(Object _data) {
@@ -282,7 +282,7 @@ public class GamePageController implements Initializable {
                     showGameOverSafely(GameResult.NO_WIN, false);
                     return;
                 }
-                
+                roleLabel.setText("Your Role");
                 unlockBoard();
             }
         });

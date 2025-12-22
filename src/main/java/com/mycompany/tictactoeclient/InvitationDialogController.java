@@ -52,11 +52,14 @@ public class InvitationDialogController implements Initializable {
     @FXML
     private void onReject(ActionEvent event) {
         try {
-            Request request = new Request(
-                RequestType.REJECT_INVITE, 
-                invitationDTO  
-            );
+            
+            new Thread(() -> {
+            Request request = new Request(RequestType.REJECT_INVITE,invitationDTO);
+            
             NetworkConnection.getConnection().sendRequest(request);
+            
+        }).start();
+           
             
         } catch (Exception e) {
             e.printStackTrace();

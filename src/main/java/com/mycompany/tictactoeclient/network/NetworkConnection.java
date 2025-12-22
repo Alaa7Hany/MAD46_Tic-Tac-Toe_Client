@@ -4,6 +4,9 @@
  */
 package com.mycompany.tictactoeclient.network;
 
+import com.mycompany.tictactoeclient.App;
+import com.mycompany.tictactoeclient.LobbyPageController;
+import com.mycompany.tictactoeclient.Pages;
 import com.mycompany.tictactoeshared.InvitationDTO;
 import com.mycompany.tictactoeshared.Request;
 import com.mycompany.tictactoeshared.Response;
@@ -13,6 +16,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import javafx.application.Platform;
 
 /**
  *
@@ -78,30 +82,57 @@ public class NetworkConnection {
         }
     }
     
-    private void listenLoop() {
+   private void listenLoop() {
         try {
             while (true) {
                 Object obj = in.readObject();   
-                if (!(obj instanceof Response)) continue;
+                if (!(obj instanceof Request)) continue;
 
-                Response response = (Response) obj;
+                Request request = (Request) obj;
 
-                // Check if this is an invite (data is InvitationDTO)
-                if (response.getData() instanceof InvitationDTO) {
-                    InvitationDTO dto = (InvitationDTO) response.getData();
-                    if (invitationListener != null) {
-                        invitationListener.onInvitationReceived(dto);
-                    } else {
-                        System.out.println("Invitation from " + dto.getFromUsername());
+                switch (request.getType()) {
+
+                    case INVITE_RECEIVED : {
+                        InvitationDTO dto =
+                            (InvitationDTO) request.getData();
+
+                        if (invitationListener != null) {
+                            Platform.runLater(() ->
+                                invitationListener.onInvitationReceived(dto)
+                            );
+                        }
+                         break;
                     }
-                } else {
-                    System.out.println("Received async response: " + response.getData());
+
+                    case INVITE_REJECTED : {
+                        Platform.runLater(() ->
+                            LobbyPageController.instance.onInviteRejected()
+                        );
+                         break;
+                    }
+
+                    case START_GAME : {
+                        Platform.runLater(() -> {
+                            try {
+                                App.navigateTo(Pages.gamePage);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                         break;
+                    }
+
+                    default : {
+                        System.out.println("Unhandled push: " + request.getType());
+                         break;
+                    }
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Listener stopped: " + e.getMessage());
+            System.out.println("Listener stopped");
         }
     }
+
     
     public void closeConnection() throws IOException{
         if (in != null) in.close();

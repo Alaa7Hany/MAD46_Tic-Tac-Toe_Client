@@ -154,6 +154,10 @@ public class App extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
     }
+    
+    public static void navigateTo(String fxml) throws IOException {
+        setRoot(fxml);   
+    }
 
     @Override
     public void stop() throws Exception {

@@ -27,6 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Region;
 /**
  * FXML Controller class
  *
@@ -37,6 +38,8 @@ public class LobbyPageController implements Initializable, InvitationListener { 
     
     private PlayerDTO currentPlayer;
     public static LobbyPageController instance;
+    private Parent waitingDialog;
+    private Region waitingDimmer;
 
     @FXML
     private Label myName;
@@ -51,11 +54,15 @@ public class LobbyPageController implements Initializable, InvitationListener { 
     private Platform platform;
     @FXML
     private StackPane rootStackPane;
+
+    
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        instance=this;
         rootStackPane.getProperties().put("controller", this);
         NetworkConnection.getConnection().setInvitationListener(this);
        
@@ -84,24 +91,12 @@ public class LobbyPageController implements Initializable, InvitationListener { 
     public void onInvitationReceived(InvitationDTO dto) {
         Platform.runLater(() -> {
             try {
-                // Open dialog
-                App.showMyFxmlDialog(
-                    rootStackPane,
-                    Pages.invitationDialog,
-                    true
-                );
-
-                // Get the dialog root
-                Parent dialogRoot = (Parent) rootStackPane.getChildren()
-                        .get(rootStackPane.getChildren().size() - 1);
-
-                // Controller is stored as property (same pattern you used)
-                InvitationDialogController controller =
-                    (InvitationDialogController) dialogRoot.getProperties()
-                                                           .get("controller");
-
-                // Pass data to dialog
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mycompany/tictactoeclient/invitationDialog.fxml"));
+                Parent dialogRoot = loader.load();
+                InvitationDialogController controller = loader.getController();
                 controller.setInvitationData(dto);
+
+                rootStackPane.getChildren().add(dialogRoot);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -145,7 +140,24 @@ public class LobbyPageController implements Initializable, InvitationListener { 
         }).start();
     }
     
+    public void closeWaitingDialog() {
+        
+        Platform.runLater(() -> {
+            if (waitingDialog != null) {
+                rootStackPane.getChildren().remove(waitingDialog);
+                waitingDialog = null;
+            }
+            if (waitingDimmer != null) {
+                rootStackPane.getChildren().remove(waitingDimmer);
+                waitingDimmer = null;
+            }
+            System.out.println("WAITING DIALOG CLOSED!");
+        });
+    }
+
+    
      public void onInviteRejected() {
+        closeWaitingDialog();
         App.showAlertMessage(rootStackPane,
                 "Your invitation was rejected",
                 false);
@@ -173,37 +185,35 @@ public class LobbyPageController implements Initializable, InvitationListener { 
             e.printStackTrace();
         }
     }
+    
     @FXML
-    public void sendInvite(){
-        
-       /* try {
-            App.showMyFxmlDialog(rootStackPane, Pages.waitingDialog, false);
+    public void sendInvite() {
 
-            Parent dialogRoot = (Parent) rootStackPane.getChildren()
-                    .get(rootStackPane.getChildren().size() - 1);
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/mycompany/tictactoeclient/waitingDialog.fxml")
+                );
+                waitingDialog = loader.load();
 
-            WaitingDialogController waitingController =
-                (WaitingDialogController) dialogRoot.getProperties()
-                                                    .get("controller");
+                waitingDimmer = new Region();
+                waitingDimmer.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
+                waitingDimmer.prefWidthProperty().bind(rootStackPane.widthProperty());
+                waitingDimmer.prefHeightProperty().bind(rootStackPane.heightProperty());
 
-            waitingController.setOpponentName("Hema");  // or selected player name
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+                rootStackPane.getChildren().addAll(waitingDimmer, waitingDialog);
+                System.out.println("WAITING DIALOG SHOWN!");
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
 
         new Thread(() -> {
-            Response response = NetworkDAO.getInstance()
-                    .sendInvite("Emad", "Hema", 350);
-
-            Platform.runLater(() -> {
-                if (response.getStatus() == Response.Status.SUCCESS) {
-                    App.showAlertMessage(rootStackPane,
-                           "Invite sent from Emad to Hema", true);
-                } else {
-                    App.showAlertMessage(rootStackPane,
-                            "Failed to send invite", false);
-                }
-            });
+            NetworkDAO.getInstance().sendInvite("Emad", "Hema", 350);
         }).start();
     }
+
+    
+       
 }

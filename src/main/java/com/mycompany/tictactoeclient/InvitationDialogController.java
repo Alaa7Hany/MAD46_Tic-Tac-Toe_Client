@@ -9,8 +9,10 @@ import com.mycompany.tictactoeshared.InvitationDTO;
 import com.mycompany.tictactoeshared.Request;
 import com.mycompany.tictactoeshared.RequestType;
 import com.mycompany.tictactoeshared.Response;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -41,6 +43,7 @@ public class InvitationDialogController implements Initializable {
     }    
     
     public void setInvitationData(InvitationDTO dto) {
+        System.out.println("setInvitationData: " + dto);
         this.invitationDTO = dto;
         playerLbl.setText(dto.getFromUsername());
         scoreLbl.setText("Score: " + dto.getScore()); 
@@ -65,11 +68,21 @@ public class InvitationDialogController implements Initializable {
     @FXML
     private void onAccept(ActionEvent event) {
         try {
+            
         // Send accept request to server
         Request request = new Request(
                 RequestType.ACCEPT_INVITE,invitationDTO );
         
             NetworkConnection.getConnection().sendRequest(request);
+            
+             Platform.runLater(() -> {
+                try {
+                    App.navigateTo(Pages.gamePage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+             
             
         } catch (Exception e) {
             e.printStackTrace();

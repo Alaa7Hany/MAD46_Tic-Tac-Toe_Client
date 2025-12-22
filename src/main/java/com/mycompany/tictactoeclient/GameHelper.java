@@ -4,6 +4,8 @@
  */
 package com.mycompany.tictactoeclient;
 
+import com.mycompany.tictactoeclient.enums.Difficulty;
+import com.mycompany.tictactoeclient.enums.GameMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,13 +52,13 @@ public class GameHelper {
         }
         return false;
     }
-    public static boolean checkDraw(List<Integer> xSteps, List<Integer> ySteps) {
-        return (xSteps.size() + ySteps.size()) == 9;
+    public static boolean checkDraw(List<Integer> xSteps, List<Integer> oSteps) {
+        return (xSteps.size() + oSteps.size()) == 9;
     }
-    public static List<Integer> getAvailableCells(List<Integer> xSteps, List<Integer> ySteps) {
+    public static List<Integer> getAvailableCells(List<Integer> xSteps, List<Integer> oSteps) {
         List<Integer> availableCells = new ArrayList<>();
         for (int i = 1; i <= 9; i++) {
-            if (!xSteps.contains(i) && !ySteps.contains(i)) {
+            if (!xSteps.contains(i) && !oSteps.contains(i)) {
                 availableCells.add(i);
             }
         }
@@ -84,12 +86,12 @@ public class GameHelper {
         lbl.getStyleClass().add(playerLblStyle);
         cell.getChildren().add(lbl);
     }
-    public static void showGameOverDialog(StackPane rootStackPane, GameResult _gameResult, boolean isLose) throws java.io.IOException {
+    public static void showGameOverDialog(StackPane rootStackPane,GameMode mode, Difficulty difficulty, GameResult _gameResult, boolean isLose,int xScore,int oScore) throws java.io.IOException {
         FXMLLoader loader = new FXMLLoader(GameHelper.class.getResource(Pages.gameOverPage + ".fxml"));
         Parent dialog = loader.load();
 
         GameOverPageController controller = loader.getController();
-        controller.initGameOver(_gameResult, isLose);
+        controller.initGameOver(mode,difficulty,_gameResult, isLose, xScore, oScore);
 
         Region dimmer = new Region();
         dimmer.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");

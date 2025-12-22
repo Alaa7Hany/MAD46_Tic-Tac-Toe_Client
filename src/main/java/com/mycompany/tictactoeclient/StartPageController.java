@@ -50,7 +50,7 @@ public class StartPageController implements Initializable {
     private void singlePlayerClicked(MouseEvent event) throws IOException {
         System.out.println("Single Player Button Clicked!");
         App.setRoot("gamePage", (GamePageController controller) -> {
-            controller.initGame(GameMode.SINGLE_PLAYER, Difficulty.EASY);
+            controller.initGame(GameMode.SINGLE_PLAYER, Difficulty.EASY,0,0);
         });
         
         

@@ -61,8 +61,9 @@ public class GamePageController implements Initializable {
     private boolean isOnline;
     private boolean boardLocked = false;
     private String sessionID;
+    private int oScore, xScore;
     private List<Integer> xSteps = new ArrayList<>();
-    private List<Integer> ySteps = new ArrayList<>();
+    private List<Integer> oSteps = new ArrayList<>();
     @FXML
     private GridPane gameBoard;
     @FXML
@@ -73,21 +74,22 @@ public class GamePageController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        playerXScore.setText("0");
-        playerOScore.setText("0");
+      
 
         //remove this  put now use it for test
-        isOnline = true;
-        isSingle = false;
-        lockBoard();
-        setupNetworkListener();
+//        isOnline = true;
+//        isSingle = false;
+//        lockBoard();
+//        setupNetworkListener();
     }
 
-    public void initGame(GameMode mode, Difficulty difficulty) {
+    public void initGame(GameMode mode, Difficulty difficulty, int xScore, int oScore) {
         this.currentGameMode = mode;
         this.currentDifficulty = difficulty;
-
-        // TODO:
+        this.xScore = xScore;
+        this.oScore = oScore;
+        playerXScore.setText(xScore + "");
+        playerOScore.setText(oScore + "");
         // in online we will accept two player models to set their names
         System.out.println("Starting game: " + mode + ", Difficulty: " + difficulty);
 
@@ -115,7 +117,7 @@ public class GamePageController implements Initializable {
         if (boardLocked) {
             return;
         }
-       
+
         StackPane clickedCell = (StackPane) event.getSource();
 
         if (!clickedCell.getChildren().isEmpty()) {
@@ -129,9 +131,9 @@ public class GamePageController implements Initializable {
         int cellNum = GameHelper.getCellNum(row, col);
 
         GameHelper.addMoveToCell(clickedCell, playerXRole);
-        
+
         Sounds.playXOClick();
-        
+
         if (isOnline) {
             lockBoard();
             roleLabel.setText("Watting...");
@@ -142,7 +144,7 @@ public class GamePageController implements Initializable {
         if (!isOnline) {
             playerXRole = !playerXRole;
         }
-        
+
         if (isSingle) {
             lockBoard();
             performComputerMove();
@@ -165,21 +167,21 @@ public class GamePageController implements Initializable {
     }
 
     private void makeComputerMove() {
-        List<Integer> availableCells = GameHelper.getAvailableCells(xSteps, ySteps);
+        List<Integer> availableCells = GameHelper.getAvailableCells(xSteps, oSteps);
         if (availableCells.isEmpty()) {
             return;
         }
-        
+
         Random random = new Random();
         int selectedCellNum = availableCells.get(random.nextInt(availableCells.size()));
         StackPane targetCell = GameHelper.findCellByNumber(gameBoard, selectedCellNum);
-        
+
         if (targetCell != null) {
             GameHelper.addMoveToCell(targetCell, false);
             Sounds.playXOClick();
-            ySteps.add(selectedCellNum);
+            oSteps.add(selectedCellNum);
 
-            if (handleGameEnd(ySteps, GameResult.O_WIN, true)) {
+            if (handleGameEnd(oSteps, GameResult.O_WIN, true)) {
                 return;
             }
 
@@ -195,8 +197,6 @@ public class GamePageController implements Initializable {
     private void unlockBoard() {
         boardLocked = false;
     }
-
-  
 
     private void setupNetworkListener() {
         new Thread(() -> {
@@ -241,14 +241,14 @@ public class GamePageController implements Initializable {
 
         playerXRole = symbol.equals("x");
 
-          Platform.runLater(() -> {
-        if (playerXRole) {
-            roleLabel.setText("Your Role");
-            unlockBoard();
-        } else {
-            roleLabel.setText("Waiting...");
-        }
-    });
+        Platform.runLater(() -> {
+            if (playerXRole) {
+                roleLabel.setText("Your Role");
+                unlockBoard();
+            } else {
+                roleLabel.setText("Waiting...");
+            }
+        });
     }
 
     private void receiveMove(Object _data) {
@@ -257,29 +257,29 @@ public class GamePageController implements Initializable {
         String symbol = data.getSymbol();
         boolean win = data.isWin();
         boolean draw = data.isDraw();
-        
+
         Platform.runLater(() -> {
             StackPane targetCell = GameHelper.findCellByNumber(gameBoard, cellNo);
-            
+
             if (targetCell != null) {
                 boolean isXPlayer = symbol.equals("x");
                 GameHelper.addMoveToCell(targetCell, isXPlayer);
                 Sounds.playXOClick();
-                
+
                 if (isXPlayer) {
                     xSteps.add(cellNo);
                 } else {
-                    ySteps.add(cellNo);
+                    oSteps.add(cellNo);
                 }
 
                 if (win) {
                     GameResult result = isXPlayer ? GameResult.X_WIN : GameResult.O_WIN;
-                    showGameOverSafely(result, true);
+                    showGameOverSafely(result, true, xScore, oScore);
                     return;
                 }
-                
+
                 if (draw) {
-                    showGameOverSafely(GameResult.NO_WIN, false);
+                    showGameOverSafely(GameResult.NO_WIN, false, xScore, oScore);
                     return;
                 }
                 roleLabel.setText("Your Role");
@@ -289,37 +289,44 @@ public class GamePageController implements Initializable {
     }
 
     private void handlePlayerMove(int cellNum) {
-        List<Integer> currentSteps = playerXRole ? xSteps : ySteps;
+        List<Integer> currentSteps = playerXRole ? xSteps : oSteps;
         GameResult winResult = playerXRole ? GameResult.X_WIN : GameResult.O_WIN;
         String symbol = playerXRole ? "x" : "o";
-        
+
         currentSteps.add(cellNum);
-        
+
         if (isOnline) {
-            NetworkDAO.getInstance().sendMove(sessionID, cellNum, symbol, 
-                    GameHelper.checkWin(currentSteps), GameHelper.checkDraw(xSteps, ySteps));
+            NetworkDAO.getInstance().sendMove(sessionID, cellNum, symbol,
+                    GameHelper.checkWin(currentSteps), GameHelper.checkDraw(xSteps, oSteps));
         }
-        
+
         handleGameEnd(currentSteps, winResult, false);
     }
 
     private boolean handleGameEnd(List<Integer> steps, GameResult winResult, boolean isLose) {
         if (GameHelper.checkWin(steps)) {
-            showGameOverSafely(winResult, isLose);
+            if (winResult == GameResult.X_WIN) {
+                 System.out.println("xxxxxxx" +xScore );
+                xScore++;
+                 System.out.println("xxxxxxx" +xScore );
+            } else {
+                oScore++;
+            }
+            showGameOverSafely(winResult, isLose, xScore, oScore);
             return true;
         }
-        
-        if (GameHelper.checkDraw(xSteps, ySteps)) {
-            showGameOverSafely(GameResult.NO_WIN, false);
+
+        if (GameHelper.checkDraw(xSteps, oSteps)) {
+            showGameOverSafely(GameResult.NO_WIN, false, xScore, oScore);
             return true;
         }
-        
+
         return false;
     }
 
-    private void showGameOverSafely(GameResult result, boolean isLose) {
+    private void showGameOverSafely(GameResult result, boolean isLose, int _xScore, int _oScore) {
         try {
-        GameHelper.showGameOverDialog(rootStackPane, result, isLose);
+            GameHelper.showGameOverDialog(rootStackPane,currentGameMode,currentDifficulty ,result, isLose, _xScore, _oScore);
         } catch (IOException ex) {
             System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }

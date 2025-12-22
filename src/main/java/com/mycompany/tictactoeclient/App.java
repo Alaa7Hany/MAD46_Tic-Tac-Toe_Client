@@ -32,7 +32,7 @@ public class App extends Application {
 
     private static Scene scene;
 
-    private final static String rootPage = Pages.gamePage;
+    private final static String rootPage = Pages.startPage;
     @Override
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML(rootPage), 615, 577);

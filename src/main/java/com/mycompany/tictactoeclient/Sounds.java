@@ -29,8 +29,10 @@ public class Sounds {
             .getResource("/sounds/Keyboard sound.wav").toExternalForm());*/
     
     
+   
+    
     public static void playSound(){
-      /*  Media media =  new Media(Sounds.class.getResource("/sounds/background.mp3").toExternalForm());
+    /*    Media media =  new Media(Sounds.class.getResource("/sounds/background.mp3").toExternalForm());
         backgroundSound = new MediaPlayer(media);
         
         backgroundSound.setCycleCount(MediaPlayer.INDEFINITE);
@@ -56,6 +58,10 @@ public class Sounds {
 
     public static void playXOClick() {
       //  XO_CLICK.play();
+
+     //   if(backgroundSound != null){
+        //    backgroundSound.pause();
+     //   }
     }
 
     public static void playTypeClick() {

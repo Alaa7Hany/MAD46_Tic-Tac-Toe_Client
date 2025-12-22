@@ -134,6 +134,19 @@ public class NetworkConnection {
     }
 
     
+        public ObjectInputStream getInputStream() {
+        return in;
+    }
+       public void sendMessage(Request request) {
+        if (out == null) return;
+        try {
+            out.writeObject(request);
+            out.flush();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+       
     public void closeConnection() throws IOException{
         if (in != null) in.close();
         if (out != null) out.close();

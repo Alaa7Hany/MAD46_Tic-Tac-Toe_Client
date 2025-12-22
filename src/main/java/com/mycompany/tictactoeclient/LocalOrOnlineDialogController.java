@@ -33,7 +33,7 @@ public class LocalOrOnlineDialogController implements Initializable {
         
         try {
             App.setRoot(Pages.gamePage, (GamePageController controller) -> {
-                controller.initGame(GameMode.LOCAL_MULTIPLAYER, null);
+                controller.initGame(GameMode.LOCAL_MULTIPLAYER, null,0,0);
             }); 
         } catch (IOException ex) {
             System.getLogger(LocalOrOnlineDialogController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -44,7 +44,7 @@ public class LocalOrOnlineDialogController implements Initializable {
     @FXML
     private void onlineClicked(MouseEvent event) {
         try {
-            App.setRoot(Pages.loginPage); 
+            App.setRoot(Pages.loginPage);
         } catch (IOException ex) {
             System.getLogger(LocalOrOnlineDialogController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }

@@ -77,10 +77,10 @@ public class GamePageController implements Initializable {
       
 
         //remove this  put now use it for test
-//        isOnline = true;
-//        isSingle = false;
-//        lockBoard();
-//        setupNetworkListener();
+        isOnline = true;
+        isSingle = false;
+        lockBoard();
+        setupNetworkListener();
     }
 
     public void initGame(GameMode mode, Difficulty difficulty, int xScore, int oScore) {

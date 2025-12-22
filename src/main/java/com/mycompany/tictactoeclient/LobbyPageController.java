@@ -84,6 +84,8 @@ public class LobbyPageController implements Initializable {
 
                 List<PlayerDTO> players =
                     (List<PlayerDTO>) response.getData();
+                
+                System.out.println("##################Number of players: "+players.size());
 
                 Platform.runLater(() -> {
                     playerContainer.getChildren().clear();

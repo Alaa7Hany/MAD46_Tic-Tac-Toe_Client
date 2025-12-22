@@ -10,6 +10,8 @@ import com.mycompany.tictactoeclient.network.NetworkConnection;
 import com.mycompany.tictactoeshared.InvitationDTO;
 import com.mycompany.tictactoeclient.network.NetworkDAO;
 import com.mycompany.tictactoeshared.PlayerDTO;
+import com.mycompany.tictactoeshared.Request;
+import com.mycompany.tictactoeshared.RequestType;
 import com.mycompany.tictactoeshared.Response;
 import java.io.IOException;
 import java.net.URL;
@@ -212,7 +214,9 @@ public class LobbyPageController implements Initializable, InvitationListener { 
         });
 
         new Thread(() -> {
-            NetworkDAO.getInstance().sendInvite("Emad", "Hema", 350);
+        NetworkConnection.getConnection().sendMessage(  
+            new Request(RequestType.INVITE_PLAYER,new InvitationDTO("Emad", "Hema", 350))
+            );
         }).start();
     }
 

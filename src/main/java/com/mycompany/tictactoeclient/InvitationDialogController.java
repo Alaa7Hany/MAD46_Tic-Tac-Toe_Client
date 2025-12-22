@@ -69,21 +69,22 @@ public class InvitationDialogController implements Initializable {
     private void onAccept(ActionEvent event) {
         try {
             
-        // Send accept request to server
-        Request request = new Request(
-                RequestType.ACCEPT_INVITE,invitationDTO );
+        new Thread(() -> {
+            Request request = new Request(RequestType.ACCEPT_INVITE,invitationDTO );
         
             NetworkConnection.getConnection().sendRequest(request);
             
-             Platform.runLater(() -> {
+            //TODO navigate to game page with game session 
+            Platform.runLater(() -> {
                 try {
                     App.navigateTo(Pages.gamePage);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException ex) {
+                    System.getLogger(InvitationDialogController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
             });
-             
             
+        }).start();
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -96,7 +97,6 @@ public class InvitationDialogController implements Initializable {
         int size = stack.getChildren().size();
         if (size >= 2) {
             stack.getChildren().remove(size - 1);
-            stack.getChildren().remove(size - 2);
         }
     }
     

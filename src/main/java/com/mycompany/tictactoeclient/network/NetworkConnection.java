@@ -112,6 +112,7 @@ public class NetworkConnection {
                     }
 
                     case START_GAME : {
+                        // TODO navigate to game page with game session 
                         Platform.runLater(() -> {
                             try {
                                 App.navigateTo(Pages.gamePage);

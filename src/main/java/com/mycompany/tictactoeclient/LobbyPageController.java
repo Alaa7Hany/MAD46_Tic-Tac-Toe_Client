@@ -5,8 +5,13 @@
 package com.mycompany.tictactoeclient;
 
 import static com.mycompany.tictactoeclient.Pages.PlayerComponent;
+import com.mycompany.tictactoeclient.network.InvitationListener;
+import com.mycompany.tictactoeclient.network.NetworkConnection;
+import com.mycompany.tictactoeshared.InvitationDTO;
 import com.mycompany.tictactoeclient.network.NetworkDAO;
 import com.mycompany.tictactoeshared.PlayerDTO;
+import com.mycompany.tictactoeshared.Request;
+import com.mycompany.tictactoeshared.RequestType;
 import com.mycompany.tictactoeshared.Response;
 import java.io.IOException;
 import java.net.URL;
@@ -21,15 +26,22 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.application.Platform;
+import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.layout.Region;
 /**
  * FXML Controller class
  *
  * @author LAPTOP
  */
-public class LobbyPageController implements Initializable {
+public class LobbyPageController implements Initializable, InvitationListener { 
+
     
     private PlayerDTO currentPlayer;
-
+    public static LobbyPageController instance;
+    private Parent waitingDialog;
+    private Region waitingDimmer;
 
     @FXML
     private Label myName;
@@ -37,15 +49,25 @@ public class LobbyPageController implements Initializable {
     private Label score;
     @FXML
     private VBox playerContainer;
+    
+    @FXML
+    private Button sendInvite;
+    
+    private Platform platform;
     @FXML
     private StackPane rootStackPane;
+
+    
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        instance=this;
         rootStackPane.getProperties().put("controller", this);
-       
+        NetworkConnection.getConnection().setInvitationListener(this);
+        
     }    
     
     
@@ -67,7 +89,26 @@ public class LobbyPageController implements Initializable {
         }
     }
     
+    @Override
+    public void onInvitationReceived(InvitationDTO dto) {
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mycompany/tictactoeclient/invitationDialog.fxml"));
+                Parent dialogRoot = loader.load();
+                InvitationDialogController controller = loader.getController();
+                controller.setInvitationData(dto);
+
+                rootStackPane.getChildren().add(dialogRoot);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+    
     public void setCurrentPlayer(PlayerDTO player){
+        // TEMPfot testing : force Emad as current player
+        //his.currentPlayer = new PlayerDTO("Emad", 150, true);
         this.currentPlayer=player;
         myName.setText(player.getUsername());
         score.setText(String.valueOf(player.getScore()));
@@ -79,6 +120,7 @@ public class LobbyPageController implements Initializable {
         new Thread(() -> {
 
             Response response = NetworkDAO.getInstance().lobby();
+            NetworkConnection.getConnection().startLobbyListener();
 
             if (response.getStatus() == Response.Status.SUCCESS) {
 
@@ -103,6 +145,29 @@ public class LobbyPageController implements Initializable {
         }).start();
     }
     
+    public void closeWaitingDialog() {
+        
+        Platform.runLater(() -> {
+            if (waitingDialog != null) {
+                rootStackPane.getChildren().remove(waitingDialog);
+                waitingDialog = null;
+            }
+            if (waitingDimmer != null) {
+                rootStackPane.getChildren().remove(waitingDimmer);
+                waitingDimmer = null;
+            }
+            System.out.println("WAITING DIALOG CLOSED!");
+        });
+    }
+
+    
+     public void onInviteRejected() {
+        closeWaitingDialog();
+        App.showAlertMessage(rootStackPane,
+                "Your invitation was rejected",
+                false);
+    }
+    
     public void openInvitationDialog(PlayerDTO player) {
         try {
             App.showMyFxmlDialog(
@@ -120,9 +185,45 @@ public class LobbyPageController implements Initializable {
                             dialog.getProperties().get("controller");
 
             controller.setChallengedPlayer(player);
+            controller.setCurrentPlayer(currentPlayer);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    
+    
+    // will remove it 
+    @FXML
+    public void sendInvite() {
+
+        /*Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/mycompany/tictactoeclient/waitingDialog.fxml")
+                );
+                waitingDialog = loader.load();
+
+                waitingDimmer = new Region();
+                waitingDimmer.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
+                waitingDimmer.prefWidthProperty().bind(rootStackPane.widthProperty());
+                waitingDimmer.prefHeightProperty().bind(rootStackPane.heightProperty());
+
+                rootStackPane.getChildren().addAll(waitingDimmer, waitingDialog);
+                System.out.println("WAITING DIALOG SHOWN!");
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        new Thread(() -> {
+        NetworkConnection.getConnection().sendMessage(  
+            new Request(RequestType.INVITE_PLAYER,new InvitationDTO(currentPlayer,player))
+            );
+        }).start();*/
+    }
+
+    
+       
 }

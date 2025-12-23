@@ -56,6 +56,7 @@ public class LoginPageController implements Initializable {
        
     }    
     
+    // Emad ... need this to pass player dto 
     @FXML
     private void login(ActionEvent event) {
         String username = userNameTextField.getText();
@@ -75,7 +76,7 @@ public class LoginPageController implements Initializable {
             App.addProgressIndicator(rootStackPane);
             
             
-            Response response = NetworkDAO.getInstance().login(username, password);
+            Response response = NetworkDAO.getInstance().login(username, password); 
            
             App.removeProgressIndicator(rootStackPane);
             

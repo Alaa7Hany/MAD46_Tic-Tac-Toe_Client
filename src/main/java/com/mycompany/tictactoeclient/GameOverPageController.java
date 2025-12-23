@@ -39,15 +39,20 @@ public class GameOverPageController implements Initializable {
     private MediaPlayer mediaPlayer;
     private GameResult gameResult;
     private String path;
-
+    private int oScore,xScore;
+    private GameMode currentGameMode;
+    private Difficulty currentDifficulty;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Sounds.pauseSound();
     }
 
-    public void initGameOver(GameResult _gameResult, boolean isLose) {
+    public void initGameOver(GameMode mode, Difficulty difficulty,GameResult _gameResult, boolean isLose,int xScore,int oScore) {
         this.gameResult = _gameResult;
-
+        this.oScore =oScore;
+        this.xScore =xScore;
+        this.currentGameMode = mode;
+        this.currentDifficulty = difficulty;
        switch (gameResult) {
             case NO_WIN:
                 title.setText("No Winner");
@@ -85,7 +90,7 @@ public class GameOverPageController implements Initializable {
         try {
             Sounds.resumeSound();
             App.setRoot(Pages.gamePage, (GamePageController controller) -> {
-                controller.initGame(GameMode.ONLINE, Difficulty.MEDIUM);
+                controller.initGame(currentGameMode, currentDifficulty,xScore,oScore);
             });
         } catch (IOException ex) {
             System.getLogger(GameOverPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);

@@ -112,7 +112,7 @@
                   </StackPane>
                </children>
             </GridPane>
-            <BorderPane layoutX="25.0" layoutY="12.0" prefHeight="114.0" prefWidth="566.0">
+            <BorderPane layoutX="25.0" layoutY="12.0" prefHeight="114.0" prefWidth="566.0" style="-fx-effect: dropshadow(gaussian, black, 30, 0.7, 0, 0);">
                <left>
                   <VBox alignment="CENTER" prefHeight="114.0" prefWidth="127.0" spacing="5.0" style="-fx-background-color: F5373A; -fx-background-radius: 20;" BorderPane.alignment="CENTER">
                      <children>
@@ -185,6 +185,13 @@
                      </children>
                   </VBox>
                </right>
+               <center>
+                  <Label fx:id="roleLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="47.0" prefWidth="176.0" textFill="WHITE" BorderPane.alignment="CENTER">
+                     <font>
+                        <Font name="System Bold" size="32.0" />
+                     </font>
+                  </Label>
+               </center>
             </BorderPane>
             <BorderPane layoutX="138.0" layoutY="491.0" prefHeight="67.0" prefWidth="340.0">
                <left>

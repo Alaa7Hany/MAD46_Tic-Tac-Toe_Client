@@ -35,7 +35,7 @@ import javafx.scene.layout.Region;
  *
  * @author LAPTOP
  */
-public class LobbyPageController implements Initializable, InvitationListener { // needs to receive player dto
+public class LobbyPageController implements Initializable, InvitationListener { 
 
     
     private PlayerDTO currentPlayer;
@@ -67,7 +67,7 @@ public class LobbyPageController implements Initializable, InvitationListener { 
         instance=this;
         rootStackPane.getProperties().put("controller", this);
         NetworkConnection.getConnection().setInvitationListener(this);
-       
+        
     }    
     
     
@@ -108,8 +108,8 @@ public class LobbyPageController implements Initializable, InvitationListener { 
     
     public void setCurrentPlayer(PlayerDTO player){
         // TEMPfot testing : force Emad as current player
-        this.currentPlayer = new PlayerDTO("Emad", 150, true);
-        //this.currentPlayer=player;
+        //his.currentPlayer = new PlayerDTO("Emad", 150, true);
+        this.currentPlayer=player;
         myName.setText(player.getUsername());
         score.setText(String.valueOf(player.getScore()));
         loadOnlinePlayers();
@@ -120,6 +120,7 @@ public class LobbyPageController implements Initializable, InvitationListener { 
         new Thread(() -> {
 
             Response response = NetworkDAO.getInstance().lobby();
+            NetworkConnection.getConnection().startLobbyListener();
 
             if (response.getStatus() == Response.Status.SUCCESS) {
 
@@ -184,16 +185,19 @@ public class LobbyPageController implements Initializable, InvitationListener { 
                             dialog.getProperties().get("controller");
 
             controller.setChallengedPlayer(player);
+            controller.setCurrentPlayer(currentPlayer);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     
+    
+    // will remove it 
     @FXML
     public void sendInvite() {
 
-        Platform.runLater(() -> {
+        /*Platform.runLater(() -> {
             try {
                 FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/mycompany/tictactoeclient/waitingDialog.fxml")
@@ -215,9 +219,9 @@ public class LobbyPageController implements Initializable, InvitationListener { 
 
         new Thread(() -> {
         NetworkConnection.getConnection().sendMessage(  
-            new Request(RequestType.INVITE_PLAYER,new InvitationDTO("Emad", "Hema", 350))
+            new Request(RequestType.INVITE_PLAYER,new InvitationDTO(currentPlayer,player))
             );
-        }).start();
+        }).start();*/
     }
 
     

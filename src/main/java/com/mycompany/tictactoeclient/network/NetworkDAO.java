@@ -7,6 +7,7 @@ package com.mycompany.tictactoeclient.network;
 import com.mycompany.tictactoeshared.InvitationDTO;
 import com.mycompany.tictactoeshared.LoginDTO;
 import com.mycompany.tictactoeshared.MoveDTO;
+import com.mycompany.tictactoeshared.PlayerDTO;
 import com.mycompany.tictactoeshared.Request;
 import com.mycompany.tictactoeshared.RequestType;
 import com.mycompany.tictactoeshared.Response;
@@ -29,13 +30,12 @@ public class NetworkDAO {
         return instance;
     }
     
-    public Response login(String username, String password){
+    public Response login(String username, String password){ 
         LoginDTO loginData = new LoginDTO(username, password);
         
         Request request = new Request(RequestType.LOGIN, loginData);
         
-        Response response = NetworkConnection.getConnection().sendRequest(request);
-        
+        Response response = NetworkConnection.getConnection().sendRequest(request); 
         return response;
     }
     public Response register(String username, String password){
@@ -50,9 +50,9 @@ public class NetworkDAO {
 
 
     
-    public Response sendInvite(String fromUser, String toUser, int opponantScore) {
+    public Response sendInvite(PlayerDTO fromUser , PlayerDTO toUser) {
         
-        InvitationDTO inviteDTo = new InvitationDTO(fromUser, toUser, opponantScore);
+        InvitationDTO inviteDTo = new InvitationDTO(fromUser, toUser);
         
         Request request = new Request(RequestType.INVITE_PLAYER, inviteDTo);
         

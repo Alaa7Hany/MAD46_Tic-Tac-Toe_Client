@@ -33,7 +33,7 @@ import javafx.util.Duration;
 public class App extends Application {
 
     private static Scene scene;
-    private final static String rootPage = Pages.lobbyPage;
+    private final static String rootPage = Pages.startPage;
     private MouseEvent mouseEvent;
     private Node node;
 

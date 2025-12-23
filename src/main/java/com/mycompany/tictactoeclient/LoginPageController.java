@@ -76,7 +76,7 @@ public class LoginPageController implements Initializable {
             App.addProgressIndicator(rootStackPane);
             
             
-            Response response = NetworkDAO.getInstance().login(username, password);
+            Response response = NetworkDAO.getInstance().login(username, password); 
            
             App.removeProgressIndicator(rootStackPane);
             

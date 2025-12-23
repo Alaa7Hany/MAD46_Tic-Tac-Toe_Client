@@ -5,11 +5,16 @@
 package com.mycompany.tictactoeclient.network;
 
 import com.mycompany.tictactoeclient.App;
+import com.mycompany.tictactoeclient.GamePageController;
 import com.mycompany.tictactoeclient.LobbyPageController;
 import com.mycompany.tictactoeclient.Pages;
 import com.mycompany.tictactoeshared.InvitationDTO;
+import com.mycompany.tictactoeshared.MoveDTO;
 import com.mycompany.tictactoeshared.Request;
+import static com.mycompany.tictactoeshared.RequestType.INVITE_REJECTED;
+import static com.mycompany.tictactoeshared.RequestType.START_GAME;
 import com.mycompany.tictactoeshared.Response;
+import com.mycompany.tictactoeshared.StartGameDTO;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -32,11 +37,12 @@ public class NetworkConnection {
     
     private NetworkConnection(){
         try {
+            System.out.println("Creating NetworkConnection...");
             socket = new Socket(InetAddress.getLocalHost(), 5005);
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
+            System.out.println("Socket created: " + socket.getLocalPort());
             
-            new Thread(this::listenLoop).start(); 
               
         } catch (UnknownHostException ex) {
             System.getLogger(NetworkConnection.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -64,24 +70,79 @@ public class NetworkConnection {
             return new Response(Response.Status.FAILURE, "Server Not Available");
         }
 
+        System.out.println("We r in NC above try ... send request ");
         try {
             out.writeObject(request);
             out.flush();
-            Response response = (Response) in.readObject();
+            Response response =(Response) in.readObject();
             return response;
+
         } catch (IOException | ClassNotFoundException ex) {
-            //  because when the server shuts we want to reset the connection to a new connection
-            try {
-                closeConnection();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            // reset the connection
-            connection = null; 
+            ex.printStackTrace();
+            try { closeConnection(); } catch (IOException e) {}
+            connection = null;
             return new Response(Response.Status.FAILURE, "Connection Error");
         }
     }
     
+    public void sendInvitation(Request request) {
+        // Check if the output stream is initialized
+        // in case in initial connection when the server is down
+        if (out == null) {
+            connection = null; 
+           // return new Response(Response.Status.FAILURE, "Server Not Available");
+        }
+
+        System.out.println("We r in NC above try ... send request ");
+        try {
+            out.writeObject(request);
+            out.flush();
+            
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            try { closeConnection(); } catch (IOException e) {}
+            connection = null;
+            //return new Response(Response.Status.FAILURE, "Connection Error");
+        }
+    }
+    
+   /* private void handleRequest(Request push) {
+        switch (push.getType()) {
+            case INVITE_RECEIVED:
+                InvitationDTO invite = (InvitationDTO) push.getData();
+                Platform.runLater(() -> {
+                    if (invitationListener != null) {
+                        invitationListener.onInvitationReceived(invite);
+                    }
+                });
+                break;
+
+            case INVITE_REJECTED:
+                Platform.runLater(() -> {
+                    if (LobbyPageController.instance != null) {
+                        LobbyPageController.instance.onInviteRejected();
+                    }
+                });
+                break;
+
+            case START_GAME:
+                StartGameDTO startData = (StartGameDTO) push.getData();
+                Platform.runLater(() -> {
+                    try {
+                        App.navigateTo(Pages.gamePage); // pass client handler 
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+
+            default:
+                System.out.println("Unhandled push: " + push.getType());
+        }
+    }*/
+    
+   
    private void listenLoop() {
         try {
             while (true) {
@@ -154,6 +215,10 @@ public class NetworkConnection {
         if (socket != null && !socket.isClosed()) {
             socket.close();
         }
+    }
+    
+    public void startLobbyListener(){
+        new Thread(this::listenLoop).start();
     }
     
 }

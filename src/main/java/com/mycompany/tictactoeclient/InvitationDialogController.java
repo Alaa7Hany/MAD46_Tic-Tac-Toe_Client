@@ -45,8 +45,8 @@ public class InvitationDialogController implements Initializable {
     public void setInvitationData(InvitationDTO dto) {
         System.out.println("setInvitationData: " + dto);
         this.invitationDTO = dto;
-        playerLbl.setText(dto.getFromUsername());
-        scoreLbl.setText("Score: " + dto.getScore()); 
+        playerLbl.setText(dto.getFromUsername().getUsername());
+        scoreLbl.setText("Score: " + dto.getToUsername().getScore()); 
     }
 
     @FXML
@@ -54,6 +54,7 @@ public class InvitationDialogController implements Initializable {
         try {
             
             new Thread(() -> {
+                
             Request request = new Request(RequestType.REJECT_INVITE,invitationDTO);
             
             NetworkConnection.getConnection().sendRequest(request);
@@ -75,7 +76,7 @@ public class InvitationDialogController implements Initializable {
         new Thread(() -> {
             Request request = new Request(RequestType.ACCEPT_INVITE,invitationDTO );
         
-            NetworkConnection.getConnection().sendRequest(request);
+            NetworkConnection.getConnection().sendInvitation(request);
             
             //TODO navigate to game page with game session 
             Platform.runLater(() -> {

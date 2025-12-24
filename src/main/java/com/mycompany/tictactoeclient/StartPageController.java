@@ -38,12 +38,26 @@ public class StartPageController implements Initializable {
     private StackPane multiPalyerButton;
     @FXML
     private StackPane rootStackPane;
+    @FXML
+    private StackPane settingLayer;
+    
+    @FXML
+    private ImageView settingIconController;
+    
+    private SettingHelper settingHelper;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+            settingLayer.setMouseTransparent(true);
+            settingHelper = new SettingHelper(settingLayer, true);
+            settingIconController.setOnMouseClicked(e ->{
+                settingHelper.toggle();
+                
+            });
+        
     }    
     
     @FXML

@@ -14,7 +14,7 @@ import javafx.scene.media.AudioClip;
  */
 public class Sounds {
     
-  /*  private static MediaPlayer backgroundSound;
+    private static MediaPlayer backgroundSound;
     
     private static final AudioClip REGULAR_CLICK =
         new AudioClip(Sounds.class
@@ -27,39 +27,39 @@ public class Sounds {
     private static final AudioClip TYPE_CLICK =
         new AudioClip(Sounds.class
             .getResource("/sounds/Keyboard sound.wav").toExternalForm());
-    */
+    
     
     public static void playSound(){
-    /*    Media media =  new Media(Sounds.class.getResource("/sounds/background.mp3").toExternalForm());
+        Media media =  new Media(Sounds.class.getResource("/sounds/background.mp3").toExternalForm());
         backgroundSound = new MediaPlayer(media);
         
         backgroundSound.setCycleCount(MediaPlayer.INDEFINITE);
         backgroundSound.setVolume(0.4);
-        backgroundSound.play();*/
+        backgroundSound.play();
     }
     
     public static void pauseSound(){
-     //   if(backgroundSound != null){
-        //    backgroundSound.pause();
-     //   }
+        if(backgroundSound != null){
+            backgroundSound.pause();
+       }
     }
     
     public static void resumeSound(){
-    //    if(backgroundSound != null){
-   //         backgroundSound.play();
-     //   }
+        if(backgroundSound != null){
+            backgroundSound.play();
+        }
     }
     
     public static void playUiClick() {
-       // REGULAR_CLICK.play();
+        REGULAR_CLICK.play();
     }
 
     public static void playXOClick() {
-    //    XO_CLICK.play();
+        XO_CLICK.play();
     }
 
     public static void playTypeClick() {
-      //  TYPE_CLICK.play();
+        TYPE_CLICK.play();
     }
     
 }

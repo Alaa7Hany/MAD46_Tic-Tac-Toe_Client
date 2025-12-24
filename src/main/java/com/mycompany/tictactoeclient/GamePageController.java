@@ -77,9 +77,9 @@ public class GamePageController implements Initializable {
       
 
         //remove this  put now use it for test
-        isOnline = true;
-        isSingle = false;
-        lockBoard();
+        //isOnline = true;
+        isSingle = true;
+        //lockBoard();
         setupNetworkListener();
     }
 

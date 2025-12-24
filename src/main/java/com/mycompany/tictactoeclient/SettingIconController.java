@@ -8,14 +8,15 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 /**
  * FXML Controller class
  *
  * @author LAPTOP
  */
 public class SettingIconController implements Initializable {
+    private Runnable action;
 
 
     @FXML
@@ -26,6 +27,17 @@ public class SettingIconController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    } 
+    
+    public void setOnClick(Runnable action){
+        this.action=action;
+    }
+    
+    @FXML
+    private void onIconClicked(MouseEvent event){
+        if(action != null){
+            action.run();
+        }
+    }
     
 }

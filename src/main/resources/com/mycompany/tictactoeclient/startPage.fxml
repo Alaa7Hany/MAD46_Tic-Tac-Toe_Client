@@ -45,6 +45,9 @@
                   <Image url="@../../../images/TIC_TAC_TOE.png" />
                </image>
             </ImageView>
+            <StackPane alignment="TOP_LEFT">
+                  <fx:include source="SettingIcon.fxml" fx:id="settingIconController"/>
+              </StackPane>
          </top>
          <center>
             <VBox alignment="TOP_CENTER" BorderPane.alignment="CENTER">
@@ -116,5 +119,6 @@
             <Insets top="20.0" />
          </padding>
       </BorderPane>
+      <StackPane fx:id="settingLayer"/> 
    </children>
 </StackPane>

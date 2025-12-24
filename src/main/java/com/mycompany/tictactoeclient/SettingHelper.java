@@ -5,6 +5,8 @@
 package com.mycompany.tictactoeclient;
 
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -28,6 +30,8 @@ public class SettingHelper {
         if (visible) {
             layer.getChildren().clear();
             layer.setMouseTransparent(true);
+            visible=false;
+            return;
         } else {
             try {
                 FXMLLoader loader = new FXMLLoader(
@@ -42,8 +46,9 @@ public class SettingHelper {
                 }
 
                 layer.getChildren().add(settingsView);
-                layer.setMouseTransparent(false);
-                //layer.setStyle("-fx-background-color: rgba(0,0,0,0.3);");
+                StackPane.setAlignment(settingsView, Pos.TOP_LEFT);
+                StackPane.setMargin(settingsView, new Insets(80,0,0,20));
+                layer.setPickOnBounds(false);
                 layer.toFront();
             } catch (Exception e) {
                 e.printStackTrace();

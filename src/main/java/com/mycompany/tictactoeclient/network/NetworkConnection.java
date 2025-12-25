@@ -8,14 +8,13 @@ import com.mycompany.tictactoeclient.App;
 import com.mycompany.tictactoeclient.GamePageController;
 import com.mycompany.tictactoeclient.LobbyPageController;
 import com.mycompany.tictactoeclient.Pages;
+import com.mycompany.tictactoeclient.enums.Difficulty;
+import com.mycompany.tictactoeclient.enums.GameMode;
 import com.mycompany.tictactoeshared.InvitationDTO;
-import com.mycompany.tictactoeshared.MoveDTO;
 import com.mycompany.tictactoeshared.PlayerDTO;
 import com.mycompany.tictactoeshared.Request;
 import static com.mycompany.tictactoeshared.RequestType.INVITE_REJECTED;
-import static com.mycompany.tictactoeshared.RequestType.START_GAME;
 import com.mycompany.tictactoeshared.Response;
-import com.mycompany.tictactoeshared.StartGameDTO;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -30,7 +29,7 @@ import javafx.application.Platform;
  * @author hp
  */
 public class NetworkConnection {
-    
+    private   static boolean flag = true;
     private static NetworkConnection connection;
     private Socket socket;
     private ObjectOutputStream out;
@@ -38,6 +37,10 @@ public class NetworkConnection {
     private InvitationListener invitationListener;
     private LobbyListener lobbyListener;
     
+    
+    public static void reConnectListener(){
+        flag = true;
+    }
     private NetworkConnection(){
         try {
             System.out.println("Creating NetworkConnection...");
@@ -150,8 +153,9 @@ public class NetworkConnection {
     
    
    private void listenLoop() {
+  
         try {
-            while (true) {
+            while (flag) {
                 Object obj = in.readObject();   
                 if (!(obj instanceof Request)) continue;
 
@@ -178,13 +182,18 @@ public class NetworkConnection {
                          break;
                     }
 
-                    case START_GAME : {
+                    case ACCEPT_INVITE : {
+               flag=false;
                         // TODO navigate to game page with game session 
                         Platform.runLater(() -> {
                             try {
-                                App.navigateTo(Pages.gamePage);
-                            } catch (IOException e) {
-                                e.printStackTrace();
+
+                                App.setRoot(Pages.gamePage, (GamePageController gameController) -> {
+                                    gameController.initGame(GameMode.ONLINE,Difficulty.EASY , 0, 0);
+                                });    
+                                
+                            } catch (IOException ex) {
+                                System.getLogger(NetworkConnection.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                             }
                         });
                          break;

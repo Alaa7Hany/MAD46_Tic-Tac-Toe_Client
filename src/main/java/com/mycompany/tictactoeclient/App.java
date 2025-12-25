@@ -114,12 +114,12 @@ public class App extends Application {
         fade.play();
     }
 
-    static void setRoot(String fxml) throws IOException {
+    public static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
     }
     
     // We will use this method to pass parameters between pages using lambda 
-    static <T> void setRoot(String fxml, Consumer<T> controllerAction) throws IOException {
+    public static <T> void setRoot(String fxml, Consumer<T> controllerAction) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         Parent root = fxmlLoader.load();
 

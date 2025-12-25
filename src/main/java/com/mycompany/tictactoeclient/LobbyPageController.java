@@ -9,16 +9,11 @@ import com.mycompany.tictactoeclient.network.InvitationListener;
 import com.mycompany.tictactoeclient.network.LobbyListener;
 import com.mycompany.tictactoeclient.network.NetworkConnection;
 import com.mycompany.tictactoeshared.InvitationDTO;
-import com.mycompany.tictactoeclient.network.NetworkDAO;
 import com.mycompany.tictactoeshared.PlayerDTO;
-import com.mycompany.tictactoeshared.Request;
-import com.mycompany.tictactoeshared.RequestType;
-import com.mycompany.tictactoeshared.Response;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -51,8 +46,6 @@ public class LobbyPageController implements Initializable, InvitationListener, L
     @FXML
     private VBox playerContainer;
     
-    @FXML
-    private Button sendInvite;
     
     private Platform platform;
     @FXML
@@ -66,6 +59,7 @@ public class LobbyPageController implements Initializable, InvitationListener, L
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         instance=this;
+         NetworkConnection.reConnectListener();
         rootStackPane.getProperties().put("controller", this);
         NetworkConnection.getConnection().setInvitationListener(this);
         NetworkConnection.getConnection().setLobbyListener(this);
@@ -170,7 +164,6 @@ public class LobbyPageController implements Initializable, InvitationListener, L
     
     
     // will remove it 
-    @FXML
     public void sendInvite() {
 
         /*Platform.runLater(() -> {

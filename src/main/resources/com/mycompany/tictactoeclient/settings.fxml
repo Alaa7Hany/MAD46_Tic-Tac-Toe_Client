@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="settingsRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="200.0" style="-fx-background-color: #4426A9; -fx-border-color: #D7EA91;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.SettingsController">
+<VBox fx:id="settingsRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="200.0" style="-fx-background-color: #A9ABAE; -fx-border-color: BLACK;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.SettingsController">
    <children>
       <VBox prefHeight="48.0" prefWidth="200.0">
          <children>
@@ -23,7 +23,7 @@
          <children>
             <AnchorPane prefHeight="193.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="muteBtn" contentDisplay="LEFT" graphicTextGap="8" layoutX="39.0" layoutY="7.0" mnemonicParsing="false" onAction="#muteMusic" prefHeight="34.0" prefWidth="122.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: #A9ABAE;" text="Mute">
+                  <Button fx:id="muteBtn" contentDisplay="LEFT" graphicTextGap="8" layoutX="39.0" layoutY="7.0" mnemonicParsing="false" onAction="#muteMusic" prefHeight="34.0" prefWidth="122.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: #4426A9; -fx-text-fill: WHITE;" text="Mute">
 
                     <font>
                         <Font name="System Bold Italic" size="18.0" />
@@ -33,7 +33,7 @@
                         <ImageView fx:id="muteIcon" fitHeight="18" fitWidth="18" preserveRatio="true" />
                     </graphic>
                 </Button>
-                  <Button fx:id="logoutBtn" layoutX="39.0" layoutY="112.0" mnemonicParsing="false" onAction="#logout" prefHeight="34.0" prefWidth="122.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: #A9ABAE;" text="Log out">
+                  <Button fx:id="logoutBtn" layoutX="39.0" layoutY="112.0" mnemonicParsing="false" onAction="#logout" prefHeight="34.0" prefWidth="122.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: #4426A9; -fx-text-fill: WHITE;" text="Log out">
                      <font>
                         <Font name="System Bold Italic" size="20.0" />
                      </font>
@@ -45,7 +45,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="aboutBtn" layoutX="39.0" layoutY="59.0" mnemonicParsing="false" onAction="#aboutGame" prefHeight="34.0" prefWidth="122.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: #A9ABAE;" text="   About">
+                  <Button fx:id="aboutBtn" layoutX="39.0" layoutY="59.0" mnemonicParsing="false" onAction="#aboutGame" prefHeight="34.0" prefWidth="122.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: #4426A9; -fx-text-fill: WHITE;" text="   About">
                      <font>
                         <Font name="System Bold Italic" size="20.0" />
                      </font>

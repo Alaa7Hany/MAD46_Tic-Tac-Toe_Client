@@ -4,6 +4,7 @@
  */
 package com.mycompany.tictactoeclient;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -13,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 /**
  * FXML Controller class
@@ -76,6 +78,13 @@ public class SettingsController implements Initializable {
 
     @FXML
     private void aboutGame(ActionEvent event) {
+        StackPane rootStackPane = (StackPane)settingsRoot.getScene().getRoot();
+        
+        try {
+            App.showMyFxmlDialog(rootStackPane, "aboutDialog", isMuted);
+        } catch (IOException ex) {
+            System.getLogger(SettingsController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
     
     public void hideLogout(){

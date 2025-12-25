@@ -30,30 +30,36 @@ public class SettingHelper {
         if (visible) {
             layer.getChildren().clear();
             layer.setMouseTransparent(true);
-            visible=false;
+            visible = false;
             return;
-        } else {
-            try {
-                FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("settings.fxml")
-                );
-                settingsView = loader.load();
-
-                SettingsController controller = loader.getController();
-
-                if (isStartPage) {
-                    controller.hideLogout();
-                }
-
-                layer.getChildren().add(settingsView);
-                StackPane.setAlignment(settingsView, Pos.TOP_LEFT);
-                StackPane.setMargin(settingsView, new Insets(80,0,0,20));
-                layer.setPickOnBounds(false);
-                layer.toFront();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
-        visible = !visible;
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("settings.fxml")
+            );
+            settingsView = loader.load();
+
+            SettingsController controller = loader.getController();
+            if (isStartPage) {
+                controller.hideLogout();
+            }
+
+            layer.getChildren().add(settingsView);
+            StackPane.setAlignment(settingsView, Pos.TOP_LEFT);
+            StackPane.setMargin(settingsView, new Insets(80, 0, 0, 20));
+
+            layer.setMouseTransparent(false);
+            settingsView.setMouseTransparent(false);
+
+            layer.setOnMouseClicked(e -> toggle());
+            settingsView.setOnMouseClicked(e -> e.consume());
+
+            layer.toFront();
+            visible = true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

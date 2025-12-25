@@ -8,6 +8,7 @@ import com.mycompany.tictactoeclient.enums.Difficulty;
 import com.mycompany.tictactoeclient.enums.GameMode;
 import com.mycompany.tictactoeshared.LoginDTO;
 import com.mycompany.tictactoeshared.MoveDTO;
+import com.mycompany.tictactoeshared.PlayerDTO;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -19,6 +20,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
@@ -51,6 +53,8 @@ public class StartPageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+            rootStackPane.getProperties().put("controller", this);
+        
             settingLayer.setMouseTransparent(true);
             settingHelper = new SettingHelper(settingLayer, true);
             settingIconController.setOnMouseClicked(e ->{
@@ -89,6 +93,17 @@ public class StartPageController implements Initializable {
             System.getLogger(StartPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
         
+    }
+    
+    public void openAboutDialog() {
+        try {
+            App.showMyFxmlDialog(
+                rootStackPane,
+                "/com/mycompany/tictactoeclient/aboutDialog.fxml",
+                true);
+            } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

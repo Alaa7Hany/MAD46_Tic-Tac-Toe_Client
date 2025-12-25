@@ -6,6 +6,8 @@ package com.mycompany.tictactoeclient;
 
 import com.mycompany.tictactoeclient.enums.Difficulty;
 import com.mycompany.tictactoeclient.enums.GameMode;
+import com.mycompany.tictactoeshared.PlayerDTO;
+import com.mycompany.tictactoeshared.TwoPlayerDTO;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -68,9 +70,14 @@ public class LevelsPageController implements Initializable {
     
     private void startSinglePlayerGame(Difficulty difficulty) {
         try {
-            
+            PlayerDTO primary =   new PlayerDTO("Me", 0, false);
+            PlayerDTO secondy =   new PlayerDTO("Computer", 0, false);
+            TwoPlayerDTO twoPlayer = new TwoPlayerDTO(
+                    primary,
+                    secondy
+            );
             App.setRoot(Pages.gamePage, (GamePageController gameController) -> {
-                gameController.initGame(GameMode.SINGLE_PLAYER, difficulty, 0, 0);
+                gameController.initGame(twoPlayer,GameMode.SINGLE_PLAYER, difficulty, 0, 0);
             });
             
         } catch (Exception e) {

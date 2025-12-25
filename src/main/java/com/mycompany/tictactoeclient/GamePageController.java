@@ -11,9 +11,11 @@ import com.mycompany.tictactoeclient.enums.GameResult;
 import com.mycompany.tictactoeclient.network.NetworkConnection;
 import com.mycompany.tictactoeclient.network.NetworkDAO;
 import com.mycompany.tictactoeshared.MoveDTO;
+import com.mycompany.tictactoeshared.PlayerDTO;
 import com.mycompany.tictactoeshared.Request;
 import static com.mycompany.tictactoeshared.RequestType.MOVE;
 import com.mycompany.tictactoeshared.StartGameDTO;
+import com.mycompany.tictactoeshared.TwoPlayerDTO;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -66,6 +68,7 @@ public class GamePageController implements Initializable {
     private boolean boardLocked = false;
     private String sessionID;
     private int oScore, xScore;
+    private TwoPlayerDTO currentTwoPlayer;
     private List<Integer> xSteps = new ArrayList<>();
     private List<Integer> oSteps = new ArrayList<>();
     @FXML
@@ -89,11 +92,14 @@ public class GamePageController implements Initializable {
 //        setupNetworkListener();
     }
 
-    public void initGame(GameMode mode, Difficulty difficulty, int xScore, int oScore) {
+    public void initGame(TwoPlayerDTO towPalyer,GameMode mode, Difficulty difficulty, int xScore, int oScore) {
         this.currentGameMode = mode;
         this.currentDifficulty = difficulty;
         this.xScore = xScore;
         this.oScore = oScore;
+        this.currentTwoPlayer = towPalyer;
+        playerXlbl.setText(currentTwoPlayer.getPrimary().getUsername());
+        playerOlbl.setText(currentTwoPlayer.getSecondry().getUsername());
         playerXScore.setText(xScore + "");
         playerOScore.setText(oScore + "");
         // in online we will accept two player models to set their names
@@ -385,7 +391,7 @@ public class GamePageController implements Initializable {
 
     private void showGameOverSafely(GameResult result, boolean isLose, int _xScore, int _oScore) {
         try {
-            GameHelper.showGameOverDialog(rootStackPane, currentGameMode, currentDifficulty, result, isLose, _xScore, _oScore);
+            GameHelper.showGameOverDialog(rootStackPane,currentTwoPlayer, currentGameMode, currentDifficulty, result, isLose, _xScore, _oScore);
         } catch (IOException ex) {
             System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }

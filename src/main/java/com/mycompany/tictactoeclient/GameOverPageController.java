@@ -11,6 +11,7 @@ import com.mycompany.tictactoeclient.enums.GameResult;
 import static com.mycompany.tictactoeclient.enums.GameResult.NO_WIN;
 import static com.mycompany.tictactoeclient.enums.GameResult.O_WIN;
 import static com.mycompany.tictactoeclient.enums.GameResult.X_WIN;
+import com.mycompany.tictactoeshared.TwoPlayerDTO;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -46,18 +47,20 @@ public class GameOverPageController implements Initializable {
     private int oScore, xScore;
     private GameMode currentGameMode;
     private Difficulty currentDifficulty;
-
+    private TwoPlayerDTO currentTwoPlayer;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Sounds.pauseSound();
     }
 
-    public void initGameOver(GameMode mode, Difficulty difficulty, GameResult _gameResult, boolean isLose, int xScore, int oScore) {
+    public void initGameOver(TwoPlayerDTO towPalyer,GameMode mode, Difficulty difficulty, GameResult _gameResult, boolean isLose, int xScore, int oScore) {
         this.gameResult = _gameResult;
         this.oScore = oScore;
         this.xScore = xScore;
         this.currentGameMode = mode;
         this.currentDifficulty = difficulty;
+        this.currentTwoPlayer = towPalyer;
         switch (gameResult) {
             case NO_WIN:
                 title.setText("No Winner");
@@ -100,7 +103,7 @@ public class GameOverPageController implements Initializable {
                     break;
                 default:
                     App.setRoot(Pages.gamePage, (GamePageController controller) -> {
-                        controller.initGame(currentGameMode, currentDifficulty, xScore, oScore);
+                        controller.initGame(currentTwoPlayer,currentGameMode, currentDifficulty, xScore, oScore);
                     });
                     break;
             }

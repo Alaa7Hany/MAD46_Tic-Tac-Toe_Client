@@ -15,6 +15,7 @@ import com.mycompany.tictactoeshared.PlayerDTO;
 import com.mycompany.tictactoeshared.Request;
 import static com.mycompany.tictactoeshared.RequestType.INVITE_REJECTED;
 import com.mycompany.tictactoeshared.Response;
+import com.mycompany.tictactoeshared.TwoPlayerDTO;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -183,13 +184,14 @@ public class NetworkConnection {
                     }
 
                     case ACCEPT_INVITE : {
+                        
                flag=false;
-                        // TODO navigate to game page with game session 
+            TwoPlayerDTO twoPlayer = (TwoPlayerDTO) request.getData();
                         Platform.runLater(() -> {
                             try {
 
                                 App.setRoot(Pages.gamePage, (GamePageController gameController) -> {
-                                    gameController.initGame(GameMode.ONLINE,Difficulty.EASY , 0, 0);
+                                    gameController.initGame(twoPlayer,GameMode.ONLINE,Difficulty.EASY , 0, 0);
                                 });    
                                 
                             } catch (IOException ex) {
@@ -215,7 +217,7 @@ public class NetworkConnection {
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Listener stopped");
+            System.out.println("Listener stopped clienr "+ e); 
         }
     }
 

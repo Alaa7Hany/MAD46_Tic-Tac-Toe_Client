@@ -17,6 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.Region;
 import com.mycompany.tictactoeclient.enums.GameResult;
+import com.mycompany.tictactoeshared.TwoPlayerDTO;
 
 /**
  *
@@ -86,12 +87,12 @@ public class GameHelper {
         lbl.getStyleClass().add(playerLblStyle);
         cell.getChildren().add(lbl);
     }
-    public static void showGameOverDialog(StackPane rootStackPane,GameMode mode, Difficulty difficulty, GameResult _gameResult, boolean isLose,int xScore,int oScore) throws java.io.IOException {
+    public static void showGameOverDialog(StackPane rootStackPane,TwoPlayerDTO towPalyer,GameMode mode, Difficulty difficulty, GameResult _gameResult, boolean isLose,int xScore,int oScore) throws java.io.IOException {
         FXMLLoader loader = new FXMLLoader(GameHelper.class.getResource(Pages.gameOverPage + ".fxml"));
         Parent dialog = loader.load();
 
         GameOverPageController controller = loader.getController();
-        controller.initGameOver(mode,difficulty,_gameResult, isLose, xScore, oScore);
+        controller.initGameOver(towPalyer,mode,difficulty,_gameResult, isLose, xScore, oScore);
 
         Region dimmer = new Region();
         dimmer.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");

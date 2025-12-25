@@ -216,6 +216,8 @@ public class GamePageController implements Initializable {
         if (availableCells.isEmpty()) {
             return;
         }
+        
+        if(GameHelper.checkWin(xSteps)||GameHelper.checkWin(oSteps)) return ;
 
         Random random = new Random();
         int selectedCellNum;
@@ -382,6 +384,7 @@ public class GamePageController implements Initializable {
                showGameOverSafely(winResult, isLose, xScore, oScore);
             });
             delay.play();
+            return true;
         }
 
         if (GameHelper.checkDraw(xSteps, oSteps)) {

@@ -6,6 +6,7 @@ package com.mycompany.tictactoeclient;
 
 import com.mycompany.tictactoeclient.enums.Difficulty;
 import com.mycompany.tictactoeclient.enums.GameMode;
+import static com.mycompany.tictactoeclient.enums.GameMode.ONLINE;
 import com.mycompany.tictactoeclient.enums.GameResult;
 import com.mycompany.tictactoeclient.network.NetworkConnection;
 import com.mycompany.tictactoeclient.network.NetworkDAO;
@@ -71,7 +72,7 @@ public class GamePageController implements Initializable {
     private GridPane gameBoard;
     @FXML
     private Label roleLabel;
-    
+
     // for records
     private ArrayList<Integer> moveHistory = new ArrayList<>();
 
@@ -80,14 +81,12 @@ public class GamePageController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-      
 
         //remove this  put now use it for test
 //        isOnline = true;
 //        isSingle = false;
 //        lockBoard();
 //        setupNetworkListener();
-
     }
 
     public void initGame(GameMode mode, Difficulty difficulty, int xScore, int oScore) {
@@ -117,7 +116,7 @@ public class GamePageController implements Initializable {
                 playerXRole = true;
             }
         }
-        
+
         moveHistory.clear();
     }
 
@@ -140,10 +139,10 @@ public class GamePageController implements Initializable {
         int cellNum = GameHelper.getCellNum(row, col);
 
         GameHelper.addMoveToCell(clickedCell, playerXRole);
-        
+
         // for records
         moveHistory.add(cellNum);
-        
+
         Sounds.playXOClick();
 
         if (isOnline) {
@@ -166,17 +165,17 @@ public class GamePageController implements Initializable {
     @FXML
     private void onRecord(ActionEvent event) {
         String fileName = "game_" + System.currentTimeMillis() + ".dat";
-        
+
         File directory = new File("records");
-        
+
         // create directory if it doesn't exist'
-        if(!directory.exists()){
+        if (!directory.exists()) {
             directory.mkdir();
         }
-        
+
         File file = new File(directory, fileName);
-        
-        try{
+
+        try {
             FileOutputStream fos = new FileOutputStream(file);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(moveHistory);
@@ -187,11 +186,23 @@ public class GamePageController implements Initializable {
         } catch (IOException ex) {
             System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        
+
     }
 
     @FXML
     private void onExit(ActionEvent event) {
+        try {
+            switch (currentGameMode) {
+                case ONLINE:
+                    App.setRoot(Pages.lobbyPage);
+                    break;
+                default:
+                    App.setRoot(Pages.startPage);
+                    break;
+            }
+        } catch (IOException ex) {
+            System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
 
     private void performComputerMove() {
@@ -211,14 +222,12 @@ public class GamePageController implements Initializable {
 
         if (currentDifficulty == Difficulty.EASY) {
             selectedCellNum = availableCells.get(new Random().nextInt(availableCells.size()));
-        } 
-        else if (currentDifficulty == Difficulty.MEDIUM) {
+        } else if (currentDifficulty == Difficulty.MEDIUM) {
             selectedCellNum = MinMaxAi.getBestMove(xSteps, oSteps, false);
-        } 
-        else { 
+        } else {
             selectedCellNum = MinMaxAi.getBestMove(xSteps, oSteps, true);
         }
-            StackPane targetCell = GameHelper.findCellByNumber(gameBoard, selectedCellNum);
+        StackPane targetCell = GameHelper.findCellByNumber(gameBoard, selectedCellNum);
 
         if (targetCell != null) {
             GameHelper.addMoveToCell(targetCell, false);
@@ -227,7 +236,7 @@ public class GamePageController implements Initializable {
 
             // for records
             moveHistory.add(selectedCellNum);
-            
+
             if (handleGameEnd(oSteps, GameResult.O_WIN, true)) {
                 return;
             }
@@ -312,7 +321,7 @@ public class GamePageController implements Initializable {
                 boolean isXPlayer = symbol.equals("x");
                 GameHelper.addMoveToCell(targetCell, isXPlayer);
                 Sounds.playXOClick();
-                
+
                 // for records
                 moveHistory.add(cellNo);
 
@@ -356,9 +365,9 @@ public class GamePageController implements Initializable {
     private boolean handleGameEnd(List<Integer> steps, GameResult winResult, boolean isLose) {
         if (GameHelper.checkWin(steps)) {
             if (winResult == GameResult.X_WIN) {
-                 System.out.println("xxxxxxx" +xScore );
+
                 xScore++;
-                 System.out.println("xxxxxxx" +xScore );
+
             } else {
                 oScore++;
             }
@@ -376,7 +385,7 @@ public class GamePageController implements Initializable {
 
     private void showGameOverSafely(GameResult result, boolean isLose, int _xScore, int _oScore) {
         try {
-            GameHelper.showGameOverDialog(rootStackPane,currentGameMode,currentDifficulty ,result, isLose, _xScore, _oScore);
+            GameHelper.showGameOverDialog(rootStackPane, currentGameMode, currentDifficulty, result, isLose, _xScore, _oScore);
         } catch (IOException ex) {
             System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }

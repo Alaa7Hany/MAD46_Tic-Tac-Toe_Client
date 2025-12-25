@@ -5,6 +5,7 @@
 package com.mycompany.tictactoeclient;
 
 import static com.mycompany.tictactoeclient.Pages.PlayerComponent;
+import com.mycompany.tictactoeclient.enums.SettingsPosition;
 import com.mycompany.tictactoeclient.network.NetworkDAO;
 import com.mycompany.tictactoeshared.PlayerDTO;
 import com.mycompany.tictactoeshared.Response;
@@ -17,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -29,6 +31,7 @@ import javafx.scene.layout.VBox;
 public class LobbyPageController implements Initializable {
     
     private PlayerDTO currentPlayer;
+    //private SettingHelper settingHelper;
 
 
     @FXML
@@ -39,15 +42,23 @@ public class LobbyPageController implements Initializable {
     private VBox playerContainer;
     @FXML
     private StackPane rootStackPane;
+//    @FXML
+//    private StackPane settingLayer;
+//    
+//    @FXML
+//    private ImageView settingIconController;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        rootStackPane.getProperties().put("controller", this);
+//        settingHelper = new SettingHelper(settingLayer, SettingsPosition.BOTTOM);
+//            settingIconController.setOnMouseClicked(e ->{
+//                settingHelper.toggle();
+//                
+//            });
        
-    }    
-    
+    }      
     
     private void addPlayer(PlayerDTO player) {
         try {
@@ -122,6 +133,17 @@ public class LobbyPageController implements Initializable {
             controller.setChallengedPlayer(player);
 
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void openAboutDialog() {
+        try {
+            App.showMyFxmlDialog(
+                rootStackPane,
+                "/com/mycompany/tictactoeclient/aboutDialog.fxml",
+                true);
+            } catch (IOException e) {
             e.printStackTrace();
         }
     }

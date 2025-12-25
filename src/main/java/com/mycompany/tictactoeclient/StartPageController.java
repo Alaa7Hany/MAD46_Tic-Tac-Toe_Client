@@ -6,6 +6,7 @@ package com.mycompany.tictactoeclient;
 
 import com.mycompany.tictactoeclient.enums.Difficulty;
 import com.mycompany.tictactoeclient.enums.GameMode;
+import com.mycompany.tictactoeclient.enums.SettingsPosition;
 import com.mycompany.tictactoeshared.LoginDTO;
 import com.mycompany.tictactoeshared.MoveDTO;
 import com.mycompany.tictactoeshared.PlayerDTO;
@@ -56,7 +57,7 @@ public class StartPageController implements Initializable {
             rootStackPane.getProperties().put("controller", this);
         
             settingLayer.setMouseTransparent(true);
-            settingHelper = new SettingHelper(settingLayer, true);
+            settingHelper = new SettingHelper(settingLayer, SettingsPosition.TOP);
             settingIconController.setOnMouseClicked(e ->{
                 settingHelper.toggle();
                 

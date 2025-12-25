@@ -30,6 +30,7 @@ public class Sounds {
     
     
     public static void playSound(){
+        if(backgroundSound != null)return;
         Media media =  new Media(Sounds.class.getResource("/sounds/background.mp3").toExternalForm());
         backgroundSound = new MediaPlayer(media);
         

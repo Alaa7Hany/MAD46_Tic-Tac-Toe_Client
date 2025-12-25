@@ -208,13 +208,24 @@
                      </font>
                   </Button>
                </right>
+               
             </BorderPane>
+            <StackPane alignment="BOTTOM_RIGHT"  >
+                <fx:include source="SettingIcon.fxml" fx:id="settingIconController"/>
+                <AnchorPane.bottomAnchor>20</AnchorPane.bottomAnchor>
+                <AnchorPane.rightAnchor>20</AnchorPane.rightAnchor>
+            </StackPane>
             <ImageView fitHeight="114.0" fitWidth="106.0" layoutY="474.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../images/xo.png" />
                </image>
             </ImageView>
          </children>
+         
       </AnchorPane>
+      
+        <StackPane fx:id="settingLayer"
+           mouseTransparent="true"
+           pickOnBounds="false"/>
    </children>
 </StackPane>

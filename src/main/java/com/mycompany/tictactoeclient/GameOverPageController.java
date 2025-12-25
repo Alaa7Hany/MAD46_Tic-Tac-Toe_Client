@@ -88,7 +88,7 @@ public class GameOverPageController implements Initializable {
         Sounds.playUiClick();
         stopMediaPlayer();
         try {
-            Sounds.resumeSound();
+            SoundManager.applyState();
             App.setRoot(Pages.gamePage, (GamePageController controller) -> {
                 controller.initGame(currentGameMode, currentDifficulty,xScore,oScore);
             });
@@ -102,7 +102,7 @@ public class GameOverPageController implements Initializable {
         Sounds.playUiClick();
         stopMediaPlayer();
         try {
-            Sounds.resumeSound();
+            SoundManager.applyState();
             App.setRoot(Pages.startPage);
         } catch (IOException ex) {
             System.getLogger(GameOverPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);

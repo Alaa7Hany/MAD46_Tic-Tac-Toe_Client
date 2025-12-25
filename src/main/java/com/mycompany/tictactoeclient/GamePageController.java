@@ -7,6 +7,7 @@ package com.mycompany.tictactoeclient;
 import com.mycompany.tictactoeclient.enums.Difficulty;
 import com.mycompany.tictactoeclient.enums.GameMode;
 import com.mycompany.tictactoeclient.enums.GameResult;
+import com.mycompany.tictactoeclient.enums.SettingsPosition;
 import com.mycompany.tictactoeclient.network.NetworkConnection;
 import com.mycompany.tictactoeclient.network.NetworkDAO;
 import com.mycompany.tictactoeshared.MoveDTO;
@@ -31,6 +32,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 /**
@@ -64,16 +66,28 @@ public class GamePageController implements Initializable {
     private int oScore, xScore;
     private List<Integer> xSteps = new ArrayList<>();
     private List<Integer> oSteps = new ArrayList<>();
+    private SettingHelper settingHelper;
     @FXML
     private GridPane gameBoard;
     @FXML
     private Label roleLabel;
+    @FXML
+    private StackPane settingLayer;
+    
+    @FXML
+    private ImageView settingIconController;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+            settingHelper = new SettingHelper(settingLayer, SettingsPosition.BOTTOM);
+            settingIconController.setOnMouseClicked(e ->{
+                settingHelper.toggle();
+                
+            });
       
 
         //remove this  put now use it for test
@@ -329,6 +343,17 @@ public class GamePageController implements Initializable {
             GameHelper.showGameOverDialog(rootStackPane,currentGameMode,currentDifficulty ,result, isLose, _xScore, _oScore);
         } catch (IOException ex) {
             System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }
+    
+    public void openAboutDialog() {
+        try {
+            App.showMyFxmlDialog(
+                rootStackPane,
+                "/com/mycompany/tictactoeclient/aboutDialog.fxml",
+                true);
+            } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

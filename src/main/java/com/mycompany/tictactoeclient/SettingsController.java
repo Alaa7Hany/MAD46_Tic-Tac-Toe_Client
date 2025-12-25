@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -24,7 +25,6 @@ import javafx.scene.layout.VBox;
 public class SettingsController implements Initializable {
     private Image muteImg;
     private Image unmuteImg;
-    private boolean isMuted = false;
 
 
     @FXML
@@ -50,20 +50,12 @@ public class SettingsController implements Initializable {
     
     @FXML
     private void muteMusic(ActionEvent event) {
-
-        isMuted = !isMuted;
-
-        if (isMuted) {
-            Sounds.pauseSound();
-        } else {
-            Sounds.resumeSound();
-        }
-
+        SoundManager.toggleMute();
         updateMuteUI();
     }
 
     private void updateMuteUI() {
-        if (isMuted) {
+        if (SoundManager.isMuted()) {
             muteBtn.setText("Unmute");
             muteIcon.setImage(unmuteImg);
         } else {
@@ -74,6 +66,18 @@ public class SettingsController implements Initializable {
 
     @FXML
     private void logout(ActionEvent event) {
+        StackPane rootStackPane =
+            (StackPane) settingsRoot.getScene().getRoot();
+
+    try {
+        rootStackPane.getChildren().clear();
+
+        Parent startPage = App.loadFXML("startPage");
+        rootStackPane.getChildren().add(startPage);
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
     }
 
     @FXML
@@ -81,7 +85,7 @@ public class SettingsController implements Initializable {
         StackPane rootStackPane = (StackPane)settingsRoot.getScene().getRoot();
         
         try {
-            App.showMyFxmlDialog(rootStackPane, "aboutDialog", isMuted);
+            App.showMyFxmlDialog(rootStackPane, "aboutDialog", SoundManager.isMuted());
         } catch (IOException ex) {
             System.getLogger(SettingsController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }

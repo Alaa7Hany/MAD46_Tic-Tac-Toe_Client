@@ -1,0 +1,20 @@
+=== Tic Tac Toe Game Record ===
+Start Time: 2025-12-25T19:58:26.043152600
+End Time: 2025-12-25T19:58:33.196672100
+Game Mode: SINGLE_PLAYER
+Difficulty: EASY
+
+Moves:
+Move 1 | Player X | Cell 1 | Time 2025-12-25T19:58:27.705630600
+Move 2 | Player O | Cell 7 | Time 2025-12-25T19:58:27.923819200
+Move 3 | Player X | Cell 5 | Time 2025-12-25T19:58:29.070223900
+Move 4 | Player O | Cell 9 | Time 2025-12-25T19:58:29.282991300
+Move 5 | Player X | Cell 3 | Time 2025-12-25T19:58:30.196699300
+Move 6 | Player O | Cell 4 | Time 2025-12-25T19:58:30.402853300
+Move 7 | Player X | Cell 8 | Time 2025-12-25T19:58:31.490025900
+Move 8 | Player O | Cell 6 | Time 2025-12-25T19:58:31.699787
+Move 9 | Player X | Cell 2 | Time 2025-12-25T19:58:33.195667200
+
+Winner: X_WIN
+Winning Cells: [1, 2, 3]
+================================

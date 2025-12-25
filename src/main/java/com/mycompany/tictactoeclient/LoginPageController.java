@@ -75,13 +75,19 @@ public class LoginPageController implements Initializable {
             // while waiting we should show like a circular progress indicator
             App.addProgressIndicator(rootStackPane);
             
+            Response responseTemp;
+            try {
+                responseTemp = NetworkDAO.getInstance().login(username, password); 
+            } catch (Exception e) {
+                System.out.println(e);
+                responseTemp = new Response(Response.Status.FAILURE, "Something went wrong");
+            }finally{
+                App.removeProgressIndicator(rootStackPane);
+            }
             
-            Response response = NetworkDAO.getInstance().login(username, password); 
-           
-            App.removeProgressIndicator(rootStackPane);
+            final Response response = responseTemp;
             
-            
-            if(response.getStatus() == Response.Status.SUCCESS){
+            if( response.getStatus() == Response.Status.SUCCESS){
                  System.out.println("#################### Login Successful");
                  PlayerDTO player = (PlayerDTO) response.getData();
                  String name = player.getUsername();
@@ -99,8 +105,6 @@ public class LoginPageController implements Initializable {
                  
                 Platform.runLater(()->{
                     try {
-                        // ############# Navigation to lobby
-//                  App.setRoot(Pages.lobbyPage);
                     FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/mycompany/tictactoeclient/LobbyPage.fxml"));
 
@@ -117,7 +121,7 @@ public class LoginPageController implements Initializable {
             }else{
                  System.out.println("Login Failed");
                  Platform.runLater(()->{
-                     App.showAlertMessage(rootStackPane, "Login Failed!", false);
+                     App.showAlertMessage(rootStackPane, (String) response.getData(), false);
                  });
             }
                

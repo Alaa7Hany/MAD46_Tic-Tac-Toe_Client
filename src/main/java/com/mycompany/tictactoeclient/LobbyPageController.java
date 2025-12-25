@@ -6,6 +6,7 @@ package com.mycompany.tictactoeclient;
 
 import static com.mycompany.tictactoeclient.Pages.PlayerComponent;
 import com.mycompany.tictactoeclient.network.InvitationListener;
+import com.mycompany.tictactoeclient.network.LobbyListener;
 import com.mycompany.tictactoeclient.network.NetworkConnection;
 import com.mycompany.tictactoeshared.InvitationDTO;
 import com.mycompany.tictactoeclient.network.NetworkDAO;
@@ -35,7 +36,7 @@ import javafx.scene.layout.Region;
  *
  * @author LAPTOP
  */
-public class LobbyPageController implements Initializable, InvitationListener { 
+public class LobbyPageController implements Initializable, InvitationListener, LobbyListener { 
 
     
     private PlayerDTO currentPlayer;
@@ -67,6 +68,7 @@ public class LobbyPageController implements Initializable, InvitationListener {
         instance=this;
         rootStackPane.getProperties().put("controller", this);
         NetworkConnection.getConnection().setInvitationListener(this);
+        NetworkConnection.getConnection().setLobbyListener(this);
         
     }    
     
@@ -116,33 +118,7 @@ public class LobbyPageController implements Initializable, InvitationListener {
     }
     
     private void loadOnlinePlayers() {
-
-        new Thread(() -> {
-
-            Response response = NetworkDAO.getInstance().lobby();
             NetworkConnection.getConnection().startLobbyListener();
-
-            if (response.getStatus() == Response.Status.SUCCESS) {
-
-                List<PlayerDTO> players =
-                    (List<PlayerDTO>) response.getData();
-                
-                System.out.println("##################Number of players: "+players.size());
-
-                Platform.runLater(() -> {
-                    playerContainer.getChildren().clear();
-
-                    for (PlayerDTO p : players) {
-                        if (p.getUsername()
-                             .equals(currentPlayer.getUsername()))
-                            continue;
-
-                        addPlayer(p);
-                    }
-                });
-            }
-
-        }).start();
     }
     
     public void closeWaitingDialog() {
@@ -222,6 +198,19 @@ public class LobbyPageController implements Initializable, InvitationListener {
             new Request(RequestType.INVITE_PLAYER,new InvitationDTO(currentPlayer,player))
             );
         }).start();*/
+    }
+
+    @Override
+    public void onOnlinePlayersUpdated(List<PlayerDTO> players) {
+        System.out.println("New player list received: " + players.size());
+        
+        playerContainer.getChildren().clear();
+        
+        for(PlayerDTO player : players){
+            if(player.getUsername().equals(currentPlayer.getUsername())) continue;
+            addPlayer(player);
+            
+        }
     }
 
     

@@ -10,6 +10,7 @@ import com.mycompany.tictactoeclient.LobbyPageController;
 import com.mycompany.tictactoeclient.Pages;
 import com.mycompany.tictactoeshared.InvitationDTO;
 import com.mycompany.tictactoeshared.MoveDTO;
+import com.mycompany.tictactoeshared.PlayerDTO;
 import com.mycompany.tictactoeshared.Request;
 import static com.mycompany.tictactoeshared.RequestType.INVITE_REJECTED;
 import static com.mycompany.tictactoeshared.RequestType.START_GAME;
@@ -21,6 +22,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.List;
 import javafx.application.Platform;
 
 /**
@@ -34,6 +36,7 @@ public class NetworkConnection {
     private ObjectOutputStream out;
     private ObjectInputStream in;
     private InvitationListener invitationListener;
+    private LobbyListener lobbyListener;
     
     private NetworkConnection(){
         try {
@@ -54,7 +57,10 @@ public class NetworkConnection {
     public void setInvitationListener(InvitationListener listener) {
         this.invitationListener = listener;
     }
-
+    public void setLobbyListener(LobbyListener listener) {
+        this.lobbyListener = listener;
+    }
+    
     // Singleton, only one instance of the class
     public static NetworkConnection getConnection(){
         if(connection == null)
@@ -183,6 +189,15 @@ public class NetworkConnection {
                         });
                          break;
                     }
+                    case GET_ONLINE_PLAYERS : {
+                        List<PlayerDTO> players = (List<PlayerDTO>) request.getData();
+                        if (lobbyListener != null) {
+                            Platform.runLater(() -> 
+                                lobbyListener.onOnlinePlayersUpdated(players)
+                            );
+                        }
+                        break;
+                    }
 
                     default : {
                         System.out.println("Unhandled push: " + request.getType());
@@ -197,8 +212,8 @@ public class NetworkConnection {
 
     
         public ObjectInputStream getInputStream() {
-        return in;
-    }
+            return in;
+        }
        public void sendMessage(Request request) {
         if (out == null) return;
         try {

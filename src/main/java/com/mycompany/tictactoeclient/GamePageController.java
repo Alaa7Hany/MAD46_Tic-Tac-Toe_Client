@@ -13,6 +13,9 @@ import com.mycompany.tictactoeshared.MoveDTO;
 import com.mycompany.tictactoeshared.Request;
 import static com.mycompany.tictactoeshared.RequestType.MOVE;
 import com.mycompany.tictactoeshared.StartGameDTO;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -68,6 +71,9 @@ public class GamePageController implements Initializable {
     private GridPane gameBoard;
     @FXML
     private Label roleLabel;
+    
+    // for records
+    private ArrayList<Integer> moveHistory = new ArrayList<>();
 
     /**
      * Initializes the controller class.
@@ -77,10 +83,10 @@ public class GamePageController implements Initializable {
       
 
         //remove this  put now use it for test
-        isOnline = true;
-        isSingle = false;
-        lockBoard();
-        setupNetworkListener();
+//        isOnline = true;
+//        isSingle = false;
+//        lockBoard();
+//        setupNetworkListener();
     }
 
     public void initGame(GameMode mode, Difficulty difficulty, int xScore, int oScore) {
@@ -110,6 +116,8 @@ public class GamePageController implements Initializable {
                 playerXRole = true;
             }
         }
+        
+        moveHistory.clear();
     }
 
     @FXML
@@ -131,7 +139,10 @@ public class GamePageController implements Initializable {
         int cellNum = GameHelper.getCellNum(row, col);
 
         GameHelper.addMoveToCell(clickedCell, playerXRole);
-
+        
+        // for records
+        moveHistory.add(cellNum);
+        
         Sounds.playXOClick();
 
         if (isOnline) {
@@ -153,7 +164,29 @@ public class GamePageController implements Initializable {
 
     @FXML
     private void onRecord(ActionEvent event) {
-
+        String fileName = "game_" + System.currentTimeMillis() + ".dat";
+        
+        File directory = new File("records");
+        
+        // create directory if it doesn't exist'
+        if(!directory.exists()){
+            directory.mkdir();
+        }
+        
+        File file = new File(directory, fileName);
+        
+        try{
+            FileOutputStream fos = new FileOutputStream(file);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(moveHistory);
+            oos.close();
+            fos.close();
+        } catch (FileNotFoundException ex) {
+            System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } catch (IOException ex) {
+            System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        
     }
 
     @FXML
@@ -181,6 +214,9 @@ public class GamePageController implements Initializable {
             Sounds.playXOClick();
             oSteps.add(selectedCellNum);
 
+            // for records
+            moveHistory.add(selectedCellNum);
+            
             if (handleGameEnd(oSteps, GameResult.O_WIN, true)) {
                 return;
             }
@@ -265,6 +301,9 @@ public class GamePageController implements Initializable {
                 boolean isXPlayer = symbol.equals("x");
                 GameHelper.addMoveToCell(targetCell, isXPlayer);
                 Sounds.playXOClick();
+                
+                // for records
+                moveHistory.add(cellNo);
 
                 if (isXPlayer) {
                     xSteps.add(cellNo);

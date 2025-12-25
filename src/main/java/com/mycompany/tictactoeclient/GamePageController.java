@@ -222,6 +222,8 @@ public class GamePageController implements Initializable {
         if (availableCells.isEmpty()) {
             return;
         }
+        
+        if(GameHelper.checkWin(xSteps)||GameHelper.checkWin(oSteps)) return ;
 
         Random random = new Random();
         int selectedCellNum;
@@ -369,15 +371,25 @@ public class GamePageController implements Initializable {
     }
 
     private boolean handleGameEnd(List<Integer> steps, GameResult winResult, boolean isLose) {
+        GameHelper.StepsToWin winLine = GameHelper.getWinningLine(steps);
         if (GameHelper.checkWin(steps)) {
+            
+            GameHelper.showWinningLine(gameBoard, winLine);
+
             if (winResult == GameResult.X_WIN) {
-
-                xScore++;
-
-            } else {
-                oScore++;
-            }
-            showGameOverSafely(winResult, isLose, xScore, oScore);
+                    System.out.println("xxxxxxx" +xScore );
+                   xScore++;
+                    System.out.println("xxxxxxx" +xScore );
+               } else {
+                   oScore++;
+               }
+            
+            PauseTransition delay = new PauseTransition(Duration.seconds(1));
+          
+            delay.setOnFinished(eh ->{
+               showGameOverSafely(winResult, isLose, xScore, oScore);
+            });
+            delay.play();
             return true;
         }
 

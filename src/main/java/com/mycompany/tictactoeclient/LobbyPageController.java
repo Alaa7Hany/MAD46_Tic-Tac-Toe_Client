@@ -46,8 +46,6 @@ public class LobbyPageController implements Initializable, InvitationListener, L
     @FXML
     private VBox playerContainer;
     
-    @FXML
-    private Button sendInvite;
     
     private Platform platform;
     @FXML
@@ -166,7 +164,6 @@ public class LobbyPageController implements Initializable, InvitationListener, L
     
     
     // will remove it 
-    @FXML
     public void sendInvite() {
 
         /*Platform.runLater(() -> {

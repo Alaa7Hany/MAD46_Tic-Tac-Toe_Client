@@ -77,10 +77,10 @@ public class GamePageController implements Initializable {
       
 
         //remove this  put now use it for test
-        isOnline = true;
+       /* isOnline = true;
         isSingle = false;
         lockBoard();
-        setupNetworkListener();
+        setupNetworkListener();*/
     }
 
     public void initGame(GameMode mode, Difficulty difficulty, int xScore, int oScore) {
@@ -173,8 +173,18 @@ public class GamePageController implements Initializable {
         }
 
         Random random = new Random();
-        int selectedCellNum = availableCells.get(random.nextInt(availableCells.size()));
-        StackPane targetCell = GameHelper.findCellByNumber(gameBoard, selectedCellNum);
+        int selectedCellNum;
+
+        if (currentDifficulty == Difficulty.EASY) {
+            selectedCellNum = availableCells.get(new Random().nextInt(availableCells.size()));
+        } 
+        else if (currentDifficulty == Difficulty.MEDIUM) {
+            selectedCellNum = MinMaxAi.getBestMove(xSteps, oSteps, false);
+        } 
+        else { 
+            selectedCellNum = MinMaxAi.getBestMove(xSteps, oSteps, true);
+        }
+            StackPane targetCell = GameHelper.findCellByNumber(gameBoard, selectedCellNum);
 
         if (targetCell != null) {
             GameHelper.addMoveToCell(targetCell, false);

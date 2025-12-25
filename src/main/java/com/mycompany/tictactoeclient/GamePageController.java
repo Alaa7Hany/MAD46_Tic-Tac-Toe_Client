@@ -354,15 +354,25 @@ public class GamePageController implements Initializable {
     }
 
     private boolean handleGameEnd(List<Integer> steps, GameResult winResult, boolean isLose) {
+        GameHelper.StepsToWin winLine = GameHelper.getWinningLine(steps);
         if (GameHelper.checkWin(steps)) {
+            
+            GameHelper.showWinningLine(gameBoard, winLine);
+
             if (winResult == GameResult.X_WIN) {
-                 System.out.println("xxxxxxx" +xScore );
-                xScore++;
-                 System.out.println("xxxxxxx" +xScore );
-            } else {
-                oScore++;
-            }
-            showGameOverSafely(winResult, isLose, xScore, oScore);
+                    System.out.println("xxxxxxx" +xScore );
+                   xScore++;
+                    System.out.println("xxxxxxx" +xScore );
+               } else {
+                   oScore++;
+               }
+            
+            PauseTransition delay = new PauseTransition(Duration.seconds(1));
+          
+            delay.setOnFinished(eh ->{
+               //showGameOverSafely(winResult, isLose, xScore, oScore);
+            });
+            delay.play();
             return true;
         }
 

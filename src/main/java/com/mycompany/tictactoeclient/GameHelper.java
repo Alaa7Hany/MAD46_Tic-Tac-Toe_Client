@@ -112,4 +112,26 @@ public class GameHelper {
             this.step3 = step3;
         }
     }
+    public static StepsToWin getWinningLine(List<Integer> steps) {
+        for (StepsToWin s : STEPS_TO_WIN) {
+            if (steps.contains(s.step1) &&
+                steps.contains(s.step2) &&
+                steps.contains(s.step3)) {
+                return s;
+            }
+        }
+        return null;
+    }
+    
+    public static void showWinningLine(GridPane board, StepsToWin win) {
+
+        int[] cells = {win.step1, win.step2, win.step3};
+        for (int cellNum : cells) {
+            StackPane cell = findCellByNumber(board, cellNum);
+            if (cell != null) {
+                cell.setStyle("-fx-background-color: #8BC34A;");
+            }
+        }
+    }
+    
 }

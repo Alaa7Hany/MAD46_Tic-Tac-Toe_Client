@@ -40,8 +40,12 @@ import javafx.application.Platform;
 import javafx.util.Duration;
 import com.mycompany.tictactoeclient.record.RecordManager;
 import com.mycompany.tictactoeclient.record.model.GameRecord;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 /**
@@ -88,6 +92,10 @@ public class GamePageController implements Initializable {
 
     // for records
     private ArrayList<Integer> moveHistory = new ArrayList<>();
+    @FXML
+    private Button recordBtn;
+    
+    private Timeline recordBlink;
 
     /**
      * Initializes the controller class.
@@ -221,11 +229,38 @@ public class GamePageController implements Initializable {
         );
 
         isRecording = true;
+        startRecordBlink();
         System.out.println("Recording started");
+    }
+    
+    private void startRecordBlink() {
+        recordBtn.getStyleClass().add("record-active");
+
+        recordBlink = new Timeline(
+            new KeyFrame(Duration.ZERO,
+                new KeyValue(recordBtn.opacityProperty(), 1.0)),
+            new KeyFrame(Duration.seconds(0.6),
+                new KeyValue(recordBtn.opacityProperty(), 0.4))
+        );
+
+        recordBlink.setAutoReverse(true);
+        recordBlink.setCycleCount(Timeline.INDEFINITE);
+        recordBlink.play();
+    }
+    
+    private void stopRecordBlink() {
+        if (recordBlink != null) {
+            recordBlink.stop();
+        }
+        recordBtn.setOpacity(1.0);
+        recordBtn.getStyleClass().remove("record-active");
     }
 
     @FXML
     private void onExit(ActionEvent event) {
+        if(isRecording){
+            stopRecordBlink();
+        }
         try {
             switch (currentGameMode) {
                 case ONLINE:
@@ -426,6 +461,8 @@ public class GamePageController implements Initializable {
             List<Integer> winningCells = GameHelper.getWinningCells(steps);
             if(isRecording){
                 recordManager.finishRecord(winResult.name(), winningCells);
+                stopRecordBlink();
+                isRecording=false;
             }
 
             GameHelper.StepsToWin winLine = GameHelper.getWinningLine(steps);
@@ -452,6 +489,8 @@ public class GamePageController implements Initializable {
             
             if(isRecording){
                 recordManager.finishRecord("DRAW", new ArrayList<>());
+                stopRecordBlink();
+                isRecording=false;
             }
             
             showGameOverSafely(GameResult.NO_WIN, false, xScore, oScore);

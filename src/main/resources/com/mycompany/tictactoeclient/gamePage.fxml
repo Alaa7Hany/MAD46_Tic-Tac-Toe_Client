@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="rootStackPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.GamePageController">
+<StackPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootStackPane" xmlns="http://javafx.com/javafx/25" fx:controller="com.mycompany.tictactoeclient.GamePageController">
    <children>
       <AnchorPane id="AnchorPane" prefHeight="577.0" prefWidth="615.0" styleClass="background" stylesheets="@../../../styles.css">
          <children>
@@ -195,14 +195,21 @@
             </BorderPane>
             <BorderPane layoutX="138.0" layoutY="491.0" prefHeight="67.0" prefWidth="340.0">
                <left>
-                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#onRecord" prefHeight="40.0" prefWidth="100.0" style="-fx-background-radius: 30; -fx-border-color: FF383C; -fx-border-radius: 30; -fx-border-width: 2; -fx-background-color: #FFFFFF;" text="Record" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                  <Button fx:id="recordBtn"  alignment="CENTER" mnemonicParsing="false" onAction="#onRecord" prefHeight="43.0" prefWidth="114.0" style="-fx-background-radius: 30; -fx-border-color: FF383C; -fx-border-radius: 30; -fx-border-width: 2; -fx-background-color: #FFFFFF;" text="Record" textAlignment="CENTER" BorderPane.alignment="CENTER">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
+                     <graphic>
+                        <ImageView fitHeight="27.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images/recordIcon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
                </left>
                <right>
-                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#onExit" prefHeight="40.0" prefWidth="100.0" style="-fx-background-radius: 30; -fx-border-color: FF383C; -fx-border-radius: 30; -fx-border-width: 2; -fx-background-color: #FFFFFF;" text="Exit" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#onExit" prefHeight="43.0" prefWidth="106.0" style="-fx-background-radius: 30; -fx-border-color: FF383C; -fx-border-radius: 30; -fx-border-width: 2; -fx-background-color: #FFFFFF;" text="Exit" textAlignment="CENTER" BorderPane.alignment="CENTER">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>

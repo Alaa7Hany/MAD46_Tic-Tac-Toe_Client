@@ -115,3 +115,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-text-fill:black;
     -fx-font-size:13;
 }
+
+.record-active {
+    -fx-background-color: rgba(255, 0, 0, 0.6);
+    -fx-text-fill: white;
+}

@@ -85,7 +85,7 @@ public class App extends Application {
         });
     }
     
-    static void showAlertMessage(StackPane sp, String message, boolean isSuccess) {
+    public static void showAlertMessage(StackPane sp, String message, boolean isSuccess) {
         // 1. Create the label
         Label toast = new Label(message);
 

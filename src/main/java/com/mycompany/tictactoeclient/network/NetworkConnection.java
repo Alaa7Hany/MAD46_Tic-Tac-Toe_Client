@@ -24,6 +24,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
 
 /**
  *
@@ -185,8 +186,8 @@ public class NetworkConnection {
 
                     case ACCEPT_INVITE : {
                         
-               flag=false;
-            TwoPlayerDTO twoPlayer = (TwoPlayerDTO) request.getData();
+                        flag=false;
+                        TwoPlayerDTO twoPlayer = (TwoPlayerDTO) request.getData();
                         Platform.runLater(() -> {
                             try {
 
@@ -217,7 +218,34 @@ public class NetworkConnection {
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Listener stopped clienr "+ e); 
+            
+            //////////////// Handling Server Disconnection, Don't touch ///////////////////
+            
+            System.out.println("Connection Lost"+e.getMessage());
+            
+            try {
+                closeConnection();
+            } catch (IOException ex) {
+                System.getLogger(NetworkConnection.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+            
+            if(flag){
+                Platform.runLater(()->{
+                    flag=false;
+                    
+                    try {
+                        App.setRoot(Pages.startPage);
+                    } catch (IOException ex) {
+                        System.getLogger(NetworkConnection.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                    }
+
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Disconnected from server.");
+                    alert.show();
+                });
+            }
+            
+            ///////////////////////////////////////////////////////////////////
         }
     }
 

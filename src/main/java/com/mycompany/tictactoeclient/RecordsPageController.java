@@ -6,11 +6,13 @@ package com.mycompany.tictactoeclient;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -27,6 +29,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.AnchorPane;
 /**
  * FXML Controller class
  *
@@ -45,6 +50,20 @@ public class RecordsPageController implements Initializable {
         loadRecords();
     }
 
+    private ListView<?> recordsListView; 
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        
+
+    }
+
+private void loadRecordsGame(){
+
+}    
+    
     @FXML
     private void moveBack(ActionEvent event) {
         // navigation

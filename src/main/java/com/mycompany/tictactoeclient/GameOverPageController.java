@@ -6,7 +6,12 @@ package com.mycompany.tictactoeclient;
 
 import com.mycompany.tictactoeclient.enums.Difficulty;
 import com.mycompany.tictactoeclient.enums.GameMode;
+import static com.mycompany.tictactoeclient.enums.GameMode.ONLINE;
 import com.mycompany.tictactoeclient.enums.GameResult;
+import static com.mycompany.tictactoeclient.enums.GameResult.NO_WIN;
+import static com.mycompany.tictactoeclient.enums.GameResult.O_WIN;
+import static com.mycompany.tictactoeclient.enums.GameResult.X_WIN;
+import com.mycompany.tictactoeshared.TwoPlayerDTO;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -39,21 +44,24 @@ public class GameOverPageController implements Initializable {
     private MediaPlayer mediaPlayer;
     private GameResult gameResult;
     private String path;
-    private int oScore,xScore;
+    private int oScore, xScore;
     private GameMode currentGameMode;
     private Difficulty currentDifficulty;
+    private TwoPlayerDTO currentTwoPlayer;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Sounds.pauseSound();
     }
 
-    public void initGameOver(GameMode mode, Difficulty difficulty,GameResult _gameResult, boolean isLose,int xScore,int oScore) {
+    public void initGameOver(TwoPlayerDTO towPalyer,GameMode mode, Difficulty difficulty, GameResult _gameResult, boolean isLose, int xScore, int oScore) {
         this.gameResult = _gameResult;
-        this.oScore =oScore;
-        this.xScore =xScore;
+        this.oScore = oScore;
+        this.xScore = xScore;
         this.currentGameMode = mode;
         this.currentDifficulty = difficulty;
-       switch (gameResult) {
+        this.currentTwoPlayer = towPalyer;
+        switch (gameResult) {
             case NO_WIN:
                 title.setText("No Winner");
                 path = getVideoPath("no_win");
@@ -89,9 +97,17 @@ public class GameOverPageController implements Initializable {
         stopMediaPlayer();
         try {
             Sounds.resumeSound();
-            App.setRoot(Pages.gamePage, (GamePageController controller) -> {
-                controller.initGame(currentGameMode, currentDifficulty,xScore,oScore);
-            });
+            switch (currentGameMode) {
+                case ONLINE:
+                   
+                    break;
+                default:
+                    App.setRoot(Pages.gamePage, (GamePageController controller) -> {
+                        controller.initGame(currentTwoPlayer,currentGameMode, currentDifficulty, xScore, oScore);
+                    });
+                    break;
+            }
+
         } catch (IOException ex) {
             System.getLogger(GameOverPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
@@ -103,7 +119,14 @@ public class GameOverPageController implements Initializable {
         stopMediaPlayer();
         try {
             Sounds.resumeSound();
-            App.setRoot(Pages.startPage);
+            switch (currentGameMode) {
+                case ONLINE:
+                    App.setRoot(Pages.lobbyPage);
+                    break;
+                default:
+                    App.setRoot(Pages.startPage);
+                    break;
+            }
         } catch (IOException ex) {
             System.getLogger(GameOverPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }

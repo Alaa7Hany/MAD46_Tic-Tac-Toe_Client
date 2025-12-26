@@ -8,19 +8,21 @@ import com.mycompany.tictactoeclient.App;
 import com.mycompany.tictactoeclient.GamePageController;
 import com.mycompany.tictactoeclient.LobbyPageController;
 import com.mycompany.tictactoeclient.Pages;
+import com.mycompany.tictactoeclient.enums.Difficulty;
+import com.mycompany.tictactoeclient.enums.GameMode;
 import com.mycompany.tictactoeshared.InvitationDTO;
-import com.mycompany.tictactoeshared.MoveDTO;
+import com.mycompany.tictactoeshared.PlayerDTO;
 import com.mycompany.tictactoeshared.Request;
 import static com.mycompany.tictactoeshared.RequestType.INVITE_REJECTED;
-import static com.mycompany.tictactoeshared.RequestType.START_GAME;
 import com.mycompany.tictactoeshared.Response;
-import com.mycompany.tictactoeshared.StartGameDTO;
+import com.mycompany.tictactoeshared.TwoPlayerDTO;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.List;
 import javafx.application.Platform;
 
 /**
@@ -28,13 +30,18 @@ import javafx.application.Platform;
  * @author hp
  */
 public class NetworkConnection {
-    
+    private   static boolean flag = true;
     private static NetworkConnection connection;
     private Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
     private InvitationListener invitationListener;
+    private LobbyListener lobbyListener;
     
+    
+    public static void reConnectListener(){
+        flag = true;
+    }
     private NetworkConnection(){
         try {
             System.out.println("Creating NetworkConnection...");
@@ -54,7 +61,10 @@ public class NetworkConnection {
     public void setInvitationListener(InvitationListener listener) {
         this.invitationListener = listener;
     }
-
+    public void setLobbyListener(LobbyListener listener) {
+        this.lobbyListener = listener;
+    }
+    
     // Singleton, only one instance of the class
     public static NetworkConnection getConnection(){
         if(connection == null)
@@ -144,8 +154,9 @@ public class NetworkConnection {
     
    
    private void listenLoop() {
+  
         try {
-            while (true) {
+            while (flag) {
                 Object obj = in.readObject();   
                 if (!(obj instanceof Request)) continue;
 
@@ -172,16 +183,31 @@ public class NetworkConnection {
                          break;
                     }
 
-                    case START_GAME : {
-                        // TODO navigate to game page with game session 
+                    case ACCEPT_INVITE : {
+                        
+               flag=false;
+            TwoPlayerDTO twoPlayer = (TwoPlayerDTO) request.getData();
                         Platform.runLater(() -> {
                             try {
-                                App.navigateTo(Pages.gamePage);
-                            } catch (IOException e) {
-                                e.printStackTrace();
+
+                                App.setRoot(Pages.gamePage, (GamePageController gameController) -> {
+                                    gameController.initGame(twoPlayer,GameMode.ONLINE,Difficulty.EASY , 0, 0);
+                                });    
+                                
+                            } catch (IOException ex) {
+                                System.getLogger(NetworkConnection.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                             }
                         });
                          break;
+                    }
+                    case GET_ONLINE_PLAYERS : {
+                        List<PlayerDTO> players = (List<PlayerDTO>) request.getData();
+                        if (lobbyListener != null) {
+                            Platform.runLater(() -> 
+                                lobbyListener.onOnlinePlayersUpdated(players)
+                            );
+                        }
+                        break;
                     }
 
                     default : {
@@ -191,14 +217,14 @@ public class NetworkConnection {
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Listener stopped");
+            System.out.println("Listener stopped clienr "+ e); 
         }
     }
 
     
         public ObjectInputStream getInputStream() {
-        return in;
-    }
+            return in;
+        }
        public void sendMessage(Request request) {
         if (out == null) return;
         try {

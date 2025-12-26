@@ -4,6 +4,8 @@
  */
 package com.mycompany.tictactoeclient;
 
+import com.mycompany.tictactoeclient.enums.Difficulty;
+import com.mycompany.tictactoeclient.enums.GameMode;
 import com.mycompany.tictactoeclient.network.NetworkConnection;
 import com.mycompany.tictactoeshared.InvitationDTO;
 import com.mycompany.tictactoeshared.Request;
@@ -80,11 +82,13 @@ public class InvitationDialogController implements Initializable {
             
             //TODO navigate to game page with game session 
             Platform.runLater(() -> {
-                try {
-                    App.navigateTo(Pages.gamePage);
-                } catch (IOException ex) {
-                    System.getLogger(InvitationDialogController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-                }
+//                try {
+//                 App.setRoot(Pages.gamePage, (GamePageController gameController) -> {
+//                gameController.initGame(GameMode.ONLINE,Difficulty.EASY , 0, 0);
+//            });
+//                } catch (IOException ex) {
+//                    System.getLogger(InvitationDialogController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+//                }
             });
             
         }).start();

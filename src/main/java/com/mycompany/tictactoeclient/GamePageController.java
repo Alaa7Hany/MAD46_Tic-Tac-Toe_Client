@@ -6,13 +6,19 @@ package com.mycompany.tictactoeclient;
 
 import com.mycompany.tictactoeclient.enums.Difficulty;
 import com.mycompany.tictactoeclient.enums.GameMode;
+import static com.mycompany.tictactoeclient.enums.GameMode.ONLINE;
 import com.mycompany.tictactoeclient.enums.GameResult;
 import com.mycompany.tictactoeclient.network.NetworkConnection;
 import com.mycompany.tictactoeclient.network.NetworkDAO;
 import com.mycompany.tictactoeshared.MoveDTO;
+import com.mycompany.tictactoeshared.PlayerDTO;
 import com.mycompany.tictactoeshared.Request;
 import static com.mycompany.tictactoeshared.RequestType.MOVE;
 import com.mycompany.tictactoeshared.StartGameDTO;
+import com.mycompany.tictactoeshared.TwoPlayerDTO;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -64,6 +70,7 @@ public class GamePageController implements Initializable {
     private boolean boardLocked = false;
     private String sessionID;
     private int oScore, xScore;
+    private TwoPlayerDTO currentTwoPlayer;
     private List<Integer> xSteps = new ArrayList<>();
     private List<Integer> oSteps = new ArrayList<>();
     private RecordManager recordManager = new RecordManager();
@@ -76,25 +83,30 @@ public class GamePageController implements Initializable {
     
     
 
+    // for records
+    private ArrayList<Integer> moveHistory = new ArrayList<>();
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-      
 
         //remove this  put now use it for test
-       /* isOnline = true;
-        isSingle = false;
-        lockBoard();
-        setupNetworkListener();*/
+//        isOnline = true;
+//        isSingle = false;
+//        lockBoard();
+//        setupNetworkListener();
     }
 
-    public void initGame(GameMode mode, Difficulty difficulty, int xScore, int oScore) {
+    public void initGame(TwoPlayerDTO towPalyer,GameMode mode, Difficulty difficulty, int xScore, int oScore) {
         this.currentGameMode = mode;
         this.currentDifficulty = difficulty;
         this.xScore = xScore;
         this.oScore = oScore;
+        this.currentTwoPlayer = towPalyer;
+        playerXlbl.setText(currentTwoPlayer.getPrimary().getUsername());
+        playerOlbl.setText(currentTwoPlayer.getSecondry().getUsername());
         playerXScore.setText(xScore + "");
         playerOScore.setText(oScore + "");
         // in online we will accept two player models to set their names
@@ -118,6 +130,8 @@ public class GamePageController implements Initializable {
             }
         }
         
+
+        moveHistory.clear();
     }
 
     @FXML
@@ -139,6 +153,9 @@ public class GamePageController implements Initializable {
         int cellNum = GameHelper.getCellNum(row, col);
 
         GameHelper.addMoveToCell(clickedCell, playerXRole);
+
+        // for records
+        moveHistory.add(cellNum);
 
         Sounds.playXOClick();
 
@@ -170,6 +187,28 @@ public class GamePageController implements Initializable {
         
         String p1 = playerXlbl.getText();
         String p2 = playerOlbl.getText();
+        String fileName = "game_" + System.currentTimeMillis() + ".dat";
+
+        File directory = new File("records");
+
+        // create directory if it doesn't exist'
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+
+        File file = new File(directory, fileName);
+
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(moveHistory);
+            oos.close();
+            fos.close();
+        } catch (FileNotFoundException ex) {
+            System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } catch (IOException ex) {
+            System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
 
         recordManager.startRecord(
                 currentGameMode.name(),
@@ -184,6 +223,18 @@ public class GamePageController implements Initializable {
 
     @FXML
     private void onExit(ActionEvent event) {
+        try {
+            switch (currentGameMode) {
+                case ONLINE:
+                    App.setRoot(Pages.lobbyPage);
+                    break;
+                default:
+                    App.setRoot(Pages.startPage);
+                    break;
+            }
+        } catch (IOException ex) {
+            System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
 
     private void performComputerMove() {
@@ -197,20 +248,20 @@ public class GamePageController implements Initializable {
         if (availableCells.isEmpty()) {
             return;
         }
+        
+        if(GameHelper.checkWin(xSteps)||GameHelper.checkWin(oSteps)) return ;
 
         Random random = new Random();
         int selectedCellNum;
 
         if (currentDifficulty == Difficulty.EASY) {
             selectedCellNum = availableCells.get(new Random().nextInt(availableCells.size()));
-        } 
-        else if (currentDifficulty == Difficulty.MEDIUM) {
+        } else if (currentDifficulty == Difficulty.MEDIUM) {
             selectedCellNum = MinMaxAi.getBestMove(xSteps, oSteps, false);
-        } 
-        else { 
+        } else {
             selectedCellNum = MinMaxAi.getBestMove(xSteps, oSteps, true);
         }
-            StackPane targetCell = GameHelper.findCellByNumber(gameBoard, selectedCellNum);
+        StackPane targetCell = GameHelper.findCellByNumber(gameBoard, selectedCellNum);
 
         if (targetCell != null) {
             GameHelper.addMoveToCell(targetCell, false);
@@ -220,6 +271,9 @@ public class GamePageController implements Initializable {
             if (isRecording) {
                 recordManager.recordMove("o", selectedCellNum);
             }
+
+            // for records
+            moveHistory.add(selectedCellNum);
 
             if (handleGameEnd(oSteps, GameResult.O_WIN, true)) {
                 return;
@@ -306,6 +360,9 @@ public class GamePageController implements Initializable {
                 GameHelper.addMoveToCell(targetCell, isXPlayer);
                 Sounds.playXOClick();
 
+                // for records
+                moveHistory.add(cellNo);
+
                 if (isXPlayer) {
                     xSteps.add(cellNo);
                 } else {
@@ -354,6 +411,7 @@ public class GamePageController implements Initializable {
     }
 
     private boolean handleGameEnd(List<Integer> steps, GameResult winResult, boolean isLose) {
+        GameHelper.StepsToWin winLine = GameHelper.getWinningLine(steps);
         if (GameHelper.checkWin(steps)) {
             List<Integer> winningCells = GameHelper.getWinningCells(steps);
             if(isRecording){
@@ -368,6 +426,23 @@ public class GamePageController implements Initializable {
             }
 
             showGameOverSafely(winResult, isLose, xScore, oScore);
+            
+            GameHelper.showWinningLine(gameBoard, winLine);
+
+            if (winResult == GameResult.X_WIN) {
+                    System.out.println("xxxxxxx" +xScore );
+                   xScore++;
+                    System.out.println("xxxxxxx" +xScore );
+               } else {
+                   oScore++;
+               }
+            
+            PauseTransition delay = new PauseTransition(Duration.seconds(1));
+          
+            delay.setOnFinished(eh ->{
+               showGameOverSafely(winResult, isLose, xScore, oScore);
+            });
+            delay.play();
             return true;
         }
 
@@ -386,7 +461,7 @@ public class GamePageController implements Initializable {
 
     private void showGameOverSafely(GameResult result, boolean isLose, int _xScore, int _oScore) {
         try {
-            GameHelper.showGameOverDialog(rootStackPane,currentGameMode,currentDifficulty ,result, isLose, _xScore, _oScore);
+            GameHelper.showGameOverDialog(rootStackPane,currentTwoPlayer, currentGameMode, currentDifficulty, result, isLose, _xScore, _oScore);
         } catch (IOException ex) {
             System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }

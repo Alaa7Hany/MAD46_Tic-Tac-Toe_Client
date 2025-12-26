@@ -4,6 +4,8 @@
  */
 package com.mycompany.tictactoeclient;
 
+import com.mycompany.tictactoeshared.Request;
+import com.mycompany.tictactoeshared.RequestType;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -17,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import com.mycompany.tictactoeclient.network.NetworkDAO;
 /**
  * FXML Controller class
  *
@@ -66,6 +69,11 @@ public class SettingsController implements Initializable {
 
     @FXML
     private void logout(ActionEvent event) {
+        
+        System.out.println("UI");
+        
+        NetworkDAO.getInstance().logout();
+        
         StackPane rootStackPane =
             (StackPane) settingsRoot.getScene().getRoot();
 

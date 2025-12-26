@@ -119,13 +119,6 @@ public class GamePageController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        //remove this  put now use it for test
-//        isOnline = true;
-//        isSingle = false;
-//        lockBoard();
-//        setupNetworkListener();
-
         
             settingHelper = new SettingHelper(settingLayer, SettingsPosition.BOTTOM);
             settingIconController.setOnMouseClicked(e ->{
@@ -263,7 +256,6 @@ public class GamePageController implements Initializable {
 
         isRecording = true;
         startRecordBlink();
-        System.out.println("Recording started");
     }
     
     private void startRecordBlink() {

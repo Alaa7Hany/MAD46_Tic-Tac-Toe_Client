@@ -74,6 +74,11 @@ public class NetworkDAO {
         Request request = new Request(RequestType.MOVE, moveData);
         NetworkConnection.getConnection().sendMessage(request);
     }
+      
+    public void logout() {
+        Request request = new Request(RequestType.LOGOUT, null);
+        NetworkConnection.getConnection().sendMessage(request);
+    }
     
 
 }

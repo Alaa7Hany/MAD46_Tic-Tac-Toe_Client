@@ -32,6 +32,7 @@ public class Sounds {
             backgroundSound.setVolume(0.4);
         }
         backgroundSound.play();
+        
     }
 
     public static void pauseSound() {
@@ -67,5 +68,16 @@ public class Sounds {
             );
         }
         TYPE_CLICK.play();
+    }
+    
+    public static void playRegularClick() {
+        if (SoundManager.isMuted()) return;
+
+        if (REGULAR_CLICK == null) {
+            REGULAR_CLICK = new AudioClip(
+                Sounds.class.getResource("/sounds/regular click.wav").toExternalForm()
+            );
+        }
+        REGULAR_CLICK.play();
     }
 }

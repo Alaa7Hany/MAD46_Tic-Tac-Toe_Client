@@ -27,5 +27,7 @@ public class Pages {
     public static final String gameOverNoWinPage = "gameOverNoWinPage"; 
     public static final String PlayerComponent = "playerComponent";
     public static final String lobbyPage = "LobbyPage";
+    public static final String settings = "settings";
+    public static final String SettingIcon = "settingsIcon";
 
 }

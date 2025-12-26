@@ -1,0 +1,43 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
+ */
+package com.mycompany.tictactoeclient;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+/**
+ * FXML Controller class
+ *
+ * @author LAPTOP
+ */
+public class SettingIconController implements Initializable {
+    private Runnable action;
+
+
+    @FXML
+    private ImageView icon;
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // TODO
+    } 
+    
+    public void setOnClick(Runnable action){
+        this.action=action;
+    }
+    
+    @FXML
+    private void onIconClicked(MouseEvent event){
+        if(action != null){
+            action.run();
+        }
+    }
+    
+}

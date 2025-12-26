@@ -50,7 +50,7 @@ public class App extends Application {
         if (!event.isPrimaryButtonDown()) return;   //  left mouse button only
         node = (Node) event.getTarget();
         if (node.getStyleClass().contains("xo-cell")) return;
-        Sounds.playUiClick();
+        SoundManager.applyState();
         });
  
         stage.show();
@@ -150,7 +150,7 @@ public class App extends Application {
         }
     }
 
-    private static Parent loadFXML(String fxml) throws IOException {
+    public static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
     }

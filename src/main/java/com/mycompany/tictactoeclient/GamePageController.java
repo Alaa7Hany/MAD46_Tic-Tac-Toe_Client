@@ -4,6 +4,7 @@
  */
 package com.mycompany.tictactoeclient;
 
+import animations.BackgroundAnimator;
 import com.mycompany.tictactoeclient.enums.Difficulty;
 import com.mycompany.tictactoeclient.enums.GameMode;
 import static com.mycompany.tictactoeclient.enums.GameMode.ONLINE;
@@ -131,6 +132,8 @@ public class GamePageController implements Initializable {
                 settingHelper.toggle();
                 
             });
+            
+            new BackgroundAnimator(rootStackPane);
       
 
         //remove this  put now use it for test

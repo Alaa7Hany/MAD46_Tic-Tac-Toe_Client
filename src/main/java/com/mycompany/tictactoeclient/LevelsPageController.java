@@ -4,6 +4,7 @@
  */
 package com.mycompany.tictactoeclient;
 
+import animations.BackgroundAnimator;
 import com.mycompany.tictactoeclient.enums.Difficulty;
 import com.mycompany.tictactoeclient.enums.GameMode;
 import com.mycompany.tictactoeshared.PlayerDTO;
@@ -32,6 +33,8 @@ public class LevelsPageController implements Initializable {
     private StackPane mediumButton;
     @FXML
     private StackPane hardButton;
+    @FXML
+    private StackPane rootStackPane;
 
     /**
      * Initializes the controller class.
@@ -42,6 +45,8 @@ public class LevelsPageController implements Initializable {
         mediumButton.setOnMouseClicked(this::mediumClicked);
         hardButton.setOnMouseClicked(this::hardClicked);
         back.setOnMouseClicked(this::backClicked);
+        
+        new BackgroundAnimator(rootStackPane);
     }    
 
     @FXML

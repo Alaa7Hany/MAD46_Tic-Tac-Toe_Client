@@ -16,9 +16,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootStackPane" xmlns="http://javafx.com/javafx/25" fx:controller="com.mycompany.tictactoeclient.GamePageController">
+<StackPane fx:id="rootStackPane" styleClass="background" stylesheets="@../../../styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.GamePageController">
    <children>
-      <AnchorPane id="AnchorPane" prefHeight="577.0" prefWidth="615.0" styleClass="background" stylesheets="@../../../styles.css">
+      <AnchorPane id="AnchorPane" prefHeight="577.0" prefWidth="615.0">
          <children>
             <GridPane fx:id="gameBoard" alignment="CENTER" hgap="10.0" layoutX="128.0" layoutY="144.0" prefHeight="315.0" prefWidth="360.0" vgap="10.0">
               <columnConstraints>
@@ -195,7 +195,7 @@
             </BorderPane>
             <BorderPane layoutX="138.0" layoutY="491.0" prefHeight="67.0" prefWidth="340.0">
                <left>
-                  <Button fx:id="recordBtn"  alignment="CENTER" mnemonicParsing="false" onAction="#onRecord" prefHeight="43.0" prefWidth="114.0" style="-fx-background-radius: 30; -fx-border-color: FF383C; -fx-border-radius: 30; -fx-border-width: 2; -fx-background-color: #FFFFFF;" text="Record" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                  <Button fx:id="recordBtn" alignment="CENTER" mnemonicParsing="false" onAction="#onRecord" prefHeight="43.0" prefWidth="114.0" style="-fx-background-radius: 30; -fx-border-color: FF383C; -fx-border-radius: 30; -fx-border-width: 2; -fx-background-color: #FFFFFF;" text="Record" textAlignment="CENTER" BorderPane.alignment="CENTER">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -217,8 +217,8 @@
                </right>
                
             </BorderPane>
-            <StackPane alignment="BOTTOM_RIGHT"  >
-                <fx:include source="SettingIcon.fxml" fx:id="settingIconController"/>
+            <StackPane alignment="BOTTOM_RIGHT">
+                <fx:include fx:id="settingIconController" source="SettingIcon.fxml" />
                 <AnchorPane.bottomAnchor>20</AnchorPane.bottomAnchor>
                 <AnchorPane.rightAnchor>20</AnchorPane.rightAnchor>
             </StackPane>
@@ -231,8 +231,6 @@
          
       </AnchorPane>
       
-        <StackPane fx:id="settingLayer"
-           mouseTransparent="true"
-           pickOnBounds="false"/>
+        <StackPane fx:id="settingLayer" mouseTransparent="true" pickOnBounds="false" />
    </children>
 </StackPane>

@@ -7,37 +7,43 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="616.0" styleClass="background" stylesheets="@../../../styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.RecordsPageController">
+<StackPane fx:id="rootStackPane" styleClass="background" stylesheets="@../../../styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.RecordsPageController">
    <children>
-      <Button fx:id="backButton" layoutX="27.0" layoutY="41.0" mnemonicParsing="false" onAction="#moveBack" style="-fx-background-color: transparent; -fx-border-color: transparent;">
-         <graphic>
-            <ImageView fitHeight="27.0" fitWidth="31.0" pickOnBounds="true">
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="616.0">
+         <children>
+            <Button fx:id="backButton" layoutX="27.0" layoutY="41.0" mnemonicParsing="false" onAction="#moveBack" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+               <graphic>
+                  <ImageView fitHeight="27.0" fitWidth="31.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../../../images/bac.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Label layoutX="239.0" layoutY="43.0" text="Game Records" textFill="WHITE">
+               <font>
+                  <Font name="System Bold Italic" size="20.0" />
+               </font>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Label>
+            <ImageView fitHeight="115.0" fitWidth="120.0" layoutX="493.0" layoutY="462.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../images/bac.png" />
-               </image></ImageView>
-         </graphic>
-      </Button>
-      <Label layoutX="239.0" layoutY="43.0" text="Game Records" textFill="WHITE">
-         <font>
-            <Font name="System Bold Italic" size="20.0" />
-         </font>
-         <effect>
-            <DropShadow />
-         </effect>
-      </Label>
-      <ImageView fitHeight="115.0" fitWidth="120.0" layoutX="493.0" layoutY="462.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../images/xo.png" />
-         </image>
-      </ImageView>
-      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" layoutX="109.0" layoutY="117.0" prefHeight="396.0" prefWidth="390.0" style="-fx-background-color: transparent;" styleClass="custom-scroll" stylesheets="@../../../styles.css" vbarPolicy="AS_NEEDED">
-         <content>
-            
-            <VBox fx:id="recordsContainer" alignment="TOP_CENTER" spacing="15" style="                 -fx-border-color: #D7EA91;                 -fx-background-radius: 12;                 -fx-border-radius: 12;                 -fx-padding: 20;             " />
-         </content>
-      </ScrollPane>
+                  <Image url="@../../../images/xo.png" />
+               </image>
+            </ImageView>
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" layoutX="109.0" layoutY="117.0" prefHeight="396.0" prefWidth="390.0" style="-fx-background-color: transparent;" styleClass="custom-scroll" stylesheets="@../../../styles.css" vbarPolicy="AS_NEEDED">
+               <content>
+                  
+                  <VBox fx:id="recordsContainer" alignment="TOP_CENTER" spacing="15" style="                 -fx-border-color: #D7EA91;                 -fx-background-radius: 12;                 -fx-border-radius: 12;                 -fx-padding: 20;             " />
+               </content>
+            </ScrollPane>
+         </children>
+      </AnchorPane>
    </children>
-</AnchorPane>
+</StackPane>

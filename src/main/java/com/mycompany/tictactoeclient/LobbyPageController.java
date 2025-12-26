@@ -4,6 +4,7 @@
  */
 package com.mycompany.tictactoeclient;
 
+import animations.BackgroundAnimator;
 import static com.mycompany.tictactoeclient.Pages.PlayerComponent;
 import com.mycompany.tictactoeclient.network.InvitationListener;
 import com.mycompany.tictactoeclient.network.LobbyListener;
@@ -63,6 +64,8 @@ public class LobbyPageController implements Initializable, InvitationListener, L
         rootStackPane.getProperties().put("controller", this);
         NetworkConnection.getConnection().setInvitationListener(this);
         NetworkConnection.getConnection().setLobbyListener(this);
+        
+        new BackgroundAnimator(rootStackPane);
         
     }    
     

@@ -5,6 +5,7 @@
 package com.mycompany.tictactoeclient;
 
 
+import animations.BackgroundAnimator;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -33,6 +34,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 /**
  * FXML Controller class
  *
@@ -45,10 +47,13 @@ public class RecordsPageController implements Initializable {
 
     @FXML
     private VBox recordsContainer;
+    @FXML
+    private StackPane rootStackPane;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         loadRecords();
+        new BackgroundAnimator(rootStackPane);
     }
 
     private ListView<?> recordsListView; 

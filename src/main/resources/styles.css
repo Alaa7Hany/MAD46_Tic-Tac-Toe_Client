@@ -115,3 +115,26 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-text-fill:black;
     -fx-font-size:13;
 }
+
+.floating-x {
+    /* Vertical Gradient: Light Orange to Red-Orange */
+    -fx-text-fill: linear-gradient(to bottom, #FFD700, #FF4500);
+    -fx-font-family: "System";
+    -fx-font-weight: bold;
+    -fx-font-size: 80px;
+    
+    /* Neon Glow Effect */
+    /* format: dropshadow(type, color, radius, spread, offsetX, offsetY) */
+    -fx-effect: dropshadow(gaussian, #FF4500, 20, 0.5, 0, 0);
+}
+
+.floating-o {
+    /* Vertical Gradient: Cyan to Deep Blue */
+    -fx-text-fill: linear-gradient(to bottom, #00FFFF, #00BFFF);
+    -fx-font-family: "System";
+    -fx-font-weight: bold;
+    -fx-font-size: 80px;
+    
+    /* Neon Glow Effect */
+    -fx-effect: dropshadow(gaussian, #00FFFF, 20, 0.5, 0, 0);
+}

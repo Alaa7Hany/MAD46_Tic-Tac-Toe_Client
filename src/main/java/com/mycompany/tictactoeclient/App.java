@@ -36,10 +36,13 @@ public class App extends Application {
     private final static String rootPage = Pages.startPage;
     private MouseEvent mouseEvent;
     private Node node;
+    
+    public static final int HEIGHT = 577;
+    public static final int WIDTH = 615;
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML(rootPage), 615, 577);
+        scene = new Scene(loadFXML(rootPage), WIDTH, HEIGHT);
 
         stage.setScene(scene);
         stage.setResizable(false);

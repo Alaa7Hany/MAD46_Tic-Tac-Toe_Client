@@ -113,6 +113,37 @@ public class GameHelper {
             this.step3 = step3;
         }
     }
+    
+   public static List<Integer> getWinningCells(List<Integer> steps) {
+        int[][] winPatterns = {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9},
+            {1, 4, 7},
+            {2, 5, 8},
+            {3, 6, 9},
+            {1, 5, 9},
+            {3, 5, 7}
+        };
+
+        for (int[] pattern : winPatterns) {
+            boolean win = true;
+            List<Integer> result = new ArrayList<>();
+
+            for (int cell : pattern) {
+                if (!steps.contains(cell)) {
+                    win = false;
+                    break;
+                }
+                result.add(cell);
+            }
+
+            if (win) {
+                return result;
+            }
+        }
+        return new ArrayList<>();
+    }
     public static StepsToWin getWinningLine(List<Integer> steps) {
         for (StepsToWin s : STEPS_TO_WIN) {
             if (steps.contains(s.step1) &&

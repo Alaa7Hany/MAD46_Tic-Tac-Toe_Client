@@ -38,6 +38,8 @@ import javafx.scene.layout.StackPane;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.util.Duration;
+import com.mycompany.tictactoeclient.record.RecordManager;
+import com.mycompany.tictactoeclient.record.model.GameRecord;
 
 /**
  * FXML Controller class
@@ -71,10 +73,15 @@ public class GamePageController implements Initializable {
     private TwoPlayerDTO currentTwoPlayer;
     private List<Integer> xSteps = new ArrayList<>();
     private List<Integer> oSteps = new ArrayList<>();
+    private RecordManager recordManager = new RecordManager();
+    private boolean isRecording = false;
+    
     @FXML
     private GridPane gameBoard;
     @FXML
     private Label roleLabel;
+    
+    
 
     // for records
     private ArrayList<Integer> moveHistory = new ArrayList<>();
@@ -122,6 +129,7 @@ public class GamePageController implements Initializable {
                 playerXRole = true;
             }
         }
+        
 
         moveHistory.clear();
     }
@@ -170,6 +178,15 @@ public class GamePageController implements Initializable {
 
     @FXML
     private void onRecord(ActionEvent event) {
+        if (isRecording) {
+            System.out.println("Already recording");
+            return;
+        }
+
+        String difficultyValue =(currentDifficulty == null) ? "NONE" : currentDifficulty.name();
+        
+        String p1 = playerXlbl.getText();
+        String p2 = playerOlbl.getText();
         String fileName = "game_" + System.currentTimeMillis() + ".dat";
 
         File directory = new File("records");
@@ -193,6 +210,15 @@ public class GamePageController implements Initializable {
             System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
 
+        recordManager.startRecord(
+                currentGameMode.name(),
+                difficultyValue,
+                p1,
+                p2
+        );
+
+        isRecording = true;
+        System.out.println("Recording started");
     }
 
     @FXML
@@ -241,6 +267,10 @@ public class GamePageController implements Initializable {
             GameHelper.addMoveToCell(targetCell, false);
             Sounds.playXOClick();
             oSteps.add(selectedCellNum);
+            
+            if (isRecording) {
+                recordManager.recordMove("o", selectedCellNum);
+            }
 
             // for records
             moveHistory.add(selectedCellNum);
@@ -338,6 +368,10 @@ public class GamePageController implements Initializable {
                 } else {
                     oSteps.add(cellNo);
                 }
+                
+                if (isRecording) {
+                    recordManager.recordMove(symbol, cellNo);
+                }
 
                 if (win) {
                     GameResult result = isXPlayer ? GameResult.X_WIN : GameResult.O_WIN;
@@ -361,6 +395,12 @@ public class GamePageController implements Initializable {
         String symbol = playerXRole ? "x" : "o";
 
         currentSteps.add(cellNum);
+        
+        if(isRecording){
+            recordManager.recordMove(symbol, cellNum);
+            
+        }
+        
 
         if (isOnline) {
             NetworkDAO.getInstance().sendMove(sessionID, cellNum, symbol,
@@ -373,6 +413,19 @@ public class GamePageController implements Initializable {
     private boolean handleGameEnd(List<Integer> steps, GameResult winResult, boolean isLose) {
         GameHelper.StepsToWin winLine = GameHelper.getWinningLine(steps);
         if (GameHelper.checkWin(steps)) {
+            List<Integer> winningCells = GameHelper.getWinningCells(steps);
+            if(isRecording){
+                recordManager.finishRecord(winResult.name(), winningCells);
+            }
+            
+
+            if (winResult == GameResult.X_WIN) {
+                xScore++;
+            } else {
+                oScore++;
+            }
+
+            showGameOverSafely(winResult, isLose, xScore, oScore);
             
             GameHelper.showWinningLine(gameBoard, winLine);
 
@@ -394,6 +447,11 @@ public class GamePageController implements Initializable {
         }
 
         if (GameHelper.checkDraw(xSteps, oSteps)) {
+            
+            if(isRecording){
+                recordManager.finishRecord("DRAW", new ArrayList<>());
+            }
+            
             showGameOverSafely(GameResult.NO_WIN, false, xScore, oScore);
             return true;
         }

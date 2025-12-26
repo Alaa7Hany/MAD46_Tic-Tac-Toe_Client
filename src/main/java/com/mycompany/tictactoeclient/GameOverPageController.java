@@ -13,6 +13,7 @@ import static com.mycompany.tictactoeclient.enums.GameResult.O_WIN;
 import static com.mycompany.tictactoeclient.enums.GameResult.X_WIN;
 import com.mycompany.tictactoeclient.network.NetworkConnection;
 import com.mycompany.tictactoeshared.InvitationDTO;
+import com.mycompany.tictactoeshared.RematchDTO;
 import com.mycompany.tictactoeshared.Request;
 import com.mycompany.tictactoeshared.RequestType;
 import java.io.IOException;
@@ -56,13 +57,15 @@ public class GameOverPageController implements Initializable {
     private GameMode currentGameMode;
     private Difficulty currentDifficulty;
     private InvitationDTO currentTwoPlayer;
-    
+    private String currentSessionId;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
     }
 
-    public void initGameOver(InvitationDTO towPalyer,GameMode mode, Difficulty difficulty, GameResult _gameResult, boolean isLose, int xScore, int oScore) {
+    public void initGameOver(String _currentSessionId, InvitationDTO towPalyer, GameMode mode, Difficulty difficulty, GameResult _gameResult, boolean isLose, int xScore, int oScore) {
+        this.currentSessionId = _currentSessionId;
         this.gameResult = _gameResult;
         this.oScore = oScore;
         this.xScore = xScore;
@@ -109,7 +112,7 @@ public class GameOverPageController implements Initializable {
                 default:
                     SoundManager.applyState();
                     App.setRoot(Pages.gamePage, (GamePageController controller) -> {
-                        controller.initGame(currentTwoPlayer,currentGameMode, currentDifficulty, xScore, oScore);
+                        controller.initGame(currentTwoPlayer, currentGameMode, currentDifficulty, xScore, oScore);
                     });
                     break;
             }
@@ -125,8 +128,8 @@ public class GameOverPageController implements Initializable {
         try {
             switch (currentGameMode) {
                 case ONLINE:
-                   FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/mycompany/tictactoeclient/LobbyPage.fxml"));
+                    FXMLLoader loader = new FXMLLoader(
+                            getClass().getResource("/com/mycompany/tictactoeclient/LobbyPage.fxml"));
 
                     Parent root = loader.load();
                     LobbyPageController controller = loader.getController();
@@ -159,41 +162,50 @@ public class GameOverPageController implements Initializable {
     }
 
     private void reMatchOnlineGame() {
-    
+
         new Thread(() -> {
-            NetworkConnection.getConnection().sendInvitation(
-                new Request(RequestType.INVITE_PLAYER, new InvitationDTO(currentTwoPlayer.getFromUsername(), currentTwoPlayer.getToUsername()))
+            RematchDTO dto = new RematchDTO(
+                    currentSessionId,
+                    currentTwoPlayer.getFromUsername().getUsername()
             );
-                  while (true) {            
-          System.out.println("+++");  
-        }
+
+            NetworkConnection.getConnection().sendMessage(
+                    new Request(RequestType.REMATCH_REQUEST, dto)
+            );
+
         }).start();
 
         Platform.runLater(() -> {
-            // the game-over dialog root
-            Parent gameOverRoot = rematchBtn.getScene().getRoot();
-            Parent parent = gameOverRoot.getParent();
-            if (!(parent instanceof StackPane)) {
-                System.out.println("Parent is not a StackPane. Can't show waiting dialog.");
+
+            Parent sceneRoot = rematchBtn.getScene().getRoot();
+            if (!(sceneRoot instanceof StackPane)) {
+                System.out.println("Scene root is not a StackPane. Can't show waiting dialog.");
                 return;
             }
-            StackPane gameOver = (StackPane) parent;
+            StackPane gamePageRoot = (StackPane) sceneRoot;
 
-            // remove the current game-over dialog from the lobby root
-            gameOver.getChildren().remove(gameOverRoot);
+            // Remove dimmer and dialog
+            int size = gamePageRoot.getChildren().size();
+            if (size >= 2) {
+                gamePageRoot.getChildren().remove(size - 2, size); // Remove dimmer and dialog
+            }
+
+            // Add waiting dialog with dimmer
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mycompany/tictactoeclient/waitingDialog.fxml"));
                 Parent waitingDialog = loader.load();
-                Region dimmer = new Region();
-                dimmer.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
-                dimmer.prefWidthProperty().bind(gameOver.widthProperty());
-                dimmer.prefHeightProperty().bind(gameOver.heightProperty());
 
-                gameOver.getChildren().addAll(dimmer, waitingDialog);
+                Region dimmer = new Region();
+                dimmer.setId("waitingDialogDimmer");
+                dimmer.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
+                dimmer.prefWidthProperty().bind(gamePageRoot.widthProperty());
+                dimmer.prefHeightProperty().bind(gamePageRoot.heightProperty());
+
+                gamePageRoot.getChildren().addAll(dimmer, waitingDialog);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         });
-        System.out.println("Invite sent");
+        System.out.println("Rematch request sent");
     }
 }

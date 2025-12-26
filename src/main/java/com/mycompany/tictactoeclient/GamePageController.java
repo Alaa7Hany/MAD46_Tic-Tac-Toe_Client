@@ -45,6 +45,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Alert;
@@ -77,7 +78,7 @@ public class GamePageController implements Initializable {
     private boolean isSingle;
     private boolean isOnline;
     private boolean boardLocked = false;
-    private String sessionID;
+    private String sessionID = "";
     private int oScore, xScore;
     private InvitationDTO currentTwoPlayer;
     private List<Integer> xSteps = new ArrayList<>();
@@ -85,7 +86,6 @@ public class GamePageController implements Initializable {
 
     private RecordManager recordManager = new RecordManager();
     private boolean isRecording = false;
-    
 
     private SettingHelper settingHelper;
     @FXML
@@ -93,22 +93,18 @@ public class GamePageController implements Initializable {
     @FXML
     private Label roleLabel;
 
-    
-    
-
     // for records
     private ArrayList<Integer> moveHistory = new ArrayList<>();
     @FXML
     private Button recordBtn;
-    
+
     private Timeline recordBlink;
 
     @FXML
     private StackPane settingLayer;
-    
+
     @FXML
     private ImageView settingIconController;
-
 
     /**
      * Initializes the controller class.
@@ -116,25 +112,17 @@ public class GamePageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        settingHelper = new SettingHelper(settingLayer, SettingsPosition.BOTTOM);
+        settingIconController.setOnMouseClicked(e -> {
+            settingHelper.toggle();
 
-        
-            settingHelper = new SettingHelper(settingLayer, SettingsPosition.BOTTOM);
-            settingIconController.setOnMouseClicked(e ->{
-                settingHelper.toggle();
-                
-            });
-            
-            new BackgroundAnimator(rootStackPane);
-      
+        });
 
-        //remove this  put now use it for test
-        //isOnline = true;
-//        isSingle = true;
-//        //lockBoard();
-//        setupNetworkListener();
+        new BackgroundAnimator(rootStackPane);
     }
+    
 
-    public void initGame(InvitationDTO towPalyer,GameMode mode, Difficulty difficulty, int xScore, int oScore) {
+    public void initGame(InvitationDTO towPalyer, GameMode mode, Difficulty difficulty, int xScore, int oScore) {
         this.currentGameMode = mode;
         this.currentDifficulty = difficulty;
         this.xScore = xScore;
@@ -164,7 +152,6 @@ public class GamePageController implements Initializable {
                 playerXRole = true;
             }
         }
-        
 
         moveHistory.clear();
     }
@@ -218,8 +205,8 @@ public class GamePageController implements Initializable {
             return;
         }
 
-        String difficultyValue =(currentDifficulty == null) ? "NONE" : currentDifficulty.name();
-        
+        String difficultyValue = (currentDifficulty == null) ? "NONE" : currentDifficulty.name();
+
         String p1 = playerXlbl.getText();
         String p2 = playerOlbl.getText();
         String fileName = "game_" + System.currentTimeMillis() + ".dat";
@@ -256,22 +243,22 @@ public class GamePageController implements Initializable {
         startRecordBlink();
         System.out.println("Recording started");
     }
-    
+
     private void startRecordBlink() {
         recordBtn.getStyleClass().add("record-active");
 
         recordBlink = new Timeline(
-            new KeyFrame(Duration.ZERO,
-                new KeyValue(recordBtn.opacityProperty(), 1.0)),
-            new KeyFrame(Duration.seconds(0.6),
-                new KeyValue(recordBtn.opacityProperty(), 0.4))
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(recordBtn.opacityProperty(), 1.0)),
+                new KeyFrame(Duration.seconds(0.6),
+                        new KeyValue(recordBtn.opacityProperty(), 0.4))
         );
 
         recordBlink.setAutoReverse(true);
         recordBlink.setCycleCount(Timeline.INDEFINITE);
         recordBlink.play();
     }
-    
+
     private void stopRecordBlink() {
         if (recordBlink != null) {
             recordBlink.stop();
@@ -282,14 +269,14 @@ public class GamePageController implements Initializable {
 
     @FXML
     private void onExit(ActionEvent event) {
-        if(isRecording){
+        if (isRecording) {
             stopRecordBlink();
         }
         try {
             switch (currentGameMode) {
                 case ONLINE:
-                     FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/mycompany/tictactoeclient/LobbyPage.fxml"));
+                    FXMLLoader loader = new FXMLLoader(
+                            getClass().getResource("/com/mycompany/tictactoeclient/LobbyPage.fxml"));
 
                     Parent root = loader.load();
                     LobbyPageController controller = loader.getController();
@@ -318,8 +305,10 @@ public class GamePageController implements Initializable {
         if (availableCells.isEmpty()) {
             return;
         }
-        
-        if(GameHelper.checkWin(xSteps)||GameHelper.checkWin(oSteps)) return ;
+
+        if (GameHelper.checkWin(xSteps) || GameHelper.checkWin(oSteps)) {
+            return;
+        }
 
         Random random = new Random();
         int selectedCellNum;
@@ -337,7 +326,7 @@ public class GamePageController implements Initializable {
             GameHelper.addMoveToCell(targetCell, false);
             Sounds.playXOClick();
             oSteps.add(selectedCellNum);
-            
+
             if (isRecording) {
                 recordManager.recordMove("o", selectedCellNum);
             }
@@ -382,10 +371,6 @@ public class GamePageController implements Initializable {
                             case START_GAME:
                                 startOnlineGame(req.getData());
                                 break;
-                            case ACCEPT_INVITE:
-                            System.out.println("***********************************************************************************************************************");
-                                break;
-    
                             default:
                                 break;
                         }
@@ -400,21 +385,20 @@ public class GamePageController implements Initializable {
                 //////////////// Handling Server Disconnection, Don't touch ///////////////////
                 
                 System.out.println("Server connection lost during game: " + ex.getMessage());
-            
+
                 Platform.runLater(() -> {
                     try {
                         App.setRoot(Pages.startPage);
 
-                         Alert alert = new Alert(Alert.AlertType.ERROR);
-                         alert.setContentText("Connection to server lost.");
-                         alert.show();
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setContentText("Connection to server lost.");
+                        alert.show();
 
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 });
-                
-               
+
             }
         }).start();
     }
@@ -427,6 +411,12 @@ public class GamePageController implements Initializable {
         playerXRole = symbol.equals("x");
 
         Platform.runLater(() -> {
+
+            removeWaitingDialog();
+            clearBoard();
+            xSteps.clear();
+            oSteps.clear();
+
             if (playerXRole) {
                 roleLabel.setText("Your Role");
                 unlockBoard();
@@ -434,6 +424,41 @@ public class GamePageController implements Initializable {
                 roleLabel.setText("Waiting...");
             }
         });
+    }
+private void clearBoard() {
+    for (Node node : gameBoard.getChildren()) {
+        if (node instanceof StackPane) {
+            StackPane cell = (StackPane) node;
+    
+            cell.getChildren().clear();
+
+            cell.setStyle("-fx-background-color: #B3ACCA;");
+        }
+    }
+}
+    private void removeWaitingDialog() {
+        // Find and remove waiting dialog dimmer and dialog
+        Node dimmerToRemove = null;
+        Node dialogToRemove = null;
+
+        for (Node node : rootStackPane.getChildren()) {
+            if (node.getId() != null && node.getId().equals("waitingDialogDimmer")) {
+                dimmerToRemove = node;
+                // The dialog should be the next node
+                int index = rootStackPane.getChildren().indexOf(node);
+                if (index + 1 < rootStackPane.getChildren().size()) {
+                    dialogToRemove = rootStackPane.getChildren().get(index + 1);
+                }
+                break;
+            }
+        }
+
+        if (dimmerToRemove != null) {
+            rootStackPane.getChildren().remove(dimmerToRemove);
+        }
+        if (dialogToRemove != null) {
+            rootStackPane.getChildren().remove(dialogToRemove);
+        }
     }
 
     private void receiveMove(Object _data) {
@@ -459,7 +484,7 @@ public class GamePageController implements Initializable {
                 } else {
                     oSteps.add(cellNo);
                 }
-                
+
                 if (isRecording) {
                     recordManager.recordMove(symbol, cellNo);
                 }
@@ -486,12 +511,11 @@ public class GamePageController implements Initializable {
         String symbol = playerXRole ? "x" : "o";
 
         currentSteps.add(cellNum);
-        
-        if(isRecording){
+
+        if (isRecording) {
             recordManager.recordMove(symbol, cellNum);
-            
+
         }
-        
 
         if (isOnline) {
             NetworkDAO.getInstance().sendMove(sessionID, cellNum, symbol,
@@ -504,38 +528,38 @@ public class GamePageController implements Initializable {
     private boolean handleGameEnd(List<Integer> steps, GameResult winResult, boolean isLose) {
         if (GameHelper.checkWin(steps)) {
             List<Integer> winningCells = GameHelper.getWinningCells(steps);
-            if(isRecording){
+            if (isRecording) {
                 recordManager.finishRecord(winResult.name(), winningCells);
                 stopRecordBlink();
-                isRecording=false;
+                isRecording = false;
             }
 
             GameHelper.StepsToWin winLine = GameHelper.getWinningLine(steps);
             GameHelper.showWinningLine(gameBoard, winLine);
-            
+
             if (winResult == GameResult.X_WIN) {
-                   xScore++;
-               } else {
-                   oScore++;
-               }
-            
+                xScore++;
+            } else {
+                oScore++;
+            }
+
             PauseTransition delay = new PauseTransition(Duration.seconds(1));
-          
-            delay.setOnFinished(eh ->{
-               showGameOverSafely(winResult, isLose, xScore, oScore);
+
+            delay.setOnFinished(eh -> {
+                showGameOverSafely(winResult, isLose, xScore, oScore);
             });
             delay.play();
             return true;
         }
 
         if (GameHelper.checkDraw(xSteps, oSteps)) {
-            
-            if(isRecording){
+
+            if (isRecording) {
                 recordManager.finishRecord("DRAW", new ArrayList<>());
                 stopRecordBlink();
-                isRecording=false;
+                isRecording = false;
             }
-            
+
             showGameOverSafely(GameResult.NO_WIN, false, xScore, oScore);
             return true;
         }
@@ -545,19 +569,19 @@ public class GamePageController implements Initializable {
 
     private void showGameOverSafely(GameResult result, boolean isLose, int _xScore, int _oScore) {
         try {
-            GameHelper.showGameOverDialog(rootStackPane,currentTwoPlayer, currentGameMode, currentDifficulty, result, isLose, _xScore, _oScore);
+            GameHelper.showGameOverDialog(rootStackPane, sessionID, currentTwoPlayer, currentGameMode, currentDifficulty, result, isLose, _xScore, _oScore);
         } catch (IOException ex) {
             System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
-    
+
     public void openAboutDialog() {
         try {
             App.showMyFxmlDialog(
-                rootStackPane,
-                "/com/mycompany/tictactoeclient/aboutDialog.fxml",
-                true);
-            } catch (IOException e) {
+                    rootStackPane,
+                    "/com/mycompany/tictactoeclient/aboutDialog.fxml",
+                    true);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

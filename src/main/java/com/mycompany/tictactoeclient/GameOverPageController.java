@@ -17,13 +17,16 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -121,7 +124,15 @@ public class GameOverPageController implements Initializable {
             Sounds.resumeSound();
             switch (currentGameMode) {
                 case ONLINE:
-                    App.setRoot(Pages.lobbyPage);
+                   FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/mycompany/tictactoeclient/LobbyPage.fxml"));
+
+                    Parent root = loader.load();
+                    LobbyPageController controller = loader.getController();
+
+                    Stage stage = (Stage) exitBtn.getScene().getWindow();
+                    stage.getScene().setRoot(root);
+                    controller.setCurrentPlayer(currentTwoPlayer.getPrimary());
                     break;
                 default:
                     App.setRoot(Pages.startPage);

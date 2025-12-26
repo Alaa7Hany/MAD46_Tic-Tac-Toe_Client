@@ -40,6 +40,9 @@ import javafx.application.Platform;
 import javafx.util.Duration;
 import com.mycompany.tictactoeclient.record.RecordManager;
 import com.mycompany.tictactoeclient.record.model.GameRecord;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -226,7 +229,15 @@ public class GamePageController implements Initializable {
         try {
             switch (currentGameMode) {
                 case ONLINE:
-                    App.setRoot(Pages.lobbyPage);
+                     FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/mycompany/tictactoeclient/LobbyPage.fxml"));
+
+                    Parent root = loader.load();
+                    LobbyPageController controller = loader.getController();
+
+                    Stage stage = (Stage) rootStackPane.getScene().getWindow();
+                    stage.getScene().setRoot(root);
+                    controller.setCurrentPlayer(currentTwoPlayer.getPrimary());
                     break;
                 default:
                     App.setRoot(Pages.startPage);

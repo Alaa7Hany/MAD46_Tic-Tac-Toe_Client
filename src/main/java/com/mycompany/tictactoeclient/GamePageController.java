@@ -45,7 +45,11 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+<<<<<<< HEAD
 import javafx.scene.control.Button;
+=======
+import javafx.scene.control.Alert;
+>>>>>>> 2590f78f79e6623a01b83ab4a71e325e4c004942
 import javafx.stage.Stage;
 
 /**
@@ -369,7 +373,24 @@ public class GamePageController implements Initializable {
                     }
                 }
             } catch (IOException | ClassNotFoundException ex) {
-                ex.printStackTrace();
+                //////////////// Handling Server Disconnection, Don't touch ///////////////////
+                
+                System.out.println("Server connection lost during game: " + ex.getMessage());
+            
+                Platform.runLater(() -> {
+                    try {
+                        App.setRoot(Pages.startPage);
+
+                         Alert alert = new Alert(Alert.AlertType.ERROR);
+                         alert.setContentText("Connection to server lost.");
+                         alert.show();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                
+                ////////////////////////////////////////////////////////////////////
             }
         }).start();
     }

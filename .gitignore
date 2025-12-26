@@ -23,3 +23,5 @@ target/
 .settings/
 .classpath
 .project
+
+records/

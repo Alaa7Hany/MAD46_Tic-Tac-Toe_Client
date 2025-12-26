@@ -3,7 +3,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -34,12 +33,11 @@
             <Image url="@../../../images/xo.png" />
          </image>
       </ImageView>
-      <ScrollPane prefWidth="390.0" prefHeight="396.0" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"  layoutX="109.0" layoutY="117.0" style="-fx-background-color: transparent;" styleClass="custom-scroll" stylesheets="@../../../styles.css">
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" layoutX="109.0" layoutY="117.0" prefHeight="396.0" prefWidth="390.0" style="-fx-background-color: transparent;" styleClass="custom-scroll" stylesheets="@../../../styles.css" vbarPolicy="AS_NEEDED">
          <content>
             
             <VBox fx:id="recordsContainer" alignment="TOP_CENTER" spacing="15" style="                 -fx-border-color: #D7EA91;                 -fx-background-radius: 12;                 -fx-border-radius: 12;                 -fx-padding: 20;             " />
          </content>
       </ScrollPane>
-      <ListView fx:id="recordsListView" layoutX="118.0" layoutY="94.0" prefHeight="418.0" prefWidth="373.0" styleClass="background" stylesheets="@../../../styles.css" />
    </children>
 </AnchorPane>

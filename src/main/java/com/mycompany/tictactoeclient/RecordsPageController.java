@@ -54,11 +54,7 @@ public class RecordsPageController implements Initializable {
     /**
      * Initializes the controller class.
      */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        
-
-    }
+    
 
 private void loadRecordsGame(){
 
@@ -66,7 +62,19 @@ private void loadRecordsGame(){
     
     @FXML
     private void moveBack(ActionEvent event) {
-        // navigation
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/mycompany/tictactoeclient/startPage.fxml")
+            );
+
+            Pane newContent = loader.load();
+            Pane currentRoot = (Pane) backButton.getScene().getRoot();
+
+            currentRoot.getChildren().setAll(newContent);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadRecords() {

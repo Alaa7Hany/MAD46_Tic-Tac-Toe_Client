@@ -422,24 +422,15 @@ public class GamePageController implements Initializable {
     }
 
     private boolean handleGameEnd(List<Integer> steps, GameResult winResult, boolean isLose) {
-        GameHelper.StepsToWin winLine = GameHelper.getWinningLine(steps);
         if (GameHelper.checkWin(steps)) {
             List<Integer> winningCells = GameHelper.getWinningCells(steps);
             if(isRecording){
                 recordManager.finishRecord(winResult.name(), winningCells);
             }
-            
 
-            if (winResult == GameResult.X_WIN) {
-                xScore++;
-            } else {
-                oScore++;
-            }
-
-            showGameOverSafely(winResult, isLose, xScore, oScore);
-            
+            GameHelper.StepsToWin winLine = GameHelper.getWinningLine(steps);
             GameHelper.showWinningLine(gameBoard, winLine);
-
+            
             if (winResult == GameResult.X_WIN) {
                     System.out.println("xxxxxxx" +xScore );
                    xScore++;

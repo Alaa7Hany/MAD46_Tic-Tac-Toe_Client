@@ -15,52 +15,67 @@ import javafx.scene.media.AudioClip;
 public class Sounds {
     
     private static MediaPlayer backgroundSound;
-    
-    private static final AudioClip REGULAR_CLICK =
-        new AudioClip(Sounds.class
-            .getResource("/sounds/regular click.wav").toExternalForm());
-    
-    private static final AudioClip XO_CLICK =
-        new AudioClip(Sounds.class
-            .getResource("/sounds/XO sound.wav").toExternalForm());
-    
-    private static final AudioClip TYPE_CLICK =
-        new AudioClip(Sounds.class
-            .getResource("/sounds/Keyboard sound.wav").toExternalForm());
-    
-    
-    public static void playSound(){
-        if(backgroundSound != null)return;
-        Media media =  new Media(Sounds.class.getResource("/sounds/background.mp3").toExternalForm());
-        backgroundSound = new MediaPlayer(media);
-        
-        backgroundSound.setCycleCount(MediaPlayer.INDEFINITE);
-        backgroundSound.setVolume(0.4);
+
+    private static AudioClip REGULAR_CLICK;
+    private static AudioClip XO_CLICK;
+    private static AudioClip TYPE_CLICK;
+
+    public static void playSound() {
+        if (SoundManager.isMuted()) return;
+
+        if (backgroundSound == null) {
+            Media media = new Media(
+                Sounds.class.getResource("/sounds/background.mp3").toExternalForm()
+            );
+            backgroundSound = new MediaPlayer(media);
+            backgroundSound.setCycleCount(MediaPlayer.INDEFINITE);
+            backgroundSound.setVolume(0.4);
+        }
         backgroundSound.play();
     }
-    
-    public static void pauseSound(){
-        if(backgroundSound != null){
+
+    public static void pauseSound() {
+        if (backgroundSound != null) {
             backgroundSound.pause();
-       }
+        }
     }
-    
-    public static void resumeSound(){
-        if(backgroundSound != null){
+
+    public static void resumeSound() {
+        if (backgroundSound != null) {
             backgroundSound.play();
         }
     }
-    
+
     public static void playUiClick() {
+        if (SoundManager.isMuted()) return;
+
+        if (REGULAR_CLICK == null) {
+            REGULAR_CLICK = new AudioClip(
+                Sounds.class.getResource("/sounds/regular click.wav").toExternalForm()
+            );
+        }
         REGULAR_CLICK.play();
     }
 
     public static void playXOClick() {
+        if (SoundManager.isMuted()) return;
+
+        if (XO_CLICK == null) {
+            XO_CLICK = new AudioClip(
+                Sounds.class.getResource("/sounds/XO sound.wav").toExternalForm()
+            );
+        }
         XO_CLICK.play();
     }
 
     public static void playTypeClick() {
+        if (SoundManager.isMuted()) return;
+
+        if (TYPE_CLICK == null) {
+            TYPE_CLICK = new AudioClip(
+                Sounds.class.getResource("/sounds/Keyboard sound.wav").toExternalForm()
+            );
+        }
         TYPE_CLICK.play();
     }
-    
 }

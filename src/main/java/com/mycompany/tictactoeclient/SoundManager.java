@@ -10,7 +10,7 @@ package com.mycompany.tictactoeclient;
  */
 public class SoundManager {
     
-    private static boolean muted = false;
+    private static boolean muted = true;
 
     public static boolean isMuted() {
         return muted;
@@ -22,7 +22,7 @@ public class SoundManager {
         if (muted) {
             Sounds.pauseSound();
         } else {
-            Sounds.resumeSound();
+            Sounds.playSound();
         }
     }
 
@@ -30,7 +30,7 @@ public class SoundManager {
         if (muted) {
             Sounds.pauseSound();
         } else {
-            Sounds.resumeSound();
+            Sounds.playSound();
         }
     }
     

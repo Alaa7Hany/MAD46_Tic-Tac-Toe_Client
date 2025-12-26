@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+
+
+<ImageView fx:id="icon" onMouseClicked="#onIconClicked"  fitHeight="45.0" fitWidth="45.0" pickOnBounds="true"  preserveRatio="true" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.SettingIconController">
+   <image>
+      <Image url="@../../../images/setting_icon.png" />
+   </image>
+</ImageView>

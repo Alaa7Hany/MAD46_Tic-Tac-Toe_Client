@@ -4,10 +4,9 @@
  */
 package com.mycompany.tictactoeclient;
 
-import com.mycompany.tictactoeclient.enums.Difficulty;
-import com.mycompany.tictactoeclient.enums.GameMode;
-import com.mycompany.tictactoeshared.LoginDTO;
-import com.mycompany.tictactoeshared.MoveDTO;
+
+import com.mycompany.tictactoeclient.enums.SettingsPosition;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -18,21 +17,17 @@ import javafx.animation.AnimationTimer;
 import javafx.css.Style;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
+
 import javafx.scene.layout.StackPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+
 /**
  * FXML Controller class
  *
@@ -55,12 +50,30 @@ public class StartPageController implements Initializable {
     private final Random random = new Random();
     
     
+    @FXML
+    private StackPane settingLayer;
+    
+    @FXML
+    private ImageView settingIconController;
+    
+    private SettingHelper settingHelper;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         startFloatingAnimation();
+
+        // TODO
+            rootStackPane.getProperties().put("controller", this);
+        
+            settingLayer.setMouseTransparent(true);
+            settingHelper = new SettingHelper(settingLayer, SettingsPosition.TOP);
+            settingIconController.setOnMouseClicked(e ->{
+                settingHelper.toggle();
+                
+            });
+        
     }    
     
     @FXML
@@ -90,6 +103,17 @@ public class StartPageController implements Initializable {
             System.getLogger(StartPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
         
+    }
+    
+    public void openAboutDialog() {
+        try {
+            App.showMyFxmlDialog(
+                rootStackPane,
+                "/com/mycompany/tictactoeclient/aboutDialog.fxml",
+                true);
+            } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     
@@ -187,7 +211,6 @@ public class StartPageController implements Initializable {
     }
     
     //////////////////////////////////////////////////////////////////
-
 
 
 }

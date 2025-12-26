@@ -54,7 +54,7 @@ public class GameOverPageController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Sounds.pauseSound();
+        
     }
 
     public void initGameOver(TwoPlayerDTO towPalyer,GameMode mode, Difficulty difficulty, GameResult _gameResult, boolean isLose, int xScore, int oScore) {
@@ -96,15 +96,13 @@ public class GameOverPageController implements Initializable {
 
     @FXML
     private void reMatchAction(ActionEvent event) {
-        Sounds.playUiClick();
-        stopMediaPlayer();
         try {
-            Sounds.resumeSound();
             switch (currentGameMode) {
                 case ONLINE:
                    
                     break;
                 default:
+                    SoundManager.applyState();
                     App.setRoot(Pages.gamePage, (GamePageController controller) -> {
                         controller.initGame(currentTwoPlayer,currentGameMode, currentDifficulty, xScore, oScore);
                     });
@@ -118,10 +116,8 @@ public class GameOverPageController implements Initializable {
 
     @FXML
     private void exitAction(ActionEvent event) {
-        Sounds.playUiClick();
         stopMediaPlayer();
         try {
-            Sounds.resumeSound();
             switch (currentGameMode) {
                 case ONLINE:
                    FXMLLoader loader = new FXMLLoader(
@@ -138,6 +134,9 @@ public class GameOverPageController implements Initializable {
                     App.setRoot(Pages.startPage);
                     break;
             }
+
+            SoundManager.applyState();
+            App.setRoot(Pages.startPage);
         } catch (IOException ex) {
             System.getLogger(GameOverPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }

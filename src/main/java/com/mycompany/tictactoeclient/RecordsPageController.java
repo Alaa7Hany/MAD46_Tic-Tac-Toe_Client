@@ -8,6 +8,7 @@ package com.mycompany.tictactoeclient;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import javafx.event.ActionEvent;
@@ -84,12 +85,16 @@ private void loadRecordsGame(){
         File[] files = dir.listFiles((d, name) -> name.endsWith(".txt"));
         if (files == null) return;
 
+        Arrays.sort(files, (f1, f2) -> 
+            Long.compare(f2.lastModified(), f1.lastModified())
+        );
+
         recordsContainer.getChildren().clear();
-        
-        int index = 1;
-        for (File file : files) {
-            recordsContainer.getChildren().add(createRecordCard(file,index));
-            index++;
+
+        int total = files.length;
+        for (int i =0; i<files.length;i++) {
+            int recordNumber = total-i;
+            recordsContainer.getChildren().add(createRecordCard(files[i], recordNumber));
         }
     }
 

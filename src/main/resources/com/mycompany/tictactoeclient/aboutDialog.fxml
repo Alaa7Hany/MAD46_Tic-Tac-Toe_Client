@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="260.0" prefWidth="400.0" style="-fx-border-radius: 50; -fx-background-radius: 50;" styleClass="background" stylesheets="@../../../styles.css" 
+            fx:controller="com.mycompany.tictactoeclient.AboutDialogController"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1">
+
+    <top>
+        <Label text="TIC TAC TOE"
+               BorderPane.alignment="CENTER"
+               textFill="WHITE"
+               style="-fx-effect: dropshadow(gaussian, black,8,0.5,0,2);"
+        >
+            <font>
+                <Font name="System Bold Italic" size="30"/>
+            </font>
+        </Label>
+    </top>
+
+    <center>
+        <VBox alignment="CENTER"
+              spacing="15"
+              BorderPane.alignment="CENTER">
+            <children>
+
+                <Label text="A simple and fun strategy game where two players compete to align three marks in a row."
+                       wrapText="true"
+                       textFill="white"
+                       maxWidth="380"/>
+
+                <Label text="Challenge friends, enjoy smooth gameplay, and sharpen your thinking skills!"
+                       wrapText="true"
+                       textFill="white"
+                       maxWidth="380"/>
+            </children>
+        </VBox>
+    </center>
+
+    <bottom>
+        <Button text="OK"
+                onAction="#closeDialog"
+                prefWidth="120"
+                BorderPane.alignment="CENTER"
+                style="-fx-background-radius: 25;
+                       -fx-font-size: 16;
+                       -fx-text-fill: white;">
+            <BorderPane.margin>
+                <Insets bottom="20"/>
+            </BorderPane.margin>
+        </Button>
+    </bottom>
+
+</BorderPane>

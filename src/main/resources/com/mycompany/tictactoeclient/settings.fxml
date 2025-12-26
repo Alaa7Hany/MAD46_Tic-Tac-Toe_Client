@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="settingsRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="200.0" style="-fx-background-color: #A9ABAE; -fx-border-color: BLACK;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.SettingsController">
+   <children>
+      <VBox prefHeight="48.0" prefWidth="200.0">
+         <children>
+            <Label prefHeight="81.0" prefWidth="200.0" style="-fx-effect: dropshadow(gaussian, black,8,0.5,0,2);" text="        Settings" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="System Bold Italic" size="25.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <VBox prefHeight="183.0" prefWidth="200.0">
+         <children>
+            <AnchorPane prefHeight="193.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="muteBtn" contentDisplay="LEFT" graphicTextGap="8" layoutX="39.0" layoutY="7.0" mnemonicParsing="false" onAction="#muteMusic" prefHeight="34.0" prefWidth="122.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: #4426A9; -fx-text-fill: WHITE; -fx-border-color: #D7EA91; -fx-border-width: 2;" text="Mute">
+
+                    <font>
+                        <Font name="System Bold Italic" size="18.0" />
+                    </font>
+
+                    <graphic>
+                        <ImageView fx:id="muteIcon" fitHeight="18" fitWidth="18" preserveRatio="true" />
+                    </graphic>
+                </Button>
+                  <Button fx:id="logoutBtn" layoutX="39.0" layoutY="112.0" mnemonicParsing="false" onAction="#logout" prefHeight="34.0" prefWidth="122.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: #4426A9; -fx-text-fill: WHITE; -fx-border-color: #D7EA91; -fx-border-width: 2;" text="Log out">
+                     <font>
+                        <Font name="System Bold Italic" size="20.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="15.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images/logout.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="aboutBtn" layoutX="39.0" layoutY="59.0" mnemonicParsing="false" onAction="#aboutGame" prefHeight="34.0" prefWidth="122.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: #4426A9; -fx-text-fill: WHITE; -fx-border-color: #D7EA91; -fx-border-width: 2;" text="   About">
+                     <font>
+                        <Font name="System Bold Italic" size="20.0" />
+                     </font>
+                  </Button>
+                  <ImageView fitHeight="17.0" fitWidth="23.0" layoutX="54.0" layoutY="72.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/about-icon.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
+   </children>
+</VBox>

@@ -1,19 +1,19 @@
 * Tic Tac Toe Game Record *
-Player1: Menna
+Player1: Me
 Player2: Computer
 Result: Lose
 Game Mode: SINGLE_PLAYER
 Difficulty: EASY
-Start Time: 2025-12-26T02:58:40.223934600
-End Time: 2025-12-26T02:58:44.016078100
+Start Time: 2025-12-26T14:15:06.000409800
+End Time: 2025-12-26T14:15:10.630855800
 
 Moves:
 Move 1 | Player x | Cell 1
-Move 2 | Player o | Cell 4
+Move 2 | Player o | Cell 9
 Move 3 | Player x | Cell 2
-Move 4 | Player o | Cell 5
+Move 4 | Player o | Cell 8
 Move 5 | Player x | Cell 3
 
-Winner: Computer, Loser: Menna
+Winner: Computer, Loser: Me
 
 Winning Cells: [1, 2, 3]

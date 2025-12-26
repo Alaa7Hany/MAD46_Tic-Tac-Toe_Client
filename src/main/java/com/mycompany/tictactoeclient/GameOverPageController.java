@@ -11,10 +11,14 @@ import com.mycompany.tictactoeclient.enums.GameResult;
 import static com.mycompany.tictactoeclient.enums.GameResult.NO_WIN;
 import static com.mycompany.tictactoeclient.enums.GameResult.O_WIN;
 import static com.mycompany.tictactoeclient.enums.GameResult.X_WIN;
-import com.mycompany.tictactoeshared.TwoPlayerDTO;
+import com.mycompany.tictactoeclient.network.NetworkConnection;
+import com.mycompany.tictactoeshared.InvitationDTO;
+import com.mycompany.tictactoeshared.Request;
+import com.mycompany.tictactoeshared.RequestType;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +26,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -50,14 +55,14 @@ public class GameOverPageController implements Initializable {
     private int oScore, xScore;
     private GameMode currentGameMode;
     private Difficulty currentDifficulty;
-    private TwoPlayerDTO currentTwoPlayer;
+    private InvitationDTO currentTwoPlayer;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
     }
 
-    public void initGameOver(TwoPlayerDTO towPalyer,GameMode mode, Difficulty difficulty, GameResult _gameResult, boolean isLose, int xScore, int oScore) {
+    public void initGameOver(InvitationDTO towPalyer,GameMode mode, Difficulty difficulty, GameResult _gameResult, boolean isLose, int xScore, int oScore) {
         this.gameResult = _gameResult;
         this.oScore = oScore;
         this.xScore = xScore;
@@ -99,7 +104,7 @@ public class GameOverPageController implements Initializable {
         try {
             switch (currentGameMode) {
                 case ONLINE:
-                   
+                    reMatchOnlineGame();
                     break;
                 default:
                     SoundManager.applyState();
@@ -128,7 +133,7 @@ public class GameOverPageController implements Initializable {
 
                     Stage stage = (Stage) exitBtn.getScene().getWindow();
                     stage.getScene().setRoot(root);
-                    controller.setCurrentPlayer(currentTwoPlayer.getPrimary());
+                    controller.setCurrentPlayer(currentTwoPlayer.getFromUsername());
                     break;
                 default:
                     App.setRoot(Pages.startPage);
@@ -151,5 +156,44 @@ public class GameOverPageController implements Initializable {
             mediaPlayer.stop();
             mediaPlayer.dispose();
         }
+    }
+
+    private void reMatchOnlineGame() {
+    
+        new Thread(() -> {
+            NetworkConnection.getConnection().sendInvitation(
+                new Request(RequestType.INVITE_PLAYER, new InvitationDTO(currentTwoPlayer.getFromUsername(), currentTwoPlayer.getToUsername()))
+            );
+                  while (true) {            
+          System.out.println("+++");  
+        }
+        }).start();
+
+        Platform.runLater(() -> {
+            // the game-over dialog root
+            Parent gameOverRoot = rematchBtn.getScene().getRoot();
+            Parent parent = gameOverRoot.getParent();
+            if (!(parent instanceof StackPane)) {
+                System.out.println("Parent is not a StackPane. Can't show waiting dialog.");
+                return;
+            }
+            StackPane gameOver = (StackPane) parent;
+
+            // remove the current game-over dialog from the lobby root
+            gameOver.getChildren().remove(gameOverRoot);
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mycompany/tictactoeclient/waitingDialog.fxml"));
+                Parent waitingDialog = loader.load();
+                Region dimmer = new Region();
+                dimmer.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
+                dimmer.prefWidthProperty().bind(gameOver.widthProperty());
+                dimmer.prefHeightProperty().bind(gameOver.heightProperty());
+
+                gameOver.getChildren().addAll(dimmer, waitingDialog);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        System.out.println("Invite sent");
     }
 }

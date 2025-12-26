@@ -25,7 +25,7 @@ public class Sounds {
 
         if (backgroundSound == null) {
             Media media = new Media(
-                Sounds.class.getResource("/sounds/background.mp3").toExternalForm()
+                Sounds.class.getResource("/sounds/background2.mp3").toExternalForm()
             );
             backgroundSound = new MediaPlayer(media);
             backgroundSound.setCycleCount(MediaPlayer.INDEFINITE);

@@ -76,8 +76,10 @@ public class NetworkDAO {
     }
       
     public void logout() {
+        NetworkConnection.disconnectListener();
         Request request = new Request(RequestType.LOGOUT, null);
         NetworkConnection.getConnection().sendMessage(request);
+        
     }
     
 

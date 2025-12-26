@@ -86,3 +86,32 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-fill: #D7EA91;
 }
 
+.record-card {
+    -fx-background-color: #1D1243;
+    -fx-border-color: #CFE18F;
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+}
+
+.record-title {
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.record-view-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #CFE18F;
+    -fx-font-weight: bold;
+}
+
+.record-icon {
+    -fx-fit-width: 36;
+    -fx-fit-height: 36;
+}
+
+.textarea-view{
+    -fx-control-inner-background:#FFFFFF;
+    -fx-text-fill:black;
+    -fx-font-size:13;
+}

@@ -7,9 +7,12 @@ package com.mycompany.tictactoeclient.record;
 import com.mycompany.tictactoeclient.record.model.GameRecord;
 import com.mycompany.tictactoeclient.record.model.MoveRecord;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  *
@@ -22,14 +25,25 @@ public class RecordManager {
     private int moveCounter = 0;
     private boolean isRecording = false;
 
-    public void startRecord(String gameMode, String difficulty) {
+    private String player1;
+    private String player2;
+
+    private String result;
+    private String winnerName;
+    private String loserName;
+
+    public void startRecord(String gameMode, String difficulty, String p1, String p2) {
+        this.player1 = p1;
+        this.player2 = p2;
+
         gameRecord = new GameRecord(
                 gameMode,
                 difficulty,
                 LocalDateTime.now().toString()
         );
-        isRecording = true;
+
         moveCounter = 0;
+        isRecording = true;
     }
 
     public void recordMove(String player, int cellNumber) {
@@ -45,65 +59,60 @@ public class RecordManager {
         );
 
         gameRecord.addMove(move);
-        System.out.println(
-        "Recorded move #" + moveCounter +
-        " Player=" + player +
-        " Cell=" + cellNumber
-    );
     }
 
-    public void finishRecord(String winner, java.util.List<Integer> winningCells) {
+    public void finishRecord(String winner, List<Integer> winningCells) {
         if (!isRecording || gameRecord == null) return;
 
         gameRecord.setWinner(winner);
         gameRecord.setWinningCells(winningCells);
         gameRecord.setEndTime(LocalDateTime.now().toString());
+
+        if (winner == null || winner.equalsIgnoreCase("DRAW")) {
+            result = "Draw";
+            winnerName = "None";
+            loserName = "None";
+        } else if (winner.equalsIgnoreCase(player1)) {
+            result = "Win";
+            winnerName = player1;
+            loserName = player2;
+        } else {
+            result = "Lose";
+            winnerName = player2;
+            loserName = player1;
+        }
+
         isRecording = false;
-        
         saveToFile();
     }
 
-    public GameRecord getGameRecord() {
-        return gameRecord;
-    }
-    
-    public void debugPrintRecord() {
-    if (gameRecord == null) {
-        System.out.println("No record");
-        return;
-    }
+    private void saveToFile() {
 
-    System.out.println("=== GAME RECORD DEBUG ===");
-    System.out.println("Mode: " + gameRecord.getGameMode());
-    System.out.println("Difficulty: " + gameRecord.getDifficulty());
+        File dir = new File("records");
+        if (!dir.exists()) dir.mkdirs();
 
-    for (MoveRecord m : gameRecord.getMoves()) {
-        System.out.println(
-            "Move " + m.getMoveNumber() +
-            " | Player " + m.getPlayer() +
-            " | Cell " + m.getCellNumber() +
-            " | Time " + m.getTime()
-        );
-    }
-    }
-    
-    public void saveToFile() {
-        if (gameRecord == null) {
-            System.out.println("No record to save");
-            return;
-        }
+        String baseName = player1 + "vs" + player2;
+        int counter = 1;
+        File file;
 
-        String fileName = "record_" + System.currentTimeMillis() + ".txt";
+        do {
+            file = new File(dir, baseName + "_" + counter + ".txt");
+            counter++;
+        } while (file.exists());
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
 
-            writer.write("=== Tic Tac Toe Game Record ===");
+            writer.write("* Tic Tac Toe Game Record *");
             writer.newLine();
 
-            writer.write("Start Time: " + gameRecord.getStartTime());
+            writer.write("Player1: " + player1);
             writer.newLine();
 
-            writer.write("End Time: " + gameRecord.getEndTime());
+            writer.write("Player2: " + player2);
+            writer.newLine();
+
+
+            writer.write("Result: " + result);
             writer.newLine();
 
             writer.write("Game Mode: " + gameRecord.getGameMode());
@@ -112,30 +121,32 @@ public class RecordManager {
             writer.write("Difficulty: " + gameRecord.getDifficulty());
             writer.newLine();
 
+            writer.write("Start Time: " + gameRecord.getStartTime());
+            writer.newLine();
+
+            writer.write("End Time: " + gameRecord.getEndTime());
+            writer.newLine();
+
             writer.newLine();
             writer.write("Moves:");
             writer.newLine();
 
             for (MoveRecord move : gameRecord.getMoves()) {
                 writer.write(
-                    "Move " + move.getMoveNumber() +
-                    " | Player " + move.getPlayer().toUpperCase() +
-                    " | Cell " + move.getCellNumber() +
-                    " | Time " + move.getTime()
+                        "Move " + move.getMoveNumber() +
+                        " | Player " + move.getPlayer() +
+                        " | Cell " + move.getCellNumber()
                 );
                 writer.newLine();
             }
-
             writer.newLine();
-            writer.write("Winner: " + gameRecord.getWinner());
+            writer.write("Winner: " + winnerName+", ");
+            writer.write("Loser: " + loserName);
             writer.newLine();
-
+            
+            writer.newLine();
             writer.write("Winning Cells: " + gameRecord.getWinningCells());
             writer.newLine();
-
-            writer.write("================================");
-
-            System.out.println("Record saved to file: " + fileName);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -167,10 +167,15 @@ public class GamePageController implements Initializable {
         }
 
         String difficultyValue =(currentDifficulty == null) ? "NONE" : currentDifficulty.name();
+        
+        String p1 = playerXlbl.getText();
+        String p2 = playerOlbl.getText();
 
         recordManager.startRecord(
                 currentGameMode.name(),
-                difficultyValue
+                difficultyValue,
+                p1,
+                p2
         );
 
         isRecording = true;
@@ -336,7 +341,7 @@ public class GamePageController implements Initializable {
         
         if(isRecording){
             recordManager.recordMove(symbol, cellNum);
-            recordManager.debugPrintRecord();
+            
         }
         
 

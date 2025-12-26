@@ -25,13 +25,14 @@ public class Sounds {
 
         if (backgroundSound == null) {
             Media media = new Media(
-                Sounds.class.getResource("/sounds/background.mp3").toExternalForm()
+                Sounds.class.getResource("/sounds/background2.mp3").toExternalForm()
             );
             backgroundSound = new MediaPlayer(media);
             backgroundSound.setCycleCount(MediaPlayer.INDEFINITE);
             backgroundSound.setVolume(0.4);
         }
         backgroundSound.play();
+        
     }
 
     public static void pauseSound() {
@@ -67,5 +68,16 @@ public class Sounds {
             );
         }
         TYPE_CLICK.play();
+    }
+    
+    public static void playRegularClick() {
+        if (SoundManager.isMuted()) return;
+
+        if (REGULAR_CLICK == null) {
+            REGULAR_CLICK = new AudioClip(
+                Sounds.class.getResource("/sounds/regular click.wav").toExternalForm()
+            );
+        }
+        REGULAR_CLICK.play();
     }
 }

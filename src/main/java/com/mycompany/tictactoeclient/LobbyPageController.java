@@ -6,6 +6,7 @@ package com.mycompany.tictactoeclient;
 
 import animations.BackgroundAnimator;
 import static com.mycompany.tictactoeclient.Pages.PlayerComponent;
+import com.mycompany.tictactoeclient.enums.SettingsPosition;
 import com.mycompany.tictactoeclient.network.InvitationListener;
 import com.mycompany.tictactoeclient.network.LobbyListener;
 import com.mycompany.tictactoeclient.network.NetworkConnection;
@@ -26,6 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 /**
  * FXML Controller class
@@ -47,10 +49,15 @@ public class LobbyPageController implements Initializable, InvitationListener, L
     @FXML
     private VBox playerContainer;
     
-    
+    private SettingHelper settingHelper;
     private Platform platform;
     @FXML
     private StackPane rootStackPane;
+    @FXML
+    private StackPane settingLayer;
+    
+    @FXML
+    private ImageView settingIconController;
 
     
 
@@ -66,6 +73,12 @@ public class LobbyPageController implements Initializable, InvitationListener, L
         NetworkConnection.getConnection().setLobbyListener(this);
         
         new BackgroundAnimator(rootStackPane);
+        
+        settingHelper = new SettingHelper(settingLayer, SettingsPosition.BOTTOM);
+            settingIconController.setOnMouseClicked(e ->{
+                settingHelper.toggle();
+                
+            });
         
     }    
     

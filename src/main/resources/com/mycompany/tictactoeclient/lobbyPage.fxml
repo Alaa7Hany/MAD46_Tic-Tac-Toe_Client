@@ -51,22 +51,18 @@
             
          </top>
          <center>
-            <ScrollPane fitToHeight="true" fitToWidth="true" pannable="true" prefHeight="400.0" prefWidth="350.0" style="-fx-background-color: transparent; -fx-background: transparent;" styleClass="custom-scroll" BorderPane.alignment="CENTER">
+            <ScrollPane fitToHeight="true" fitToWidth="true" pannable="true" prefHeight="328.0" prefWidth="556.0" style="-fx-background-color: transparent; -fx-background: transparent;" styleClass="custom-scroll" BorderPane.alignment="CENTER">
                <content>
                   <VBox fx:id="playerContainer" alignment="TOP_CENTER" fillWidth="false" prefHeight="358.0" prefWidth="612.0" style="-fx-spacing: 10;" />
                </content>
             </ScrollPane>
          </center>
+         <bottom>
+                   <fx:include fx:id="settingIconController" source="SettingIcon.fxml" BorderPane.alignment="BOTTOM_LEFT" />
+         </bottom>
          
       </BorderPane>
-<!--      <StackPane alignment="TOP_RIGHT"  >
-                <fx:include source="SettingIcon.fxml" fx:id="settingIconController"/>
-                <AnchorPane.topAnchor>20</AnchorPane.topAnchor>
-                <AnchorPane.rightAnchor>20</AnchorPane.rightAnchor>
-            </StackPane>
-      
-      <StackPane fx:id="settingLayer"
-           mouseTransparent="true"
-           pickOnBounds="false"/>-->
+
+                                    <StackPane fx:id="settingLayer" alignment="BOTTOM_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" mouseTransparent="true" pickOnBounds="false" prefHeight="99.0" prefWidth="52.0" />
    </children>
 </StackPane>

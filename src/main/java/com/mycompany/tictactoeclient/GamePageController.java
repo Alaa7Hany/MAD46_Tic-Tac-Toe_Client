@@ -111,12 +111,15 @@ public class GamePageController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        settingHelper = new SettingHelper(settingLayer, SettingsPosition.BOTTOM);
-        settingIconController.setOnMouseClicked(e -> {
-            settingHelper.toggle();
-
-        });
+        
+            settingHelper = new SettingHelper(settingLayer, SettingsPosition.BOTTOM);
+            settingIconController.setOnMouseClicked(e ->{
+                settingHelper.toggle();
+                
+            });
+            
+            new BackgroundAnimator(rootStackPane);
+      
 
         new BackgroundAnimator(rootStackPane);
     }
@@ -241,7 +244,6 @@ public class GamePageController implements Initializable {
 
         isRecording = true;
         startRecordBlink();
-        System.out.println("Recording started");
     }
 
     private void startRecordBlink() {

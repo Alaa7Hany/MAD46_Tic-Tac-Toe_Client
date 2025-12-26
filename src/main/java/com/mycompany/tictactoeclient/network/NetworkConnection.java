@@ -42,6 +42,9 @@ public class NetworkConnection {
     public static void reConnectListener(){
         flag = true;
     }
+    public static void disconnectListener(){
+        flag = false;
+    }
     private NetworkConnection(){
         try {
             System.out.println("Creating NetworkConnection...");

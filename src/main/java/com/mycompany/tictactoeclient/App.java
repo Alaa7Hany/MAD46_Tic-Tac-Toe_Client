@@ -47,16 +47,16 @@ public class App extends Application {
         stage.setScene(scene);
         stage.setResizable(false);
         scene.setFill(Color.TRANSPARENT);
-        Sounds.playSound();
+        
         
         scene.addEventFilter(mouseEvent.MOUSE_PRESSED, event -> {
-        if (!event.isPrimaryButtonDown()) return;   //  left mouse button only
+        if (!event.isPrimaryButtonDown()) return;  
         node = (Node) event.getTarget();
         if (node.getStyleClass().contains("xo-cell")) return;
-        SoundManager.applyState();
+        
         });
- 
         stage.show();
+        SoundManager.applyState();
     }
     
     static void addProgressIndicator(StackPane sp){

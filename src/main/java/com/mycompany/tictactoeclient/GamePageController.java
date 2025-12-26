@@ -16,7 +16,6 @@ import com.mycompany.tictactoeshared.MoveDTO;
 import com.mycompany.tictactoeshared.Request;
 import static com.mycompany.tictactoeshared.RequestType.MOVE;
 import com.mycompany.tictactoeshared.StartGameDTO;
-import com.mycompany.tictactoeshared.TwoPlayerDTO;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -41,15 +40,12 @@ import javafx.application.Platform;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import com.mycompany.tictactoeclient.record.RecordManager;
-import com.mycompany.tictactoeclient.record.model.GameRecord;
+import com.mycompany.tictactoeshared.InvitationDTO;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
@@ -83,7 +79,7 @@ public class GamePageController implements Initializable {
     private boolean boardLocked = false;
     private String sessionID;
     private int oScore, xScore;
-    private TwoPlayerDTO currentTwoPlayer;
+    private InvitationDTO currentTwoPlayer;
     private List<Integer> xSteps = new ArrayList<>();
     private List<Integer> oSteps = new ArrayList<>();
 
@@ -136,14 +132,14 @@ public class GamePageController implements Initializable {
 //        setupNetworkListener();
     }
 
-    public void initGame(TwoPlayerDTO towPalyer,GameMode mode, Difficulty difficulty, int xScore, int oScore) {
+    public void initGame(InvitationDTO towPalyer,GameMode mode, Difficulty difficulty, int xScore, int oScore) {
         this.currentGameMode = mode;
         this.currentDifficulty = difficulty;
         this.xScore = xScore;
         this.oScore = oScore;
         this.currentTwoPlayer = towPalyer;
-        playerXlbl.setText(currentTwoPlayer.getPrimary().getUsername());
-        playerOlbl.setText(currentTwoPlayer.getSecondry().getUsername());
+        playerXlbl.setText(currentTwoPlayer.getFromUsername().getUsername());
+        playerOlbl.setText(currentTwoPlayer.getToUsername().getUsername());
         playerXScore.setText(xScore + "");
         playerOScore.setText(oScore + "");
         // in online we will accept two player models to set their names
@@ -297,7 +293,7 @@ public class GamePageController implements Initializable {
 
                     Stage stage = (Stage) rootStackPane.getScene().getWindow();
                     stage.getScene().setRoot(root);
-                    controller.setCurrentPlayer(currentTwoPlayer.getPrimary());
+                    controller.setCurrentPlayer(currentTwoPlayer.getFromUsername());
                     break;
                 default:
                     App.setRoot(Pages.startPage);
@@ -383,6 +379,10 @@ public class GamePageController implements Initializable {
                             case START_GAME:
                                 startOnlineGame(req.getData());
                                 break;
+                            case ACCEPT_INVITE:
+                            System.out.println("***********************************************************************************************************************");
+                                break;
+    
                             default:
                                 break;
                         }
@@ -511,9 +511,7 @@ public class GamePageController implements Initializable {
             GameHelper.showWinningLine(gameBoard, winLine);
             
             if (winResult == GameResult.X_WIN) {
-                    System.out.println("xxxxxxx" +xScore );
                    xScore++;
-                    System.out.println("xxxxxxx" +xScore );
                } else {
                    oScore++;
                }

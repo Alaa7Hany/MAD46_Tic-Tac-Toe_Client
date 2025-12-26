@@ -17,7 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.Region;
 import com.mycompany.tictactoeclient.enums.GameResult;
-import com.mycompany.tictactoeshared.TwoPlayerDTO;
+import com.mycompany.tictactoeshared.InvitationDTO;
 
 /**
  *
@@ -87,7 +87,7 @@ public class GameHelper {
         lbl.getStyleClass().add(playerLblStyle);
         cell.getChildren().add(lbl);
     }
-    public static void showGameOverDialog(StackPane rootStackPane,TwoPlayerDTO towPalyer,GameMode mode, Difficulty difficulty, GameResult _gameResult, boolean isLose,int xScore,int oScore) throws java.io.IOException {
+    public static void showGameOverDialog(StackPane rootStackPane,InvitationDTO towPalyer,GameMode mode, Difficulty difficulty, GameResult _gameResult, boolean isLose,int xScore,int oScore) throws java.io.IOException {
         FXMLLoader loader = new FXMLLoader(GameHelper.class.getResource(Pages.gameOverPage + ".fxml"));
         Parent dialog = loader.load();
 

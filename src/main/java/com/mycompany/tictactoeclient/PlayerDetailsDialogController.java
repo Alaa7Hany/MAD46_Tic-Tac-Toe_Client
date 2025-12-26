@@ -5,9 +5,7 @@
 package com.mycompany.tictactoeclient;
 
 import com.mycompany.tictactoeclient.network.NetworkConnection;
-import com.mycompany.tictactoeclient.network.NetworkDAO;
 import com.mycompany.tictactoeshared.InvitationDTO;
-import com.mycompany.tictactoeshared.Response;
 import com.mycompany.tictactoeshared.PlayerDTO;
 import com.mycompany.tictactoeshared.Request;
 import com.mycompany.tictactoeshared.RequestType;
@@ -19,11 +17,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 

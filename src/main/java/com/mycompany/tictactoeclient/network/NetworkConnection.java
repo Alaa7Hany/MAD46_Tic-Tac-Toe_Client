@@ -15,7 +15,6 @@ import com.mycompany.tictactoeshared.PlayerDTO;
 import com.mycompany.tictactoeshared.Request;
 import static com.mycompany.tictactoeshared.RequestType.INVITE_REJECTED;
 import com.mycompany.tictactoeshared.Response;
-import com.mycompany.tictactoeshared.TwoPlayerDTO;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -187,7 +186,7 @@ public class NetworkConnection {
                     case ACCEPT_INVITE : {
                         
                         flag=false;
-                        TwoPlayerDTO twoPlayer = (TwoPlayerDTO) request.getData();
+                       InvitationDTO twoPlayer = (InvitationDTO) request.getData();
                         Platform.runLater(() -> {
                             try {
 

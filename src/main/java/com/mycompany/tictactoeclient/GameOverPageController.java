@@ -128,6 +128,8 @@ public class GameOverPageController implements Initializable {
         if (GamePageController.instance != null) {
             GamePageController.instance.stopListening();
         }
+
+        SoundManager.applyState();
         try {
             switch (currentGameMode) {
                 case ONLINE:
@@ -154,6 +156,7 @@ public class GameOverPageController implements Initializable {
 
             SoundManager.applyState();
 //            App.setRoot(Pages.startPage);
+
         } catch (IOException ex) {
             System.getLogger(GameOverPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }

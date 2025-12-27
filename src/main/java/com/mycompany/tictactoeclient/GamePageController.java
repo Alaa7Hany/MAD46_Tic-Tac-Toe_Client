@@ -127,7 +127,6 @@ public class GamePageController implements Initializable {
 
         new BackgroundAnimator(rootStackPane);
     }
-    
 
     public void initGame(InvitationDTO towPalyer, GameMode mode, Difficulty difficulty, int xScore, int oScore) {
         this.currentGameMode = mode;
@@ -439,7 +438,7 @@ public class GamePageController implements Initializable {
         StartGameDTO data = (StartGameDTO) _data;
         sessionID = data.sessionID;
         String symbol = data.symbol;
-
+          System.out.println("-------------------startOnlineGame"  );
         playerXRole = symbol.equals("x");
 
         Platform.runLater(() -> {
@@ -493,6 +492,7 @@ private void clearBoard() {
         }
     }
 
+
     private void receiveMove(Object _data) {
         MoveDTO data = (MoveDTO) _data;
         int cellNo = data.getCellNo();
@@ -522,6 +522,13 @@ private void clearBoard() {
                 }
 
                 if (win) {
+                     if (isXPlayer) {
+                    xScore++;
+                    playerXScore.setText(xScore + "");
+                } else {
+                    oScore++;
+                    playerOScore.setText(oScore + "");
+                }
                     GameResult result = isXPlayer ? GameResult.X_WIN : GameResult.O_WIN;
                     PauseTransition delay = new PauseTransition(Duration.seconds(1));
 
@@ -578,13 +585,13 @@ private void clearBoard() {
 
             GameHelper.StepsToWin winLine = GameHelper.getWinningLine(steps);
             GameHelper.showWinningLine(gameBoard, winLine);
-
             if (winResult == GameResult.X_WIN) {
-                xScore++;
-            } else {
-                oScore++;
-            }
-
+            xScore++;
+            playerXScore.setText(xScore + ""); 
+        } else {
+            oScore++;
+            playerOScore.setText(oScore + "");  
+        }
             PauseTransition delay = new PauseTransition(Duration.seconds(1));
 
             delay.setOnFinished(eh -> {

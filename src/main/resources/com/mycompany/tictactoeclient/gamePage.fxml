@@ -186,7 +186,7 @@
                   </VBox>
                </right>
                <center>
-                  <Label fx:id="roleLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="47.0" prefWidth="176.0" textFill="WHITE" BorderPane.alignment="CENTER">
+                  <Label fx:id="roleLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="47.0" prefWidth="302.0" textFill="WHITE" BorderPane.alignment="CENTER">
                      <font>
                         <Font name="System Bold" size="32.0" />
                      </font>

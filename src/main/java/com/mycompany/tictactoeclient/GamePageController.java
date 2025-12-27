@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
@@ -82,24 +83,24 @@ public class GamePageController implements Initializable {
     private boolean isOnline;
     private boolean boardLocked = false;
     private String sessionID = "";
-    private int oScore, xScore;
+    private volatile boolean isListening = true;
+    public static GamePageController instance;
+    private int xScore = 0;
+    private int oScore = 0;
     private InvitationDTO currentTwoPlayer;
     private List<Integer> xSteps = new ArrayList<>();
     private List<Integer> oSteps = new ArrayList<>();
-
-    private volatile boolean isListening = true;
-    public static GamePageController instance;
-    
+    private String currentPlayerName;
+    private String opponentPlayerName;
+    private boolean scoresInitialized = false;
     private RecordManager recordManager = new RecordManager();
     private boolean isRecording = false;
-
     private SettingHelper settingHelper;
     @FXML
     private GridPane gameBoard;
     @FXML
     private Label roleLabel;
 
-    // for records
     private ArrayList<Integer> moveHistory = new ArrayList<>();
     @FXML
     private Button recordBtn;
@@ -112,50 +113,59 @@ public class GamePageController implements Initializable {
     @FXML
     private ImageView settingIconController;
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         instance = this;
-            settingHelper = new SettingHelper(settingLayer, SettingsPosition.BOTTOM);
-            settingIconController.setOnMouseClicked(e ->{
-                settingHelper.toggle();
-                
-            });
-                  
+        settingHelper = new SettingHelper(settingLayer, SettingsPosition.BOTTOM);
+        settingIconController.setOnMouseClicked(e -> {
+            settingHelper.toggle();
+        });
 
         new BackgroundAnimator(rootStackPane);
     }
 
-    public void initGame(InvitationDTO towPalyer, GameMode mode, Difficulty difficulty, int xScore, int oScore) {
+    public void initGame(InvitationDTO twoPlayer, GameMode mode, Difficulty difficulty, int fromScore, int toScore) {
+
         this.currentGameMode = mode;
         this.currentDifficulty = difficulty;
-        this.xScore = xScore;
-        this.oScore = oScore;
-        this.currentTwoPlayer = towPalyer;
-        playerXlbl.setText(currentTwoPlayer.getFromUsername().getUsername());
-        playerOlbl.setText(currentTwoPlayer.getToUsername().getUsername());
-        playerXScore.setText(xScore + "");
-        playerOScore.setText(oScore + "");
-        // in online we will accept two player models to set their names
-        System.out.println("Starting game: " + mode + ", Difficulty: " + difficulty);
+        this.currentTwoPlayer = twoPlayer;
+
+        currentPlayerName = twoPlayer.getFromUsername().getUsername();
+        opponentPlayerName = twoPlayer.getToUsername().getUsername();
 
         if (mode == GameMode.ONLINE) {
             isOnline = true;
             isSingle = false;
+            scoresInitialized = false;
+            this.xScore = fromScore;
+            this.oScore = toScore;
+
+            playerXlbl.setText("Waiting...");
+            playerOlbl.setText("Waiting...");
+            playerXScore.setText("...");
+            playerOScore.setText("...");
+
             lockBoard();
             setupNetworkListener();
         } else {
+
+            this.xScore = fromScore;
+            this.oScore = toScore;
+
+            playerXlbl.setText(currentPlayerName);
+            playerXScore.setText(xScore + "");
+            playerOScore.setText(oScore + "");
+
             if (mode == GameMode.SINGLE_PLAYER) {
                 isSingle = true;
                 isOnline = false;
                 playerXRole = true;
-                playerOlbl.setText("Computer");
+                playerOlbl.setText(opponentPlayerName);
             } else {
                 isSingle = false;
                 isOnline = false;
                 playerXRole = true;
+                playerOlbl.setText(opponentPlayerName);
             }
         }
 
@@ -181,15 +191,12 @@ public class GamePageController implements Initializable {
         int cellNum = GameHelper.getCellNum(row, col);
 
         GameHelper.addMoveToCell(clickedCell, playerXRole);
-
-        // for records
         moveHistory.add(cellNum);
-
         Sounds.playXOClick();
 
         if (isOnline) {
             lockBoard();
-            roleLabel.setText("Watting...");
+            roleLabel.setText("Waiting...");
         }
 
         handlePlayerMove(cellNum);
@@ -212,14 +219,11 @@ public class GamePageController implements Initializable {
         }
 
         String difficultyValue = (currentDifficulty == null) ? "NONE" : currentDifficulty.name();
-
         String p1 = playerXlbl.getText();
         String p2 = playerOlbl.getText();
         String fileName = "game_" + System.currentTimeMillis() + ".dat";
 
         File directory = new File("records");
-
-        // create directory if it doesn't exist'
         if (!directory.exists()) {
             directory.mkdir();
         }
@@ -238,13 +242,7 @@ public class GamePageController implements Initializable {
             System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
 
-        recordManager.startRecord(
-                currentGameMode.name(),
-                difficultyValue,
-                p1,
-                p2
-        );
-
+        recordManager.startRecord(currentGameMode.name(), difficultyValue, p1, p2);
         isRecording = true;
         startRecordBlink();
     }
@@ -336,7 +334,6 @@ public class GamePageController implements Initializable {
                 recordManager.recordMove("o", selectedCellNum);
             }
 
-            // for records
             moveHistory.add(selectedCellNum);
 
             if (handleGameEnd(oSteps, GameResult.O_WIN, true)) {
@@ -359,7 +356,7 @@ public class GamePageController implements Initializable {
     public void stopListening() {
         isListening = false;
     }
-    
+
     private void setupNetworkListener() {
         new Thread(() -> {
             try {
@@ -376,8 +373,7 @@ public class GamePageController implements Initializable {
                     }
                     if (obj instanceof Request) {
                         Request req = (Request) obj;
-                        
-                        
+
                         // Handoff the call to the lobby because we have a zompie thread
                         if (req.getType() == RequestType.GET_ONLINE_PLAYERS) {
                             System.out.println("Game Thread caught Lobby Data. Handing off...");
@@ -394,7 +390,7 @@ public class GamePageController implements Initializable {
                             isListening = false;
                             break;
                         }
-                        
+
                         switch (req.getType()) {
                             case MOVE:
                                 receiveMove(req.getData());
@@ -413,8 +409,7 @@ public class GamePageController implements Initializable {
                     }
                 }
             } catch (IOException | ClassNotFoundException ex) {
-                //////////////// Handling Server Disconnection, Don't touch ///////////////////
-                
+
                 System.out.println("Server connection lost during game: " + ex.getMessage());
 
                 Platform.runLater(() -> {
@@ -438,44 +433,73 @@ public class GamePageController implements Initializable {
         StartGameDTO data = (StartGameDTO) _data;
         sessionID = data.sessionID;
         String symbol = data.symbol;
-          System.out.println("-------------------startOnlineGame"  );
+
         playerXRole = symbol.equals("x");
 
         Platform.runLater(() -> {
-
             removeWaitingDialog();
             clearBoard();
             xSteps.clear();
             oSteps.clear();
 
+            if (!scoresInitialized) {
+                System.out.println("First game - initializing scores from DTO");
+
+                int currentPlayerScore = currentTwoPlayer.getFromUsername().getScore();
+                int opponentPlayerScore = currentTwoPlayer.getToUsername().getScore();
+
+                System.out.println("DTO scores - Current: " + currentPlayerScore + ", Opponent: " + opponentPlayerScore);
+
+                if (playerXRole) {
+
+                    xScore = currentPlayerScore;
+                    oScore = opponentPlayerScore;
+                } else {
+
+                    xScore = opponentPlayerScore;
+                    oScore = currentPlayerScore;
+                }
+
+                scoresInitialized = true;
+                System.out.println("Initialized - xScore: " + xScore + ", oScore: " + oScore);
+            } else {
+                System.out.println("Rematch - keeping current scores: xScore=" + xScore + ", oScore=" + oScore);
+            }
+
             if (playerXRole) {
-                roleLabel.setText("Your Role");
+                playerXlbl.setText(currentPlayerName + " (You)");
+                playerOlbl.setText(opponentPlayerName);
+                roleLabel.setText("Your Turn (X)");
                 unlockBoard();
             } else {
+                playerXlbl.setText(opponentPlayerName);
+                playerOlbl.setText(currentPlayerName + " (You)");
                 roleLabel.setText("Waiting...");
             }
+
+            playerXScore.setText(xScore + "");
+            playerOScore.setText(oScore + "");
+
         });
     }
-private void clearBoard() {
-    for (Node node : gameBoard.getChildren()) {
-        if (node instanceof StackPane) {
-            StackPane cell = (StackPane) node;
-    
-            cell.getChildren().clear();
 
-            cell.setStyle("-fx-background-color: #B3ACCA;");
+    private void clearBoard() {
+        for (Node node : gameBoard.getChildren()) {
+            if (node instanceof StackPane) {
+                StackPane cell = (StackPane) node;
+                cell.getChildren().clear();
+                cell.setStyle("-fx-background-color: #B3ACCA;");
+            }
         }
     }
-}
+
     private void removeWaitingDialog() {
-        // Find and remove waiting dialog dimmer and dialog
         Node dimmerToRemove = null;
         Node dialogToRemove = null;
 
         for (Node node : rootStackPane.getChildren()) {
             if (node.getId() != null && node.getId().equals("waitingDialogDimmer")) {
                 dimmerToRemove = node;
-                // The dialog should be the next node
                 int index = rootStackPane.getChildren().indexOf(node);
                 if (index + 1 < rootStackPane.getChildren().size()) {
                     dialogToRemove = rootStackPane.getChildren().get(index + 1);
@@ -492,7 +516,6 @@ private void clearBoard() {
         }
     }
 
-
     private void receiveMove(Object _data) {
         MoveDTO data = (MoveDTO) _data;
         int cellNo = data.getCellNo();
@@ -508,7 +531,6 @@ private void clearBoard() {
                 GameHelper.addMoveToCell(targetCell, isXPlayer);
                 Sounds.playXOClick();
 
-                // for records
                 moveHistory.add(cellNo);
 
                 if (isXPlayer) {
@@ -522,17 +544,36 @@ private void clearBoard() {
                 }
 
                 if (win) {
-                     if (isXPlayer) {
-                    xScore++;
-                    playerXScore.setText(xScore + "");
-                } else {
-                    oScore++;
-                    playerOScore.setText(oScore + "");
-                }
-                    GameResult result = isXPlayer ? GameResult.X_WIN : GameResult.O_WIN;
-                    PauseTransition delay = new PauseTransition(Duration.seconds(1));
 
+                    if (isXPlayer) {
+                        xScore++;
+                        System.out.println("X won - xScore incremented to: " + xScore);
+                    } else {
+                        oScore++;
+                        System.out.println("O won - oScore incremented to: " + oScore);
+                    }
+
+                    playerXScore.setText(xScore + "");
+                    playerOScore.setText(oScore + "");
+
+                    System.out.println("UI updated - Displayed: X=" + xScore + ", O=" + oScore);
+
+                    GameResult result = isXPlayer ? GameResult.X_WIN : GameResult.O_WIN;
+
+                    List<Integer> winningSteps = isXPlayer ? xSteps : oSteps;
+                    List<Integer> winningCells = GameHelper.getWinningCells(winningSteps);
+                    if (isRecording) {
+                        recordManager.finishRecord(result.name(), winningCells);
+                        stopRecordBlink();
+                        isRecording = false;
+                    }
+
+                    GameHelper.StepsToWin winLine = GameHelper.getWinningLine(winningSteps);
+                    GameHelper.showWinningLine(gameBoard, winLine);
+
+                    PauseTransition delay = new PauseTransition(Duration.seconds(1));
                     delay.setOnFinished(eh -> {
+                        System.out.println("Showing game over dialog - Scores: X=" + xScore + ", O=" + oScore);
                         showGameOverSafely(result, true, xScore, oScore);
                     });
                     delay.play();
@@ -540,15 +581,20 @@ private void clearBoard() {
                 }
 
                 if (draw) {
-                    PauseTransition delay = new PauseTransition(Duration.seconds(1));
-
-                    delay.setOnFinished(eh -> {
-                        showGameOverSafely(GameResult.NO_WIN, false, xScore, oScore);
-                    });
-                    delay.play();
+                    if (isRecording) {
+                        recordManager.finishRecord("DRAW", new ArrayList<>());
+                        stopRecordBlink();
+                        isRecording = false;
+                    }
+                    showGameOverSafely(GameResult.NO_WIN, false, xScore, oScore);
                     return;
                 }
-                roleLabel.setText("Your Role");
+
+                if (playerXRole) {
+                    roleLabel.setText("Your Turn (X)");
+                } else {
+                    roleLabel.setText("Your Turn (O)");
+                }
                 unlockBoard();
             }
         });
@@ -563,7 +609,6 @@ private void clearBoard() {
 
         if (isRecording) {
             recordManager.recordMove(symbol, cellNum);
-
         }
 
         if (isOnline) {
@@ -576,6 +621,7 @@ private void clearBoard() {
 
     private boolean handleGameEnd(List<Integer> steps, GameResult winResult, boolean isLose) {
         if (GameHelper.checkWin(steps)) {
+
             List<Integer> winningCells = GameHelper.getWinningCells(steps);
             if (isRecording) {
                 recordManager.finishRecord(winResult.name(), winningCells);
@@ -585,16 +631,21 @@ private void clearBoard() {
 
             GameHelper.StepsToWin winLine = GameHelper.getWinningLine(steps);
             GameHelper.showWinningLine(gameBoard, winLine);
-            if (winResult == GameResult.X_WIN) {
-            xScore++;
-            playerXScore.setText(xScore + ""); 
-        } else {
-            oScore++;
-            playerOScore.setText(oScore + "");  
-        }
-            PauseTransition delay = new PauseTransition(Duration.seconds(1));
 
+            if (winResult == GameResult.X_WIN) {
+                xScore++;
+                System.out.println("X won - xScore incremented to: " + xScore);
+            } else {
+                oScore++;
+                System.out.println("O won - oScore incremented to: " + oScore);
+            }
+
+            playerXScore.setText(xScore + "");
+            playerOScore.setText(oScore + "");
+
+            PauseTransition delay = new PauseTransition(Duration.seconds(1));
             delay.setOnFinished(eh -> {
+                System.out.println("Showing game over dialog - Scores: X=" + xScore + ", O=" + oScore);
                 showGameOverSafely(winResult, isLose, xScore, oScore);
             });
             delay.play();
@@ -602,7 +653,6 @@ private void clearBoard() {
         }
 
         if (GameHelper.checkDraw(xSteps, oSteps)) {
-
             if (isRecording) {
                 recordManager.finishRecord("DRAW", new ArrayList<>());
                 stopRecordBlink();

@@ -125,6 +125,7 @@ public class GameOverPageController implements Initializable {
     @FXML
     private void exitAction(ActionEvent event) {
         stopMediaPlayer();
+        SoundManager.applyState();
         try {
             switch (currentGameMode) {
                 case ONLINE:
@@ -142,9 +143,6 @@ public class GameOverPageController implements Initializable {
                     App.setRoot(Pages.startPage);
                     break;
             }
-
-            SoundManager.applyState();
-            App.setRoot(Pages.startPage);
         } catch (IOException ex) {
             System.getLogger(GameOverPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }

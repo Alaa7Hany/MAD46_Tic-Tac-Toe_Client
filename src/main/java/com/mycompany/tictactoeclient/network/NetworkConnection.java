@@ -194,7 +194,7 @@ public class NetworkConnection {
                             try {
 
                                 App.setRoot(Pages.gamePage, (GamePageController gameController) -> {
-                                    gameController.initGame(twoPlayer,GameMode.ONLINE,Difficulty.EASY , 0, 0);
+                                    gameController.initGame(twoPlayer,GameMode.ONLINE,Difficulty.EASY ,twoPlayer.getFromUsername().getScore() ,twoPlayer.getToUsername().getScore() );
                                 });    
                                 
                             } catch (IOException ex) {

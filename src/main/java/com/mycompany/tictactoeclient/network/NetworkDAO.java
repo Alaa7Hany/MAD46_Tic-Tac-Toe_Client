@@ -62,11 +62,9 @@ public class NetworkDAO {
     }
 
     
-    public Response lobby(){
+    public void requestOnlinePlayers() {
         Request request = new Request(RequestType.GET_ONLINE_PLAYERS, null);
-        
-        Response response = NetworkConnection.getConnection().sendRequest(request);
-        return response;
+        NetworkConnection.getConnection().sendMessage(request);
     }
     
       public void sendMove (String sessionId,int cellNo,String symbol,boolean win ,boolean draw){

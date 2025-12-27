@@ -160,7 +160,10 @@ public class NetworkConnection {
   
         try {
             while (flag) {
-                Object obj = in.readObject();   
+                Object obj;   
+                synchronized (in) {
+                    obj = in.readObject();
+                }
                 if (!(obj instanceof Request)) continue;
 
                 Request request = (Request) obj;
@@ -276,5 +279,9 @@ public class NetworkConnection {
     public void startLobbyListener(){
         new Thread(this::listenLoop).start();
     }
+    
+    public LobbyListener getLobbyListener() {
+    return this.lobbyListener;
+}
     
 }

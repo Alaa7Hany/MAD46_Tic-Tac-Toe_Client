@@ -10,6 +10,7 @@ import com.mycompany.tictactoeclient.enums.SettingsPosition;
 import com.mycompany.tictactoeclient.network.InvitationListener;
 import com.mycompany.tictactoeclient.network.LobbyListener;
 import com.mycompany.tictactoeclient.network.NetworkConnection;
+import com.mycompany.tictactoeclient.network.NetworkDAO;
 import com.mycompany.tictactoeshared.InvitationDTO;
 import com.mycompany.tictactoeshared.PlayerDTO;
 import java.io.IOException;
@@ -67,7 +68,7 @@ public class LobbyPageController implements Initializable, InvitationListener, L
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         instance=this;
-         NetworkConnection.reConnectListener();
+        NetworkConnection.reConnectListener();
         rootStackPane.getProperties().put("controller", this);
         NetworkConnection.getConnection().setInvitationListener(this);
         NetworkConnection.getConnection().setLobbyListener(this);
@@ -129,6 +130,7 @@ public class LobbyPageController implements Initializable, InvitationListener, L
     
     private void loadOnlinePlayers() {
             NetworkConnection.getConnection().startLobbyListener();
+            NetworkDAO.getInstance().requestOnlinePlayers();
     }
     
     public void closeWaitingDialog() {

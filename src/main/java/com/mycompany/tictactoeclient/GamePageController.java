@@ -10,6 +10,7 @@ import com.mycompany.tictactoeclient.enums.GameMode;
 import static com.mycompany.tictactoeclient.enums.GameMode.ONLINE;
 import com.mycompany.tictactoeclient.enums.GameResult;
 import com.mycompany.tictactoeclient.enums.SettingsPosition;
+import com.mycompany.tictactoeclient.network.LobbyListener;
 import com.mycompany.tictactoeclient.network.NetworkConnection;
 import com.mycompany.tictactoeclient.network.NetworkDAO;
 import com.mycompany.tictactoeshared.MoveDTO;
@@ -41,6 +42,8 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import com.mycompany.tictactoeclient.record.RecordManager;
 import com.mycompany.tictactoeshared.InvitationDTO;
+import com.mycompany.tictactoeshared.PlayerDTO;
+import com.mycompany.tictactoeshared.RequestType;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -84,6 +87,9 @@ public class GamePageController implements Initializable {
     private List<Integer> xSteps = new ArrayList<>();
     private List<Integer> oSteps = new ArrayList<>();
 
+    private volatile boolean isListening = true;
+    public static GamePageController instance;
+    
     private RecordManager recordManager = new RecordManager();
     private boolean isRecording = false;
 
@@ -111,7 +117,7 @@ public class GamePageController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+        instance = this;
             settingHelper = new SettingHelper(settingLayer, SettingsPosition.BOTTOM);
             settingIconController.setOnMouseClicked(e ->{
                 settingHelper.toggle();
@@ -351,6 +357,10 @@ public class GamePageController implements Initializable {
         boardLocked = false;
     }
 
+    public void stopListening() {
+        isListening = false;
+    }
+    
     private void setupNetworkListener() {
         new Thread(() -> {
             try {
@@ -360,10 +370,32 @@ public class GamePageController implements Initializable {
                     return;
                 }
 
-                while (true) {
-                    Object obj = in.readObject();
+                while (isListening) {
+                    Object obj;
+                    synchronized (in) {
+                        obj = in.readObject();
+                    }
                     if (obj instanceof Request) {
                         Request req = (Request) obj;
+                        
+                        
+                        // Handoff the call to the lobby because we have a zompie thread
+                        if (req.getType() == RequestType.GET_ONLINE_PLAYERS) {
+                            System.out.println("Game Thread caught Lobby Data. Handing off...");
+
+                            // Pass data to the Lobby Listener
+                            List<PlayerDTO> players = (List<PlayerDTO>) req.getData();
+                            LobbyListener listener = NetworkConnection.getConnection().getLobbyListener();
+
+                            if (listener != null) {
+                                Platform.runLater(() -> listener.onOnlinePlayersUpdated(players));
+                            }
+
+                            // Now we can safely stop
+                            isListening = false;
+                            break;
+                        }
+                        
                         switch (req.getType()) {
                             case MOVE:
                                 receiveMove(req.getData());

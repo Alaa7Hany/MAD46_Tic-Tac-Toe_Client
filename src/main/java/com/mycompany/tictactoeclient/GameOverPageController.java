@@ -125,18 +125,27 @@ public class GameOverPageController implements Initializable {
     @FXML
     private void exitAction(ActionEvent event) {
         stopMediaPlayer();
+        if (GamePageController.instance != null) {
+            GamePageController.instance.stopListening();
+        }
         try {
             switch (currentGameMode) {
                 case ONLINE:
-                    FXMLLoader loader = new FXMLLoader(
-                            getClass().getResource("/com/mycompany/tictactoeclient/lobbyPage.fxml"));
+                    Platform.runLater(()->{
+                        try {
+                            FXMLLoader loader = new FXMLLoader(
+                                    getClass().getResource("/com/mycompany/tictactoeclient/lobbyPage.fxml"));
 
-                    Parent root = loader.load();
-                    LobbyPageController controller = loader.getController();
+                            Parent root = loader.load();
+                            LobbyPageController controller = loader.getController();
 
-                    Stage stage = (Stage) exitBtn.getScene().getWindow();
-                    stage.getScene().setRoot(root);
-                    controller.setCurrentPlayer(currentTwoPlayer.getFromUsername());
+                            Stage stage = (Stage) exitBtn.getScene().getWindow();
+                            stage.getScene().setRoot(root);
+                            controller.setCurrentPlayer(currentTwoPlayer.getFromUsername());
+                        } catch (IOException ex) {
+                            System.getLogger(GameOverPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                        }
+                    });
                     break;
                 default:
                     App.setRoot(Pages.startPage);
@@ -144,7 +153,7 @@ public class GameOverPageController implements Initializable {
             }
 
             SoundManager.applyState();
-            App.setRoot(Pages.startPage);
+//            App.setRoot(Pages.startPage);
         } catch (IOException ex) {
             System.getLogger(GameOverPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
@@ -158,6 +167,7 @@ public class GameOverPageController implements Initializable {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.dispose();
+            mediaPlayer = null;
         }
     }
 

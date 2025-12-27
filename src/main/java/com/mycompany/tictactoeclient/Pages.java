@@ -29,5 +29,6 @@ public class Pages {
     public static final String lobbyPage = "lobbyPage";
     public static final String settings = "settings";
     public static final String SettingIcon = "SettingsIcon";
+    public static final String serverConfigureDialog = "serverConfigureDialog";
 
 }

@@ -12,8 +12,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 /**
  * FXML Controller class
  *
@@ -51,7 +53,8 @@ public class LocalOrOnlineDialogController implements Initializable {
     @FXML
     private void onlineClicked(MouseEvent event) {
         try {
-            App.setRoot(Pages.loginPage);
+            StackPane root = (StackPane) ((Node) event.getSource()).getScene().getRoot();
+            App.showMyFxmlDialog(root, Pages.serverConfigureDialog, true);
         } catch (IOException ex) {
             System.getLogger(LocalOrOnlineDialogController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }

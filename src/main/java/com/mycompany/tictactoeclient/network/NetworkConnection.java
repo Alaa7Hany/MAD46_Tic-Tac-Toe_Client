@@ -37,7 +37,12 @@ public class NetworkConnection {
     private ObjectInputStream in;
     private InvitationListener invitationListener;
     private LobbyListener lobbyListener;
+    private static String serverIp = "localhost";
     
+    
+    public static void setServerIp(String ip) {
+        serverIp = ip;
+    }
     
     public static void reConnectListener(){
         flag = true;
@@ -48,7 +53,7 @@ public class NetworkConnection {
     private NetworkConnection(){
         try {
             System.out.println("Creating NetworkConnection...");
-            socket = new Socket(InetAddress.getLocalHost(), 5005);
+            socket = new Socket(serverIp, 5005);
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
             System.out.println("Socket created: " + socket.getLocalPort());

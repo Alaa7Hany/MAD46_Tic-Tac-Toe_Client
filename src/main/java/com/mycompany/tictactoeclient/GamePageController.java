@@ -117,9 +117,7 @@ public class GamePageController implements Initializable {
                 settingHelper.toggle();
                 
             });
-            
-            new BackgroundAnimator(rootStackPane);
-      
+                  
 
         new BackgroundAnimator(rootStackPane);
     }
@@ -493,12 +491,22 @@ private void clearBoard() {
 
                 if (win) {
                     GameResult result = isXPlayer ? GameResult.X_WIN : GameResult.O_WIN;
-                    showGameOverSafely(result, true, xScore, oScore);
+                    PauseTransition delay = new PauseTransition(Duration.seconds(1));
+
+                    delay.setOnFinished(eh -> {
+                        showGameOverSafely(result, true, xScore, oScore);
+                    });
+                    delay.play();
                     return;
                 }
 
                 if (draw) {
-                    showGameOverSafely(GameResult.NO_WIN, false, xScore, oScore);
+                    PauseTransition delay = new PauseTransition(Duration.seconds(1));
+
+                    delay.setOnFinished(eh -> {
+                        showGameOverSafely(GameResult.NO_WIN, false, xScore, oScore);
+                    });
+                    delay.play();
                     return;
                 }
                 roleLabel.setText("Your Role");

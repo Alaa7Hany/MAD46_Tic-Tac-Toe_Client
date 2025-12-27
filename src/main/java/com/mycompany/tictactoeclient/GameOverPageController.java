@@ -129,7 +129,7 @@ public class GameOverPageController implements Initializable {
             switch (currentGameMode) {
                 case ONLINE:
                     FXMLLoader loader = new FXMLLoader(
-                            getClass().getResource("/com/mycompany/tictactoeclient/LobbyPage.fxml"));
+                            getClass().getResource("/com/mycompany/tictactoeclient/lobbyPage.fxml"));
 
                     Parent root = loader.load();
                     LobbyPageController controller = loader.getController();

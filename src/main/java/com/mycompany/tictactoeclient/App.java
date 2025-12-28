@@ -1,7 +1,6 @@
 package com.mycompany.tictactoeclient;
 
 
-import com.mycompany.tictactoeshared.PlayerDTO;
 import com.mycompany.tictactoeclient.network.NetworkConnection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,15 +15,13 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.Node;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.util.Scanner;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.image.Image;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 /**
@@ -39,21 +36,25 @@ public class App extends Application {
     
     public static final int HEIGHT = 577;
     public static final int WIDTH = 615;
-
+    
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML(rootPage), WIDTH, HEIGHT);
+        Parent root = loadFXML(rootPage);
+        scene = new Scene(root, WIDTH, HEIGHT);
 
         stage.setScene(scene);
         stage.setResizable(false);
         scene.setFill(Color.TRANSPARENT);
         
+        stage.initStyle(StageStyle.DECORATED);
+        stage.setTitle("TicTacToe");
         
-        scene.addEventFilter(mouseEvent.MOUSE_PRESSED, event -> {
-        if (!event.isPrimaryButtonDown()) return;  
-        node = (Node) event.getTarget();
-        if (node.getStyleClass().contains("xo-cell")) return;
+        stage.getIcons().add(new Image(App.class.getResourceAsStream("/images/xo.png")));
         
+        scene.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+            if (!event.isPrimaryButtonDown()) return;
+            node = (Node) event.getTarget();
+            if (node.getStyleClass().contains("xo-cell")) return;
         });
         stage.show();
         
@@ -89,11 +90,14 @@ public class App extends Application {
         });
     }
     
-    public static void showAlertMessage(StackPane sp, String message, boolean isSuccess) {
-        // 1. Create the label
+
+    public static void setRoot(String fxml) throws IOException {
+        scene.setRoot(loadFXML(fxml));
+    }
+    
+        public static void showAlertMessage(StackPane sp, String message, boolean isSuccess) {
         Label toast = new Label(message);
 
-        // 2. Simple Styling (Green for success, Red for failure)
         String bgColor = isSuccess ? "rgba(0, 128, 0, 0.7)" : "rgba(255, 0, 0, 0.7)";
         toast.setStyle("-fx-background-color: " + bgColor + ";" +
                        "-fx-text-fill: white;" +
@@ -101,25 +105,17 @@ public class App extends Application {
                        "-fx-padding: 10px 20px;" +
                        "-fx-background-radius: 20;");
 
-        // 3. Position it (Bottom Center looks best for toasts)
-        // Note: You can remove this to center it by default
         StackPane.setAlignment(toast, Pos.BOTTOM_CENTER);
         StackPane.setMargin(toast, new javafx.geometry.Insets(0, 0, 50, 0)); // 50px from bottom
 
-        // 4. Add to the provided StackPane
         sp.getChildren().add(toast);
 
-        // 5. Animation: Wait 1.5s, then Fade Out, then Remove
         FadeTransition fade = new FadeTransition(Duration.seconds(1.5), toast);
-        fade.setFromValue(1.0); // Fully visible
-        fade.setToValue(0.0);   // Transparent
-        fade.setDelay(Duration.seconds(1.5)); // Wait before fading
-        fade.setOnFinished(e -> sp.getChildren().remove(toast)); // Cleanup
+        fade.setFromValue(1.0); 
+        fade.setToValue(0.0);   
+        fade.setDelay(Duration.seconds(1.5));
+        fade.setOnFinished(e -> sp.getChildren().remove(toast)); 
         fade.play();
-    }
-
-    public static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
     }
     
     // We will use this method to pass parameters between pages using lambda 

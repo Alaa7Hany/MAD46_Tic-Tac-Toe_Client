@@ -547,9 +547,11 @@ public class GamePageController implements Initializable {
 
                     if (isXPlayer) {
                         xScore++;
+                        currentTwoPlayer.getFromUsername().incrementScore();
                         System.out.println("X won - xScore incremented to: " + xScore);
                     } else {
                         oScore++;
+                        currentTwoPlayer.getToUsername().incrementScore();
                         System.out.println("O won - oScore incremented to: " + oScore);
                     }
 
@@ -634,11 +636,9 @@ public class GamePageController implements Initializable {
 
             if (winResult == GameResult.X_WIN) {
                 xScore++;
-                currentTwoPlayer.getFromUsername().incrementScore();
                 System.out.println("X won - xScore incremented to: " + xScore);
             } else {
                 oScore++;
-                currentTwoPlayer.getToUsername().incrementScore();
                 System.out.println("O won - oScore incremented to: " + oScore);
             }
 

@@ -66,6 +66,8 @@ public class PlayerDetailsDialogController implements Initializable {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mycompany/tictactoeclient/waitingDialog.fxml"));
                 Parent waitingDialog = loader.load();
+                WaitingDialogController waitingController = loader.getController();
+                  waitingController.setPlayerName(challengedPlayer.getUsername());
                 Region dimmer = new Region();
                 dimmer.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
                 dimmer.prefWidthProperty().bind(root.widthProperty());

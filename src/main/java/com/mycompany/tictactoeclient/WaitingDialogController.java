@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+
 /**
  * FXML Controller class
  *
@@ -22,27 +23,31 @@ import javafx.scene.layout.StackPane;
  */
 public class WaitingDialogController implements Initializable {
 
-
     @FXML
     private Button exitBtn;
     @FXML
     private Label name;
     @FXML
     private AnchorPane root;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-    
+    }
+
+    public void setPlayerName(String playerName) {
+        name.setText(playerName);
+    }
+
     @FXML
     private void exitAction(ActionEvent event) {
         if (LobbyPageController.instance != null) {
             LobbyPageController.instance.closeWaitingDialog();
         }
-        
+
     }
 
 }

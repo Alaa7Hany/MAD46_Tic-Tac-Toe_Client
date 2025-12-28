@@ -4,6 +4,7 @@
  */
 package com.mycompany.tictactoeclient;
 
+import static com.mycompany.tictactoeclient.Pages.waitingDialog;
 import com.mycompany.tictactoeclient.enums.Difficulty;
 import com.mycompany.tictactoeclient.enums.GameMode;
 import static com.mycompany.tictactoeclient.enums.GameMode.ONLINE;
@@ -98,7 +99,7 @@ public class GameOverPageController implements Initializable {
         mediaPlayer.setOnReady(() -> {
             mediaPlayer.play();
         });
-        
+
         mediaPlayer.setOnError(() -> {
             System.out.println("Media Error: " + mediaPlayer.getError().getMessage());
         });
@@ -141,7 +142,7 @@ public class GameOverPageController implements Initializable {
         try {
             switch (currentGameMode) {
                 case ONLINE:
-                    Platform.runLater(()->{
+                    Platform.runLater(() -> {
                         try {
                             FXMLLoader loader = new FXMLLoader(
                                     getClass().getResource("/com/mycompany/tictactoeclient/lobbyPage.fxml"));
@@ -161,9 +162,10 @@ public class GameOverPageController implements Initializable {
                     App.setRoot(Pages.startPage);
                     break;
             }
-
+            if (currentGameMode == GameMode.ONLINE && GamePageController.instance != null) {
+                GamePageController.instance.syncPlayerScores();
+            }
             SoundManager.applyState();
-//            App.setRoot(Pages.startPage);
 
         } catch (IOException ex) {
             System.getLogger(GameOverPageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -200,7 +202,7 @@ public class GameOverPageController implements Initializable {
 
             Parent sceneRoot = rematchBtn.getScene().getRoot();
             if (!(sceneRoot instanceof StackPane)) {
-                System.out.println("Scene root is not a StackPane. Can't show waiting dialog.");
+
                 return;
             }
             StackPane gamePageRoot = (StackPane) sceneRoot;
@@ -215,6 +217,9 @@ public class GameOverPageController implements Initializable {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mycompany/tictactoeclient/waitingDialog.fxml"));
                 Parent waitingDialog = loader.load();
+
+                WaitingDialogController waitingController = loader.getController();
+                waitingController.setPlayerName(currentTwoPlayer.getToUsername().getUsername());
 
                 Region dimmer = new Region();
                 dimmer.setId("waitingDialogDimmer");

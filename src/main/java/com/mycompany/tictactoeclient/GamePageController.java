@@ -275,6 +275,10 @@ public class GamePageController implements Initializable {
         if (isRecording) {
             stopRecordBlink();
         }
+        if (isOnline) {
+            updatePlayerScoresInDTO();
+        }
+
         try {
             switch (currentGameMode) {
                 case ONLINE:
@@ -401,7 +405,6 @@ public class GamePageController implements Initializable {
                             default:
                                 break;
                         }
-                        System.out.println("Received Response: " + req.getData().toString());
 
                         Platform.runLater(() -> {
 
@@ -409,8 +412,6 @@ public class GamePageController implements Initializable {
                     }
                 }
             } catch (IOException | ClassNotFoundException ex) {
-
-                System.out.println("Server connection lost during game: " + ex.getMessage());
 
                 Platform.runLater(() -> {
                     try {
@@ -443,12 +444,9 @@ public class GamePageController implements Initializable {
             oSteps.clear();
 
             if (!scoresInitialized) {
-                System.out.println("First game - initializing scores from DTO");
 
                 int currentPlayerScore = currentTwoPlayer.getFromUsername().getScore();
                 int opponentPlayerScore = currentTwoPlayer.getToUsername().getScore();
-
-                System.out.println("DTO scores - Current: " + currentPlayerScore + ", Opponent: " + opponentPlayerScore);
 
                 if (playerXRole) {
 
@@ -461,9 +459,7 @@ public class GamePageController implements Initializable {
                 }
 
                 scoresInitialized = true;
-                System.out.println("Initialized - xScore: " + xScore + ", oScore: " + oScore);
             } else {
-                System.out.println("Rematch - keeping current scores: xScore=" + xScore + ", oScore=" + oScore);
             }
 
             if (playerXRole) {
@@ -547,16 +543,12 @@ public class GamePageController implements Initializable {
 
                     if (isXPlayer) {
                         xScore++;
-                        System.out.println("X won - xScore incremented to: " + xScore);
                     } else {
                         oScore++;
-                        System.out.println("O won - oScore incremented to: " + oScore);
                     }
 
                     playerXScore.setText(xScore + "");
                     playerOScore.setText(oScore + "");
-
-                    System.out.println("UI updated - Displayed: X=" + xScore + ", O=" + oScore);
 
                     GameResult result = isXPlayer ? GameResult.X_WIN : GameResult.O_WIN;
 
@@ -573,7 +565,6 @@ public class GamePageController implements Initializable {
 
                     PauseTransition delay = new PauseTransition(Duration.seconds(1));
                     delay.setOnFinished(eh -> {
-                        System.out.println("Showing game over dialog - Scores: X=" + xScore + ", O=" + oScore);
                         showGameOverSafely(result, true, xScore, oScore);
                     });
                     delay.play();
@@ -634,12 +625,10 @@ public class GamePageController implements Initializable {
 
             if (winResult == GameResult.X_WIN) {
                 xScore++;
-                currentTwoPlayer.getFromUsername().incrementScore();
-                System.out.println("X won - xScore incremented to: " + xScore);
+
             } else {
                 oScore++;
-                currentTwoPlayer.getToUsername().incrementScore();
-                System.out.println("O won - oScore incremented to: " + oScore);
+
             }
 
             playerXScore.setText(xScore + "");
@@ -647,7 +636,6 @@ public class GamePageController implements Initializable {
 
             PauseTransition delay = new PauseTransition(Duration.seconds(1));
             delay.setOnFinished(eh -> {
-                System.out.println("Showing game over dialog - Scores: X=" + xScore + ", O=" + oScore);
                 showGameOverSafely(winResult, isLose, xScore, oScore);
             });
             delay.play();
@@ -674,6 +662,24 @@ public class GamePageController implements Initializable {
         } catch (IOException ex) {
             System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
+    }
+
+    private void updatePlayerScoresInDTO() {
+        if (currentTwoPlayer == null) {
+            return;
+        }
+
+        if (playerXRole) {
+            currentTwoPlayer.getFromUsername().setScore(xScore);
+            currentTwoPlayer.getToUsername().setScore(oScore);
+        } else {
+            currentTwoPlayer.getFromUsername().setScore(oScore);
+            currentTwoPlayer.getToUsername().setScore(xScore);
+        }
+    }
+
+    public void syncPlayerScores() {
+        updatePlayerScoresInDTO();
     }
 
     public void openAboutDialog() {

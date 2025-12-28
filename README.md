@@ -27,16 +27,24 @@ A desktop Tic-Tac-Toe game developed as the Java project for ITI Intake 46 by st
 
 * Open server project 
 * Run its main class and start the Server
+* Run Client App and choose if to play locally (localhost:5005)
+* Or enter the netwoek IP you are connecting to
+
+#### Other way:
+
+You can open the project by simply
+* open Server.jar
+* open Client.jar
 
 ### Features:
-* login
+* Login
 * SignUp
-* record games
-* play with online friends
-* play with pc with 3 difficulty levels
-* play with a friend in the same machine
-* play and stop background music
-* show the total users , online and offline at the server side
+* Record games
+* Play with online friends
+* Play with pc with 3 difficulty levels
+* Play with a friend in the same machine
+* Play and stop background music
+* Show the total users , online and offline at the server side
 
 ### Contributing:
 Contributions welcome! For significant modifications, please create an issue first to discuss the wanted changes.

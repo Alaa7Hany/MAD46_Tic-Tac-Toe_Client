@@ -48,7 +48,7 @@ public class InvitationDialogController implements Initializable {
         System.out.println("setInvitationData: " + dto);
         this.invitationDTO = dto;
         playerLbl.setText(dto.getFromUsername().getUsername());
-        scoreLbl.setText("Score: " + dto.getToUsername().getScore()); 
+        scoreLbl.setText("Score: " + dto.getFromUsername().getScore()); 
     }
 
     @FXML

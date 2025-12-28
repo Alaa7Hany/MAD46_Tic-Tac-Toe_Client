@@ -13,8 +13,8 @@ A desktop Tic-Tac-Toe game developed as the Java project for ITI Intake 46 by st
 
 #### Make sure you have:
 
+* JDK 11+
 * TicTacToe Server : https://github.com/Alaa7Hany/MAD46_Tic-Tac-Toe_Server   -- For playing online
-
 * TicTacToe Shared Library : https://github.com/Alaa7Hany/MAD46_Tic-Tac-Toe_Shared
 
 #### Run Client
@@ -34,9 +34,12 @@ A desktop Tic-Tac-Toe game developed as the Java project for ITI Intake 46 by st
 * record games
 * play with online friends
 * play with pc with 3 difficulty levels
-* play with a friend in the same machine 
+* play with a friend in the same machine
 * play and stop background music
 * show the total users , online and offline at the server side
+
+### Contributing:
+Contributions welcome! For significant modifications, please create an issue first to discuss the wanted changes.
 
 Dont forget to have fun ^ ^
 

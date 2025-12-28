@@ -49,9 +49,6 @@ public class PlayerDetailsDialogController implements Initializable {
         // TODO
     }    
 
-    @FXML
-    private void onExitClicked(ActionEvent event) {
-    }
 
     @FXML
     private void onInviteClicked(ActionEvent event) {
@@ -75,6 +72,7 @@ public class PlayerDetailsDialogController implements Initializable {
                 dimmer.prefHeightProperty().bind(root.heightProperty());
 
                 lobbyRoot.getChildren().addAll(dimmer, waitingDialog);
+                LobbyPageController.instance.setWaitingDialog(waitingDialog, dimmer);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

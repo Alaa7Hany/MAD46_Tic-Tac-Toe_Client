@@ -59,7 +59,7 @@ public class InvitationDialogController implements Initializable {
                 
             Request request = new Request(RequestType.REJECT_INVITE,invitationDTO);
             
-            NetworkConnection.getConnection().sendRequest(request);
+            NetworkConnection.getConnection().sendMessage(request);
             
         }).start();
            

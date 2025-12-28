@@ -10,16 +10,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="281.0" prefWidth="550.0" style="-fx-border-radius: 50; -fx-background-radius: 50;" styleClass="background" stylesheets="@../../../styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.tictactoeclient.PlayerDetailsDialogController">
    <bottom>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="520.0" spacing="100.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" onAction="#onExitClicked" prefWidth="150.0" text="Exit" textFill="WHITE">
-               <font>
-                  <Font name="System Bold Italic" size="18.0" />
-               </font>
-            </Button>
             <Button mnemonicParsing="false" onAction="#onInviteClicked" prefWidth="150.0" stylesheets="@../../../styles.css" text="Invite" textFill="#d7ea91">
                <font>
                   <Font name="System Bold Italic" size="18.0" />

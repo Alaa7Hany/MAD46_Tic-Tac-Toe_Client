@@ -13,6 +13,8 @@ import javafx.fxml.Initializable;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 /**
  * FXML Controller class
  *
@@ -25,6 +27,8 @@ public class WaitingDialogController implements Initializable {
     private Button exitBtn;
     @FXML
     private Label name;
+    @FXML
+    private AnchorPane root;
     /**
      * Initializes the controller class.
      */
@@ -35,11 +39,10 @@ public class WaitingDialogController implements Initializable {
     
     @FXML
     private void exitAction(ActionEvent event) {
-        try {
-            App.setRoot(Pages.lobbyPage);
-        } catch (IOException ex) {
-            System.getLogger(WaitingDialogController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        if (LobbyPageController.instance != null) {
+            LobbyPageController.instance.closeWaitingDialog();
         }
+        
     }
 
 }

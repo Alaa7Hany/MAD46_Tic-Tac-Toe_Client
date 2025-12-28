@@ -93,7 +93,15 @@ public class GameOverPageController implements Initializable {
         mediaPlayer = new MediaPlayer(media);
         mediaView.setMediaPlayer(mediaPlayer);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        mediaPlayer.setAutoPlay(true);
+        mediaPlayer.setAutoPlay(false);
+        mediaView.setPreserveRatio(true);
+        mediaPlayer.setOnReady(() -> {
+            mediaPlayer.play();
+        });
+        
+        mediaPlayer.setOnError(() -> {
+            System.out.println("Media Error: " + mediaPlayer.getError().getMessage());
+        });
 
         mediaView.sceneProperty().addListener((observable, oldScene, newScene) -> {
             if (newScene == null && mediaPlayer != null) {

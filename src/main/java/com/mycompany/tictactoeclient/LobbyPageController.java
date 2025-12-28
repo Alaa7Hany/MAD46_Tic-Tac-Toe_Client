@@ -133,6 +133,13 @@ public class LobbyPageController implements Initializable, InvitationListener, L
             NetworkDAO.getInstance().requestOnlinePlayers();
     }
     
+        
+    public void setWaitingDialog(Parent dialog, Region dimmer) {
+        this.waitingDialog = dialog;
+        this.waitingDimmer = dimmer;
+    }
+
+    
     public void closeWaitingDialog() {
         
         Platform.runLater(() -> {

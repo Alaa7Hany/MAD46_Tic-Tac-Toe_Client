@@ -120,8 +120,6 @@ public class LobbyPageController implements Initializable, InvitationListener, L
     }
     
     public void setCurrentPlayer(PlayerDTO player){
-        // TEMPfot testing : force Emad as current player
-        //his.currentPlayer = new PlayerDTO("Emad", 150, true);
         this.currentPlayer=player;
         myName.setText(player.getUsername());
         score.setText(String.valueOf(player.getScore()));

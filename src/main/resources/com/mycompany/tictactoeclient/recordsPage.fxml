@@ -40,7 +40,7 @@
             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" layoutX="109.0" layoutY="117.0" prefHeight="396.0" prefWidth="390.0" style="-fx-background-color: transparent;" styleClass="custom-scroll" stylesheets="@../../../styles.css" vbarPolicy="AS_NEEDED">
                <content>
                   
-                  <VBox fx:id="recordsContainer" alignment="TOP_CENTER" spacing="15" style="                 -fx-border-color: #D7EA91;                 -fx-background-radius: 12;                 -fx-border-radius: 12;                 -fx-padding: 20;             " />
+                  <VBox fx:id="recordsContainer" alignment="TOP_CENTER" spacing="15" style=" -fx-border-color: #D7EA91; -fx-background-radius: 12;-fx-border-radius: 12;                 -fx-padding: 20;             " />
                </content>
             </ScrollPane>
          </children>

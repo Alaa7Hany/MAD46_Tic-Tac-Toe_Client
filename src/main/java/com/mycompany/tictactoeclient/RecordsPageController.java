@@ -154,14 +154,19 @@ private void loadRecordsGame(){
         Button viewBtn = new Button("View");
         viewBtn.getStyleClass().add("record-view-btn");
         viewBtn.setOnAction(e -> openRecord(file));
+        
+        Button replayBtn = new Button("Reply");
+        replayBtn.getStyleClass().add("record-view-btn");
+        replayBtn.setOnAction(e -> openReplay(file));
+        
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        HBox card = new HBox(iconPane, title, spacer, viewBtn);
-        card.setPrefWidth(360);
-        card.setSpacing(15);
-        card.setPadding(new Insets(15));
+        HBox card = new HBox(iconPane, title, spacer, viewBtn, replayBtn);
+        card.setPrefWidth(420);
+        card.setSpacing(13);
+        card.setPadding(new Insets(13));
         card.setAlignment(Pos.CENTER_LEFT);
 
         card.getStyleClass().add("record-card");
@@ -171,29 +176,48 @@ private void loadRecordsGame(){
 
     private void openRecord(File file) {
 
-    StringBuilder content = new StringBuilder();
+        StringBuilder content = new StringBuilder();
 
-    try (Scanner scanner = new Scanner(file)) {
-        while (scanner.hasNextLine()) {
-            content.append(scanner.nextLine()).append("\n");
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                content.append(scanner.nextLine()).append("\n");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-        return;
+
+
+        TextArea textArea = new TextArea(content.toString());
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+        textArea.setPrefSize(500, 400);
+        textArea.getStyleClass().add("textarea-view");
+
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("TIC TAC TOE");
+        dialog.getDialogPane().setContent(textArea);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+
+        dialog.showAndWait();
     }
-
     
-    TextArea textArea = new TextArea(content.toString());
-    textArea.setEditable(false);
-    textArea.setWrapText(true);
-    textArea.setPrefSize(500, 400);
-    textArea.getStyleClass().add("textarea-view");
+    private void openReplay(File file) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/com/mycompany/tictactoeclient/RecordReplayPage.fxml")
+            );
 
-    Dialog<Void> dialog = new Dialog<>();
-    dialog.setTitle("TIC TAC TOE");
-    dialog.getDialogPane().setContent(textArea);
-    dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+            Pane pane = loader.load();
 
-    dialog.showAndWait();
+            RecordReplayPageController controller = loader.getController();
+            controller.loadReplay(file);
+
+            Pane root = (Pane) rootStackPane.getScene().getRoot();
+            root.getChildren().setAll(pane);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 }
 }

@@ -95,7 +95,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 
 .record-title {
     -fx-text-fill: white;
-    -fx-font-size: 12px;
+    -fx-font-size: 10px;
     -fx-font-weight: bold;
 }
 
@@ -106,8 +106,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 }
 
 .record-icon {
-    -fx-fit-width: 36;
-    -fx-fit-height: 36;
+    -fx-fit-width: 30;
+    -fx-fit-height: 30;
 }
 
 .textarea-view{

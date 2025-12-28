@@ -170,6 +170,15 @@ public class GamePageController implements Initializable {
         }
 
         moveHistory.clear();
+        
+        recordManager.startRecord(
+            currentGameMode.name(),
+            currentDifficulty == null ? "NONE" : currentDifficulty.name(),
+            currentPlayerName,
+            opponentPlayerName
+        );
+
+        isRecording = true;
     }
 
     @FXML
@@ -213,37 +222,10 @@ public class GamePageController implements Initializable {
 
     @FXML
     private void onRecord(ActionEvent event) {
-        if (isRecording) {
-            System.out.println("Already recording");
-            return;
+        if (recordBlink != null && recordBlink.getStatus() == Timeline.Status.RUNNING) {
+        return;
         }
-
-        String difficultyValue = (currentDifficulty == null) ? "NONE" : currentDifficulty.name();
-        String p1 = playerXlbl.getText();
-        String p2 = playerOlbl.getText();
-        String fileName = "game_" + System.currentTimeMillis() + ".dat";
-
-        File directory = new File("records");
-        if (!directory.exists()) {
-            directory.mkdir();
-        }
-
-        File file = new File(directory, fileName);
-
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(moveHistory);
-            oos.close();
-            fos.close();
-        } catch (FileNotFoundException ex) {
-            System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        } catch (IOException ex) {
-            System.getLogger(GamePageController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
-
-        recordManager.startRecord(currentGameMode.name(), difficultyValue, p1, p2);
-        isRecording = true;
+        recordManager.enableSave();
         startRecordBlink();
     }
 

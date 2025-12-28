@@ -31,6 +31,7 @@ public class RecordManager {
     private String result;
     private String winnerName;
     private String loserName;
+    private boolean wantSave=false;
 
     public void startRecord(String gameMode, String difficulty, String p1, String p2) {
         this.player1 = p1;
@@ -60,9 +61,13 @@ public class RecordManager {
 
         gameRecord.addMove(move);
     }
+    
+    public void enableSave(){
+        wantSave=true;
+    }
 
     public void finishRecord(String winner, List<Integer> winningCells) {
-        if (!isRecording || gameRecord == null) return;
+        if (!isRecording || gameRecord == null || !wantSave) return;
 
         gameRecord.setWinner(winner);
         gameRecord.setWinningCells(winningCells);

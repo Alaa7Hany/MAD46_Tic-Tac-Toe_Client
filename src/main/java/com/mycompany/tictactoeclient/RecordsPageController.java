@@ -59,12 +59,7 @@ public class RecordsPageController implements Initializable {
     private ListView<?> recordsListView; 
     /**
      * Initializes the controller class.
-     */
-    
-
-private void loadRecordsGame(){
-
-}    
+     */    
     
     @FXML
     private void moveBack(ActionEvent event) {

@@ -8,6 +8,8 @@ A desktop Tic-Tac-Toe game developed as the Java project for ITI Intake 46 by st
 
 <img src="GameAnimation.gif" alt="Game demo" width="500">
 
+<img src="MultPlay Game.gif" alt="Game demo" width="1000">
+
 
 ### How to Run:
 
